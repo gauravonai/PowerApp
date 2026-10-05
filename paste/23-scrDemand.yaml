@@ -800,7 +800,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.Rank
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =32
@@ -818,7 +818,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.PartNo
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =162
@@ -836,7 +836,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.Description
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =222
@@ -854,7 +854,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.Times, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =82
@@ -872,7 +872,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =2
@@ -908,7 +908,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.Qty, "#,##0") & " " & ThisItem.UOM
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =82
@@ -926,7 +926,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.OnHand, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =62
@@ -944,7 +944,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.RefQty, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =52
@@ -962,7 +962,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =2
@@ -1002,7 +1002,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =If(IsBlank(ThisItem.Last), "—", Text(ThisItem.Last, "dd-mmm-yyyy"))
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =52

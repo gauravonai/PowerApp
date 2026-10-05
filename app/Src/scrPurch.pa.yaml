@@ -1620,7 +1620,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.PartNo
                                     VerticalAlign: =VerticalAlign.Bottom
                                     Width: =162
@@ -1656,7 +1656,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.Description
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =232
@@ -1674,7 +1674,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Text(ThisItem.Qty, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =72
@@ -1692,7 +1692,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =""
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =6
@@ -1710,7 +1710,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.Requests
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =152
@@ -1728,7 +1728,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.Who
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =162
@@ -1746,7 +1746,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =Coalesce(Concat(Filter(nfPurch, PN = ThisItem.PN && !IsBlank(PRNumber)), PRNumber, ", "), "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =102
@@ -2144,7 +2144,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.PartNo
                                     VerticalAlign: =VerticalAlign.Bottom
                                     Width: =152
@@ -2180,7 +2180,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Text(ThisItem.QtyRequired, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =62
@@ -2198,7 +2198,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Text(ThisItem.QtyConfirmed, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =68
@@ -2216,7 +2216,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =""
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =2
@@ -2234,7 +2234,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =Coalesce(ThisItem.RequestNo, "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =122
@@ -2252,7 +2252,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =Coalesce(ThisItem.PRNumber, "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =92
@@ -2270,7 +2270,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Coalesce(ThisItem.SupplierName, "—")
                                     VerticalAlign: =VerticalAlign.Bottom
                                     Width: =142
@@ -2328,7 +2328,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =If(IsBlank(ThisItem.ExpectedDate), "—", Text(ThisItem.ExpectedDate, "dd-mmm-yyyy"))
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =92

@@ -1830,7 +1830,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.RequestNo
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =142
@@ -1849,7 +1849,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.HarnessPartNo
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =142
@@ -1868,7 +1868,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.RaisedByName
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =182
@@ -1887,7 +1887,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.Lines
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =62
@@ -1906,7 +1906,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.ShortLines
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =62
@@ -1925,7 +1925,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =22
@@ -1966,7 +1966,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =If(IsBlank(ThisItem.DateRaised), "—", Text(ThisItem.DateRaised, "dd-mmm-yyyy"))
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =200
@@ -2378,7 +2378,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.PartNo
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =182
@@ -2396,7 +2396,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.Description
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =292
@@ -2414,7 +2414,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =Coalesce(ThisItem.Location, "—")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =112
@@ -2470,7 +2470,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.Reserved, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =72
@@ -2488,7 +2488,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.Avail, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =82

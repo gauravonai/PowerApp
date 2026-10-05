@@ -1614,7 +1614,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.QtyRequested, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =48
@@ -1632,7 +1632,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =If(IsBlank(LookUp(nfStock, PN = ThisItem.PN)), "—", Text(LookUp(nfStock, PN = ThisItem.PN).Avail + Max(0, ThisItem.QtyReserved - ThisItem.QtyReleased), "#,##0"))
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =52
@@ -1650,7 +1650,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.QtyReserved, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =48
@@ -1668,7 +1668,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(ThisItem.QtyReleased, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =48
@@ -1686,7 +1686,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Text(Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased)), "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =52
@@ -1704,7 +1704,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =4

@@ -1861,7 +1861,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.AssetNo
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =132
@@ -1879,7 +1879,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.AssetName
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =292
@@ -1897,7 +1897,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.Location
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =152
@@ -1915,7 +1915,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =If(IsBlank(ThisItem.DueDate), "—", Text(ThisItem.DueDate, "dd-mmm-yyyy"))
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =112
@@ -1933,7 +1933,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =If(ThisItem.Days < 0, "overdue " & Abs(ThisItem.Days), Text(ThisItem.Days))
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =112
@@ -1951,7 +1951,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.Owner
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =210

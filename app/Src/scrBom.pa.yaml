@@ -1421,7 +1421,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.Sr
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =32
@@ -1439,7 +1439,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.PartNo
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =162
@@ -1457,7 +1457,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.Description
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =242
@@ -1475,7 +1475,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Text(ThisItem.Qty, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =52
@@ -1493,7 +1493,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =If(ThisItem.Found, Text(ThisItem.OnHand, "#,##0"), "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =62
@@ -1511,7 +1511,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =If(ThisItem.Found, Text(ThisItem.Reserved, "#,##0"), "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =48
@@ -1529,7 +1529,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =If(ThisItem.Found, Text(ThisItem.Avail, "#,##0"), "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =52
@@ -1547,7 +1547,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Text(ThisItem.Short, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =52
@@ -1565,7 +1565,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.UOM
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =38
@@ -1583,7 +1583,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.Location
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =72

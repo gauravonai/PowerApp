@@ -844,7 +844,7 @@ def scr_newpartq():
              'DateRaised, SortOrder.Descending))' % (K, K))
     cols = [Col("Request", 120, "ThisItem.RequestNo", "mono", sub='"Sr " & ThisItem.SrNo'),
             Col("Requester", 110, "ThisItem.RequesterName"),
-            Col("Part / Machine", 160, "ThisItem.PartName", sub="ThisItem.OtherSpecs"),
+            Col("Part / Machine", 150, "ThisItem.PartName", sub="ThisItem.OtherSpecs"),
             Col("Category", 100, 'ThisItem.Category & If(IsBlank(ThisItem.SubCategory), "", " · " & ThisItem.SubCategory)'),
             Col("Plant", 50, "ThisItem.PlantCode", "mono"),
             Col("Make", 90, 'ThisItem.MakeBrand & " " & ThisItem.ModelNo'),
@@ -852,7 +852,7 @@ def scr_newpartq():
             Col("UOM", 40, "ThisItem.UOM", "muted"),
             Col("Status", 96, "ThisItem.Status", "pill"),
             Col("Raised", 0 or None, fdate("ThisItem.DateRaised"), "mono")]
-    cols[-1].w = 86
+    cols[-1].w = 96
     cols.append(Col("", None, None, "custom", make=approve))
     content = [head(K, '"NEW PURCHASE PARTS"', '"Parts engineers have asked the lab to buy for the first time."'),
                sec("flt" + K, 36, [dd("st" + K, 0, 0, 200, 36, '["All", "SUBMITTED", "APPROVED", "REJECTED", "DRAFT"]'),
@@ -931,9 +931,9 @@ def scr_ledger():
              'Filter(nfLedger, (t = "All types" || Type = t) && (IsBlank(d0) || Date >= d0) && (IsBlank(d1) || Date <= d1) && '
              '(IsBlank(s) || s in Upper(PartNo & " " & Description & " " & Reference & " " & Harness & " " & Machine & " " & '
              'IssuedTo & " " & IssuedBy & " " & Reason))))' % {"K": K})
-    cols = [Col("Date", 86, fdate("ThisItem.Date"), "mono"),
-            Col("Part", 140, "ThisItem.PartNo", "mono"),
-            Col("Description", 180, "ThisItem.Description", sub="ThisItem.Reason"),
+    cols = [Col("Date", 96, fdate("ThisItem.Date"), "mono"),
+            Col("Part", 150, "ThisItem.PartNo", "mono"),
+            Col("Description", 160, "ThisItem.Description", sub="ThisItem.Reason"),
             Col("Harness", 90, 'Coalesce(ThisItem.Harness, "—")', "mono"),
             Col("Machine", 80, 'Coalesce(ThisItem.Machine, "—")'),
             Col("Type", 80, "ThisItem.Type", "pill"),

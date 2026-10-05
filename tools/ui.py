@@ -51,7 +51,7 @@ def tiles(name, specs, visible=None, h=100):
 
 
 class Col:
-    def __init__(self, title, w, expr=None, kind="text", align="Left", color="cInk", size=12, make=None,
+    def __init__(self, title, w, expr=None, kind="text", align="Left", color="cInk", size=11, make=None,
                  bold=False, sub=None):
         self.title, self.w, self.expr, self.kind, self.align = title, w, expr, kind, align
         self.color, self.size, self.make, self.bold, self.sub = color, size, make, bold, sub
@@ -85,7 +85,7 @@ def table(pfx, items, cols, x=0, y=46, w=W, h=400, row_h=40, onrow=None, empty="
             row += c.make(n, cx, cw, row_h)
         else:
             font = MONO if c.kind == "mono" else UI
-            size = 11 if c.kind in ("mono", "muted") else c.size
+            size = 10 if c.kind in ("mono", "muted") else c.size
             color = "cInk3" if c.kind == "muted" else c.color
             if c.sub:
                 row.append(lbl(n, c.expr, cx, 4, cw - 8, row_h / 2 - 2, size=size, color=color, font=font,

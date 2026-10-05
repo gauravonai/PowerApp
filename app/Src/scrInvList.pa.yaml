@@ -1127,7 +1127,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.InvoiceNo
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =152
@@ -1145,7 +1145,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =If(IsBlank(ThisItem.InvoiceDate), "—", Text(ThisItem.InvoiceDate, "dd-mmm-yyyy"))
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =88
@@ -1163,7 +1163,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =ThisItem.BusinessUnit
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =102
@@ -1181,7 +1181,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.HarnessPartNos
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =112
@@ -1199,7 +1199,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =11
+                                    Size: =10
                                     Text: =ThisItem.RefRequest
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =112
@@ -1217,7 +1217,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =Text(ThisItem.NoOfCircuits, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =52
@@ -1235,7 +1235,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: ="₹" & Text(ThisItem.TotalCost, "#,##0.00")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =102
@@ -1253,7 +1253,7 @@ Screens:
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =12
+                                    Size: =11
                                     Text: =""
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =2

@@ -732,7 +732,7 @@
                         Size: =8
                         Text: ="DATE"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =80
+                        Width: =90
                         X: =16
                         Y: =0
                   - lgLgH1:
@@ -750,8 +750,8 @@
                         Size: =8
                         Text: ="PART"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =134
-                        X: =102
+                        Width: =144
+                        X: =112
                         Y: =0
                   - lgLgH2:
                       Control: Label@2.5.1
@@ -768,8 +768,8 @@
                         Size: =8
                         Text: ="DESCRIPTION"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =174
-                        X: =242
+                        Width: =154
+                        X: =262
                         Y: =0
                   - lgLgH3:
                       Control: Label@2.5.1
@@ -944,10 +944,10 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =If(IsBlank(ThisItem.Date), "—", Text(ThisItem.Date, "dd-mmm-yyyy"))
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =78
+                              Width: =88
                               X: =16
                               Y: =0
                         - lgLgC1:
@@ -962,11 +962,11 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.PartNo
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =132
-                              X: =102
+                              Width: =142
+                              X: =112
                               Y: =0
                         - lgLgC2:
                             Control: Label@2.5.1
@@ -980,11 +980,11 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.Description
                               VerticalAlign: =VerticalAlign.Bottom
-                              Width: =172
-                              X: =242
+                              Width: =152
+                              X: =262
                               Y: =4
                         - lgLgC2s:
                             Control: Label@2.5.1
@@ -1001,8 +1001,8 @@
                               Size: =10
                               Text: =ThisItem.Reason
                               VerticalAlign: =VerticalAlign.Top
-                              Width: =172
-                              X: =242
+                              Width: =152
+                              X: =262
                               Y: =24.0
                         - lgLgC3:
                             Control: Label@2.5.1
@@ -1016,7 +1016,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =Coalesce(ThisItem.Harness, "—")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =82
@@ -1034,7 +1034,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Coalesce(ThisItem.Machine, "—")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =72
@@ -1074,7 +1074,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =If(ThisItem.SQty > 0, "+", "") & Text(ThisItem.SQty, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =52
@@ -1092,7 +1092,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =0
@@ -1110,7 +1110,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =Coalesce(ThisItem.IssuedTo, "—")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =88
@@ -1128,7 +1128,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =ThisItem.IssuedBy
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =72
@@ -1146,7 +1146,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
+                              Size: =10
                               Text: =Coalesce(ThisItem.Reference, "—")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =82
@@ -1164,7 +1164,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =If(ThisItem.UnitCost > 0, "₹" & Text(ThisItem.UnitCost, "#,##0.00"), "—")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =60

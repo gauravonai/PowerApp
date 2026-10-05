@@ -1546,7 +1546,7 @@
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =12
+                              Size: =11
                               Text: =ThisItem.SoftwareName
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =162
