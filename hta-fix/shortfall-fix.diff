@@ -1,0 +1,20 @@
+3308c3308
+<       var gap=(Number(l.q)||0)-(Number(l.resv)||0)-(Number(l.rel)||0);
+---
+>       var gap=(Number(l.q)||0)-Math.max(Number(l.resv)||0,Number(l.rel)||0);
+3341c3341
+<   var gap=(Number(l.q)||0)-(Number(l.resv)||0)-(Number(l.rel)||0);
+---
+>   var gap=(Number(l.q)||0)-Math.max(Number(l.resv)||0,Number(l.rel)||0);
+4811c4811
+<     var gap=(Number(l.q)||0)-(Number(l.resv)||0)-(Number(l.rel)||0);
+---
+>     var gap=(Number(l.q)||0)-Math.max(Number(l.resv)||0,Number(l.rel)||0);
+4917c4917
+<       if((Number(l.q)||0) - (Number(l.resv)||0) - (Number(l.rel)||0) > 0) purchAdd(l.pn);
+---
+>       if((Number(l.q)||0)-Math.max(Number(l.resv)||0,Number(l.rel)||0) > 0) purchAdd(l.pn);
+4943c4943
+<       if((Number(l.q)||0) - (Number(l.resv)||0) - (Number(l.rel)||0) > 0){
+---
+>       if((Number(l.q)||0)-Math.max(Number(l.resv)||0,Number(l.rel)||0) > 0){

@@ -208,10 +208,6 @@
             PaddingLeft: =10
             PressedColor: =cInk
             PressedFill: =cPanel2
-            RadiusBottomLeft: =0
-            RadiusBottomRight: =0
-            RadiusTopLeft: =0
-            RadiusTopRight: =0
             SelectionColor: =cOnJcb
             SelectionFill: =cJcb
             Size: =10
@@ -802,10 +798,6 @@
                         PaddingLeft: =10
                         PressedColor: =cInk
                         PressedFill: =cPanel2
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
                         SelectionColor: =cOnJcb
                         SelectionFill: =cJcb
                         Size: =12
@@ -849,10 +841,6 @@
                         PaddingLeft: =10
                         PressedColor: =cInk
                         PressedFill: =cPanel2
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
                         SelectionColor: =cOnJcb
                         SelectionFill: =cJcb
                         Size: =12
@@ -1075,10 +1063,6 @@
                         IconFill: =cJcb
                         IsEditable: =false
                         PaddingLeft: =10
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
                         Size: =12
                         StartYear: =2020
                         Width: =525

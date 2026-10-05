@@ -244,8 +244,7 @@ def dd(name, x, y, w, h, items, default=None, visible=None, extra=None, onchange
          "SelectionFill": "cJcb", "SelectionColor": "cOnJcb",
          "ChevronBackground": "cSunk", "ChevronFill": "cInk2",
          "ChevronHoverBackground": "cPanel2", "ChevronHoverFill": "cJcb",
-         "Size": 12, "Font": UI, "PaddingLeft": 10,
-         "RadiusTopLeft": 0, "RadiusTopRight": 0, "RadiusBottomLeft": 0, "RadiusBottomRight": 0}
+         "Size": 12, "Font": UI, "PaddingLeft": 10}
     if default is not None:
         p["Default"] = default
     if visible is not None:
@@ -262,8 +261,7 @@ def date(name, x, y, w, h, default="Today()", visible=None, extra=None):
          "Fill": "cSunk", "Color": "cInk", "BorderColor": "cLine2", "BorderThickness": 1,
          "IconBackground": "cPanel2", "IconFill": "cJcb",
          "CalendarHeaderFill": "cJcb", "Size": 12, "Font": UI, "PaddingLeft": 10,
-         "IsEditable": "false", "StartYear": 2020, "EndYear": 2040,
-         "RadiusTopLeft": 0, "RadiusTopRight": 0, "RadiusBottomLeft": 0, "RadiusBottomRight": 0}
+         "IsEditable": "false", "StartYear": 2020, "EndYear": 2040}
     if visible is not None:
         p["Visible"] = visible
     if extra:

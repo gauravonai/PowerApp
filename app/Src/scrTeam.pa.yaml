@@ -217,10 +217,6 @@ Screens:
                   PaddingLeft: =10
                   PressedColor: =cInk
                   PressedFill: =cPanel2
-                  RadiusBottomLeft: =0
-                  RadiusBottomRight: =0
-                  RadiusTopLeft: =0
-                  RadiusTopRight: =0
                   SelectionColor: =cOnJcb
                   SelectionFill: =cJcb
                   Size: =10
@@ -784,10 +780,6 @@ Screens:
                               PaddingLeft: =10
                               PressedColor: =cInk
                               PressedFill: =cPanel2
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
                               SelectionColor: =cOnJcb
                               SelectionFill: =cJcb
                               Size: =12
@@ -1094,10 +1086,6 @@ Screens:
                                     PaddingLeft: =10
                                     PressedColor: =cInk
                                     PressedFill: =cPanel2
-                                    RadiusBottomLeft: =0
-                                    RadiusBottomRight: =0
-                                    RadiusTopLeft: =0
-                                    RadiusTopRight: =0
                                     SelectionColor: =cOnJcb
                                     SelectionFill: =cJcb
                                     Size: =11
