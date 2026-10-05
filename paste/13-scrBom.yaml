@@ -1,0 +1,1655 @@
+- rootBom:
+    Control: GroupContainer@1.4.0
+    Variant: ManualLayout
+    Properties:
+      BorderColor: =cBg
+      BorderThickness: =0
+      DropShadow: =DropShadow.None
+      Fill: =cBg
+      Height: =768
+      RadiusBottomLeft: =0
+      RadiusBottomRight: =0
+      RadiusTopLeft: =0
+      RadiusTopRight: =0
+      Width: =1366
+      X: =0
+      Y: =0
+    Children:
+      - hdrBgBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cBg
+            Fill: =cBg
+            Height: =56
+            Width: =1366
+            X: =0
+            Y: =0
+      - hdrLnBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cLine
+            Fill: =cLine
+            Height: =1
+            Width: =1366
+            X: =0
+            Y: =55
+      - hdrMkBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cJcb
+            Fill: =cJcb
+            Height: =36
+            Width: =36
+            X: =16
+            Y: =10
+      - hdrMkTBom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =cOnJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =36
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: ="EDS"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =36
+            X: =16
+            Y: =10
+      - hdrT1Bom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =cInk3
+            Font: =fMono
+            FontWeight: =FontWeight.Normal
+            Height: =16
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="JCB INDIA · PUNE"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =320
+            X: =62
+            Y: =8
+      - hdrT2Bom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Normal
+            Height: =26
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: ="Material Management"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =320
+            X: =62
+            Y: =23
+      - hdrDivBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cLine
+            Fill: =cLine
+            Height: =32
+            Width: =1
+            X: =690
+            Y: =12
+      - hdrAvBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cJcb
+            Fill: =cJcb
+            Height: =32
+            Width: =32
+            X: =706
+            Y: =12
+      - hdrAvTBom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Center
+            Color: =cOnJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =nfMeInitials
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =32
+            X: =706
+            Y: =12
+      - hdrNmBom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: =nfMeName
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =200
+            X: =746
+            Y: =10
+      - hdrRlBom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =cJcb
+            Font: =fMono
+            FontWeight: =FontWeight.Normal
+            Height: =16
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =Upper(gRole)
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =200
+            X: =746
+            Y: =29
+      - hdrSrcBom:
+          Control: Label@2.5.1
+          Properties:
+            Align: =Align.Left
+            Color: =cInk3
+            Font: =fMono
+            FontWeight: =FontWeight.Normal
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="●  Excel Online · " & CountRows(nfParts) & " parts · " & CountRows(nfMoves) & " moves"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =170
+            Wrap: =true
+            X: =950
+            Y: =12
+      - hdrAsBom:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =cLine2
+            BorderThickness: =1
+            ChevronBackground: =cSunk
+            ChevronFill: =cInk2
+            ChevronHoverBackground: =cPanel2
+            ChevronHoverFill: =cJcb
+            Color: =cInk
+            Default: =If(gRole = "Lab Lead", "Lab Admin", gRole)
+            Fill: =cSunk
+            Font: =fUI
+            Height: =30
+            HoverColor: =cInk
+            HoverFill: =cPanel2
+            Items: =["Lab Admin", "Engineer", "Manager"]
+            OnChange: =Set(gRole, If(Self.Selected.Value = "Lab Admin", nfRoleCanon, Self.Selected.Value)); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.None)
+            PaddingLeft: =10
+            PressedColor: =cInk
+            PressedFill: =cPanel2
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            SelectionColor: =cOnJcb
+            SelectionFill: =cJcb
+            Size: =10
+            Tooltip: ="Preview the portal as another role (admins only)"
+            Visible: =nfRoleCanon in ["Lab Admin", "Lab Lead"]
+            Width: =112
+            X: =1126
+            Y: =13
+      - hdrRfBom:
+          Control: Classic/Button
+          Properties:
+            BorderColor: =cLine2
+            BorderThickness: =1
+            Color: =cInk
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk3
+            DisabledFill: =cPanel
+            Fill: =cPanel2
+            Font: =fUI
+            FontWeight: =FontWeight.Semibold
+            Height: =30
+            HoverBorderColor: =cLine2
+            HoverColor: =cInk
+            HoverFill: =cLine
+            OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Notify("Re-read from Excel.", NotificationType.Information)
+            PaddingLeft: =6
+            PaddingRight: =6
+            PressedBorderColor: =cLine2
+            PressedColor: =cInk
+            PressedFill: =cLine
+            RadiusBottomLeft: =2
+            RadiusBottomRight: =2
+            RadiusTopLeft: =2
+            RadiusTopRight: =2
+            Size: =10
+            Text: ="Refresh now"
+            Width: =106
+            X: =1246
+            Y: =13
+      - navBgBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cBg
+            Fill: =cBg
+            Height: =712
+            Width: =224
+            X: =0
+            Y: =56
+      - navLnBom:
+          Control: Rectangle@2.3.0
+          Properties:
+            BorderColor: =cLine
+            Fill: =cLine
+            Height: =712
+            Width: =1
+            X: =223
+            Y: =56
+      - navGalBom:
+          Control: Gallery@2.15.0
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
+          Properties:
+            BorderColor: =cLine
+            BorderThickness: =0
+            Fill: =RGBA(0,0,0,0)
+            Height: =690
+            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+            OnSelect: |-
+              =If(!ThisItem.Hdr, Switch(ThisItem.Key,
+                "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.None),
+                "stock", Navigate(scrStock, ScreenTransition.None),
+                "bom", Navigate(scrBom, ScreenTransition.None),
+                "newreq", Navigate(scrNewReq, ScreenTransition.None),
+                "myreq", Navigate(scrMyReq, ScreenTransition.None),
+                "newpart", Navigate(scrNewPart, ScreenTransition.None),
+                "queue", Navigate(scrQueue, ScreenTransition.None),
+                "newpartq", Navigate(scrNewPartQ, ScreenTransition.None),
+                "inventory", Navigate(scrInventory, ScreenTransition.None),
+                "inward", Navigate(scrInward, ScreenTransition.None),
+                "ledger", Navigate(scrLedger, ScreenTransition.None),
+                "demand", Navigate(scrDemand, ScreenTransition.None),
+                "invoice", Navigate(scrInvoice, ScreenTransition.None),
+                "invlist", Navigate(scrInvList, ScreenTransition.None),
+                "cost", Navigate(scrCost, ScreenTransition.None),
+                "proc", Navigate(scrProc, ScreenTransition.None),
+                "purch", Navigate(scrPurch, ScreenTransition.None),
+                "lic", Navigate(scrLic, ScreenTransition.None),
+                "team", Navigate(scrTeam, ScreenTransition.None)))
+            ShowScrollbar: =false
+            TemplatePadding: =0
+            TemplateSize: =38
+            Width: =223
+            X: =0
+            Y: =70
+          Children:
+            - navSelBgBom:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =cPanel
+                  Fill: =cPanel
+                  Height: =38
+                  Visible: =!ThisItem.Hdr && ThisItem.Key = "bom"
+                  Width: =224
+                  X: =0
+                  Y: =0
+            - navSelBarBom:
+                Control: Rectangle@2.3.0
+                Properties:
+                  BorderColor: =cJcb
+                  Fill: =cJcb
+                  Height: =38
+                  Visible: =!ThisItem.Hdr && ThisItem.Key = "bom"
+                  Width: =3
+                  X: =0
+                  Y: =0
+            - navHdrBom:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk3
+                  Font: =fMono
+                  FontWeight: =FontWeight.Normal
+                  Height: =20
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =8
+                  Text: =ThisItem.Label
+                  VerticalAlign: =VerticalAlign.Middle
+                  Visible: =ThisItem.Hdr
+                  Width: =190
+                  X: =18
+                  Y: =16
+            - navItmBom:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Left
+                  Color: =If(ThisItem.Key = "bom", cInk, cInk2)
+                  Font: =fUI
+                  FontWeight: =If(ThisItem.Key = "bom", FontWeight.Bold, FontWeight.Normal)
+                  Height: =38
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: =ThisItem.Label
+                  VerticalAlign: =VerticalAlign.Middle
+                  Visible: =!ThisItem.Hdr
+                  Width: =160
+                  X: =21
+                  Y: =0
+            - navCntBom:
+                Control: Label@2.5.1
+                Properties:
+                  Align: =Align.Center
+                  Color: =cJcb
+                  Fill: =cJcbWash
+                  Font: =fMono
+                  FontWeight: =FontWeight.Normal
+                  Height: =18
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", nfMyOpenCount, "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", nfMyOpenCount, "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                  Width: =32
+                  X: =178
+                  Y: =10
+      - bodyBom:
+          Control: GroupContainer@1.4.0
+          Variant: AutoLayout
+          Properties:
+            BorderColor: =cBg
+            BorderThickness: =0
+            DropShadow: =DropShadow.None
+            Fill: =cBg
+            Height: =712
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            LayoutJustifyContent: =LayoutJustifyContent.Start
+            LayoutOverflowY: =LayoutOverflow.Scroll
+            PaddingBottom: =26
+            PaddingLeft: =26
+            PaddingRight: =26
+            PaddingTop: =26
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =1142
+            X: =224
+            Y: =56
+          Children:
+            - hdBom:
+                Control: GroupContainer@1.4.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  BorderThickness: =0
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =0
+                  Height: =76
+                  LayoutMinHeight: =76
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - hdTBom:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =22
+                        Text: ="BOM COMPARE"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =900
+                        X: =0
+                        Y: =4
+                  - hdSBom:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =20
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: ="Paste two columns from Excel — part number and quantity — and see instantly what the lab can supply"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =1000
+                        X: =0
+                        Y: =44
+                  - hdLBom:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =71
+            - cdPBom:
+                Control: GroupContainer@1.4.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =250
+                  LayoutMinHeight: =250
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - cdPBomTb:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cPanel2
+                        Fill: =cPanel2
+                        Height: =46
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =0
+                  - cdPBomTl:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =46
+                  - cdPBomTt:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: =Upper("1 · Paste your BOM")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =760
+                        X: =16
+                        Y: =0
+                  - txtBom:
+                      Control: Classic/TextInput
+                      Properties:
+                        BorderColor: =cLine2
+                        BorderThickness: =1
+                        Color: =cInk
+                        Default: =gBomText
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk2
+                        DisabledFill: =cPanel
+                        Fill: =cSunk
+                        FocusedBorderColor: =cJcb
+                        Font: =fMono
+                        Height: =120
+                        HintText: ="7219/0373  20  (part number, then quantity — select the two columns in Excel, Ctrl+C, click here, Ctrl+V)"
+                        HoverBorderColor: =cInk3
+                        HoverFill: =cSunk
+                        Mode: =TextMode.MultiLine
+                        PaddingLeft: =10
+                        PaddingRight: =6
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                        Size: =12
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =62
+                  - goBom:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =cJcb
+                        BorderThickness: =1
+                        Color: =cOnJcb
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =cPanel
+                        Fill: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =36
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cOnJcb
+                        HoverFill: =cJcbDark
+                        OnSelect: |-
+                          =With({rows: With({raw: Filter(ForAll(Split(Substitute(txtBom.Text, Char(13), ""), Char(10)) As L, With({t: TrimEnds(Substitute(Substitute(Substitute(L.Value, Char(9), " "), ",", " "), ";", " "))}, With({qt: Last(Split(t, " ")).Value}, {PN: Upper(TrimEnds(Left(t, Len(t) - Len(qt)))), Q: IfError(Value(qt), 0)}))), !IsBlank(PN) && Q > 0)}, ForAll(Distinct(raw, PN) As D, {PN: D.Value, Q: Sum(Filter(raw, PN = D.Value), Q)}))}, ClearCollect(colBom, ForAll(Sequence(CountRows(rows)) As I, With({B: Index(rows, I.Value)}, With({p: LookUp(nfStock, PN = B.PN)}, {Sr: I.Value, PartNo: Coalesce(p.PartNo, B.PN), PN: B.PN, Qty: B.Q, Description: Coalesce(p.Description, "— not in the lab catalogue —"), UOM: Coalesce(p.UOM, ""), Location: Coalesce(p.Location, "—"), OnHand: Coalesce(p.OnHand, 0), Reserved: Coalesce(p.Reserved, 0), Avail: Coalesce(p.Avail, 0), UnitCost: Coalesce(p.UnitCost, 0), Short: If(IsBlank(p), B.Q, Max(0, Round(B.Q - p.Avail, 3))), Status: If(IsBlank(p), "NEW PART", B.Q <= p.Avail, "AVAILABLE", p.Avail <= 0, "OUT OF STOCK", "SHORTAGE"), Found: !IsBlank(p)}))))); If(CountRows(colBom) = 0, Notify("Paste at least one line with a part number and a quantity.", NotificationType.Warning))
+                        PaddingLeft: =6
+                        PaddingRight: =6
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cOnJcb
+                        PressedFill: =cJcbDark
+                        RadiusBottomLeft: =2
+                        RadiusBottomRight: =2
+                        RadiusTopLeft: =2
+                        RadiusTopRight: =2
+                        Size: =11
+                        Text: ="COMPARE AGAINST STOCK"
+                        Width: =220
+                        X: =16
+                        Y: =196
+                  - smpBom:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =cLine2
+                        BorderThickness: =1
+                        Color: =cInk
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =cPanel
+                        Fill: =cPanel2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =36
+                        HoverBorderColor: =cLine2
+                        HoverColor: =cInk
+                        HoverFill: =cLine
+                        OnSelect: =Set(gBomText, nfSampleBom); Reset(txtBom)
+                        PaddingLeft: =6
+                        PaddingRight: =6
+                        PressedBorderColor: =cLine2
+                        PressedColor: =cInk
+                        PressedFill: =cLine
+                        RadiusBottomLeft: =2
+                        RadiusBottomRight: =2
+                        RadiusTopLeft: =2
+                        RadiusTopRight: =2
+                        Size: =11
+                        Text: ="LOAD A SAMPLE HARNESS"
+                        Width: =210
+                        X: =248
+                        Y: =196
+                  - clrBom:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =cLine2
+                        BorderThickness: =1
+                        Color: =cInk
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =cPanel
+                        Fill: =cPanel2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =36
+                        HoverBorderColor: =cLine2
+                        HoverColor: =cInk
+                        HoverFill: =cLine
+                        OnSelect: =Set(gBomText, ""); Reset(txtBom); Clear(colBom)
+                        PaddingLeft: =6
+                        PaddingRight: =6
+                        PressedBorderColor: =cLine2
+                        PressedColor: =cInk
+                        PressedFill: =cLine
+                        RadiusBottomLeft: =2
+                        RadiusBottomRight: =2
+                        RadiusTopLeft: =2
+                        RadiusTopRight: =2
+                        Size: =11
+                        Text: ="CLEAR"
+                        Width: =90
+                        X: =470
+                        Y: =196
+                  - hintBom:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =36
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Tab, comma or multiple spaces all work as the separator."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =500
+                        X: =576
+                        Y: =196
+            - tiBom:
+                Control: GroupContainer@1.4.0
+                Variant: AutoLayout
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  BorderThickness: =0
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =0
+                  Height: =100
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =14
+                  LayoutJustifyContent: =LayoutJustifyContent.Start
+                  LayoutMinHeight: =100
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Visible: =CountRows(colBom) > 0
+                Children:
+                  - tiBom0:
+                      Control: GroupContainer@1.4.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                      Children:
+                        - tiBom0Bar:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =cLine2
+                              Fill: =cLine2
+                              Height: =2
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                        - tiBom0T:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =16
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="LINES"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =14
+                        - tiBom0V:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =22
+                              Text: =CountRows(colBom)
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =32
+                        - tiBom0S:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="in this BOM"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 24
+                              Wrap: =true
+                              X: =16
+                              Y: =68
+                  - tiBom1:
+                      Control: GroupContainer@1.4.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                      Children:
+                        - tiBom1Bar:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =cOk
+                              Fill: =cOk
+                              Height: =2
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                        - tiBom1T:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =16
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="AVAILABLE"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =14
+                        - tiBom1V:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =22
+                              Text: =CountRows(Filter(colBom, Status = "AVAILABLE"))
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =32
+                        - tiBom1S:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="can be issued today"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 24
+                              Wrap: =true
+                              X: =16
+                              Y: =68
+                  - tiBom2:
+                      Control: GroupContainer@1.4.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                      Children:
+                        - tiBom2Bar:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =cStop
+                              Fill: =cStop
+                              Height: =2
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                        - tiBom2T:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =16
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="SHORT"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =14
+                        - tiBom2V:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =22
+                              Text: =CountRows(Filter(colBom, Status in ["SHORTAGE", "OUT OF STOCK"]))
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =32
+                        - tiBom2S:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="not enough in store"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 24
+                              Wrap: =true
+                              X: =16
+                              Y: =68
+                  - tiBom3:
+                      Control: GroupContainer@1.4.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                      Children:
+                        - tiBom3Bar:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =cSteel
+                              Fill: =cSteel
+                              Height: =2
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                        - tiBom3T:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =16
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="NEW PARTS"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =14
+                        - tiBom3V:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =22
+                              Text: =CountRows(Filter(colBom, Status = "NEW PART"))
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =32
+                        - tiBom3S:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="not in the catalogue at all"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 24
+                              Wrap: =true
+                              X: =16
+                              Y: =68
+                  - tiBom4:
+                      Control: GroupContainer@1.4.0
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =0
+                        RadiusBottomRight: =0
+                        RadiusTopLeft: =0
+                        RadiusTopRight: =0
+                      Children:
+                        - tiBom4Bar:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =cJcb
+                              Fill: =cJcb
+                              Height: =2
+                              Width: =Parent.Width
+                              X: =0
+                              Y: =0
+                        - tiBom4T:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =16
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="ESTIMATED MATERIAL"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =14
+                        - tiBom4V:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =34
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =22
+                              Text: |-
+                                =With({v: Sum(colBom, Qty * UnitCost)}, If(v >= 10000000, "₹" & Text(v / 10000000, "0.00") & " Cr", v >= 100000, "₹" & Text(v / 100000, "0.00") & " L", "₹" & Text(v, "#,##0")))
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 24
+                              X: =16
+                              Y: =32
+                        - tiBom4S:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =26
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="at last purchase price"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 24
+                              Wrap: =true
+                              X: =16
+                              Y: =68
+            - cdRBom:
+                Control: GroupContainer@1.4.0
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =520
+                  LayoutMinHeight: =520
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                  Visible: =CountRows(colBom) > 0
+                Children:
+                  - cdRBomTb:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cPanel2
+                        Fill: =cPanel2
+                        Height: =46
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =0
+                  - cdRBomTl:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width
+                        X: =0
+                        Y: =46
+                  - cdRBomTt:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: =Upper("2 · Comparison")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =760
+                        X: =16
+                        Y: =0
+                  - reqBom:
+                      Control: Classic/Button
+                      Properties:
+                        BorderColor: =cJcb
+                        BorderThickness: =1
+                        Color: =cOnJcb
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =cPanel
+                        Fill: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =28
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cOnJcb
+                        HoverFill: =cJcbDark
+                        OnSelect: =Navigate(scrNewReq, ScreenTransition.None)
+                        PaddingLeft: =6
+                        PaddingRight: =6
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cOnJcb
+                        PressedFill: =cJcbDark
+                        RadiusBottomLeft: =2
+                        RadiusBottomRight: =2
+                        RadiusTopLeft: =2
+                        RadiusTopRight: =2
+                        Size: =10
+                        Text: ="Raise part request ›"
+                        Visible: =gRole <> "Manager"
+                        Width: =180
+                        X: =Parent.Width - 196
+                        Y: =9
+                  - cmpBomHb:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cPanel
+                        Fill: =cPanel
+                        Height: =30
+                        Width: =1090
+                        X: =0
+                        Y: =46
+                  - cmpBomHl:
+                      Control: Rectangle@2.3.0
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =1090
+                        X: =0
+                        Y: =75
+                  - cmpBomH0:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="#"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =34
+                        X: =16
+                        Y: =46
+                  - cmpBomH1:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="PART NUMBER"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =164
+                        X: =56
+                        Y: =46
+                  - cmpBomH2:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="DESCRIPTION"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =244
+                        X: =226
+                        Y: =46
+                  - cmpBomH3:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="REQ"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =54
+                        X: =476
+                        Y: =46
+                  - cmpBomH4:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="ON HAND"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =64
+                        X: =536
+                        Y: =46
+                  - cmpBomH5:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="RESV"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =50
+                        X: =606
+                        Y: =46
+                  - cmpBomH6:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="AVAIL"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =54
+                        X: =662
+                        Y: =46
+                  - cmpBomH7:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="SHORT"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =54
+                        X: =722
+                        Y: =46
+                  - cmpBomH8:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="UOM"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =40
+                        X: =782
+                        Y: =46
+                  - cmpBomH9:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="LOC"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =74
+                        X: =828
+                        Y: =46
+                  - cmpBomH10:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="STATUS"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =160
+                        X: =908
+                        Y: =46
+                  - cmpBomGal:
+                      Control: Gallery@2.15.0
+                      Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =0
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =400
+                        Items: =colBom
+                        ShowScrollbar: =true
+                        TemplatePadding: =0
+                        TemplateSize: =40
+                        Width: =1090
+                        X: =0
+                        Y: =76
+                      Children:
+                        - cmpBomC0:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.Sr
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =32
+                              X: =16
+                              Y: =0
+                        - cmpBomC1:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.PartNo
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =162
+                              X: =56
+                              Y: =0
+                        - cmpBomC2:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =ThisItem.Description
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =242
+                              X: =226
+                              Y: =0
+                        - cmpBomC3:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =Text(ThisItem.Qty, "#,##0")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =52
+                              X: =476
+                              Y: =0
+                        - cmpBomC4:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =If(ThisItem.Found, Text(ThisItem.OnHand, "#,##0"), "—")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =62
+                              X: =536
+                              Y: =0
+                        - cmpBomC5:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =If(ThisItem.Found, Text(ThisItem.Reserved, "#,##0"), "—")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =48
+                              X: =606
+                              Y: =0
+                        - cmpBomC6:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =If(ThisItem.Found, Text(ThisItem.Avail, "#,##0"), "—")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =52
+                              X: =662
+                              Y: =0
+                        - cmpBomC7:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Right
+                              Color: =If(ThisItem.Short > 0, cStop, cInk)
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =Text(ThisItem.Short, "#,##0")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =52
+                              X: =722
+                              Y: =0
+                        - cmpBomC8:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.UOM
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =38
+                              X: =782
+                              Y: =0
+                        - cmpBomC9:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fMono
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.Location
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =72
+                              X: =828
+                              Y: =0
+                        - cmpBomC10:
+                            Control: Label@2.5.1
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).C, cInk3)
+                              BorderThickness: =1
+                              Color: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).C, cInk3)
+                              Fill: =RGBA(0,0,0,0)
+                              Font: =fMono
+                              FontWeight: =FontWeight.Semibold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =8
+                              Text: =Upper(ThisItem.Status)
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =150
+                              Wrap: =false
+                              X: =908
+                              Y: =9
+                        - cmpBomSep:
+                            Control: Rectangle@2.3.0
+                            Properties:
+                              BorderColor: =cLine
+                              Fill: =cLine
+                              Height: =1
+                              Width: =Parent.TemplateWidth
+                              X: =0
+                              Y: =39
+                  - cmpBomEmp:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Center
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: ="NOTHING HERE YET"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Visible: =CountRows(cmpBomGal.AllItems) = 0
+                        Width: =1090
+                        X: =0
+                        Y: =106
+                  - noteBom:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =36
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="A new part is not the same as an out-of-stock part. New means the lab has never carried it and the store must create it first."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =900
+                        Wrap: =true
+                        X: =16
+                        Y: =478

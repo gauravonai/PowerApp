@@ -1,0 +1,26 @@
+// App.OnStart - only session state. All data lives in the named formulas (App.Formulas).
+Set(gRole, nfRoleCanon);
+Set(gBusy, false);
+Set(gReqNo, "");
+Set(gInvReq, "");
+Set(gInvEdit, "");
+Set(gCostReq, "");
+Set(gPrintKind, "cost");
+Set(gPrinting, false);
+Set(gBomText, "");
+Set(gShortSr, -1);
+Set(gEditPr, "");
+Set(gEditPurch, "");
+Set(gPanel, "");
+Set(gVendorPick, "");
+Set(gEditPurchReq, "");
+Set(gPrintCkt, 200);
+ClearCollect(colBom, {Sr: 0, PartNo: "", PN: "", Qty: 0, Description: "", UOM: "", Location: "", OnHand: 0,
+    Reserved: 0, Avail: 0, UnitCost: 0, Short: 0, Status: "", Found: false});
+Clear(colBom);
+ClearCollect(colNP, ForAll(Sequence(3) As S, {Id: S.Value, RequesterName: nfMeName, Category: "", SubCategory: "",
+    PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}));
+ClearCollect(colInvLines, {Sr: 0, PartNo: "", Description: "", Qty: 0, UnitCost: 0});
+Clear(colInvLines);
+ClearCollect(colCostLines, {Sr: 0, PartNo: "", Description: "", Qty: 0, UnitCost: 0});
+Clear(colCostLines)
