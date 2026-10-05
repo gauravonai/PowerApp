@@ -192,6 +192,12 @@ public static class Sim {
     Ok(S(P("imgPieTest".Length > 0 ? "revPieMgr" : "", "Image")).StartsWith("data:image/svg+xml;utf8,"), "revenue pie renders an SVG data URI");
 
     Console.WriteLine($"\nworkflow simulation: {Pass} passed, {Fail} failed");
+    // leave a realistic state behind for the screen previews
+    Txt("txtBom", S("nfSampleBom")); Do("goBom");
+    E($"Set(gReqNo, \"{REQ}\"); Set(gCostReq, \"{REQ}\"); Set(gPrintKind, \"cost\"); Set(gPrintCkt, 100); Set(gInvReq, \"{REQ}\")");
+    E($"ClearCollect(colCostLines, ForAll(Filter(nfLines, RequestNo = \"{REQ}\") As L, {{Sr: L.Sr, PartNo: L.PartNo, Description: L.Description, Qty: L.QtyReleased, UnitCost: L.UnitCost}}))");
+    Txt("cktCs", "100");
+    Touch();
     return Fail;
   }
 }

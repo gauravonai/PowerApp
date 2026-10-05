@@ -25,7 +25,7 @@ def card(name, title, h, kids, right=None, visible=None, title_is_formula=False)
     t = title if title_is_formula else q(title)
     base = [rect(name + "Tb", 0, 0, "Parent.Width", 46, "cPanel2"),
             rect(name + "Tl", 0, 46, "Parent.Width", 1, "cLine"),
-            lbl(name + "Tt", "Upper(%s)" % t, 16, 0, 760, 46, size=13, bold=True, color="cInk")]
+            lbl(name + "Tt", "Upper(%s)" % t, 16, 0, "Parent.Width - 220", 46, size=13, bold=True, color="cInk")]
     c = box(name, None, None, None, h, base + (right or []) + list(kids), fill="cPanel", border="cLine",
             visible=visible, extra={"FillPortions": 0, "LayoutMinHeight": h})
     return c
@@ -42,7 +42,7 @@ def tiles(name, specs, visible=None, h=100):
             rect(n + "Bar", 0, 0, "Parent.Width", 2, col),
             lbl(n + "T", q(title.upper()), 16, 14, "Parent.Width - 24", 16, size=9, color="cInk3", font=MONO),
             lbl(n + "V", val, 16, 32, "Parent.Width - 24", 34, size=22, color="cInk"),
-            lbl(n + "S", sub, 16, 68, "Parent.Width - 24", 26, size=10, color="cInk3", valign="Top", wrap=True),
+            lbl(n + "S", sub, 16, 66, "Parent.Width - 24", 30, size=9, color="cInk3", valign="Top", wrap=True),
         ], fill="cPanel", border="cLine", extra={"FillPortions": 1, "LayoutMinWidth": 120}))
     row = box(name, None, None, None, h, kids, fill="RGBA(0,0,0,0)", border="RGBA(0,0,0,0)", thick=0,
               auto=True, direction="Horizontal", gap=14, visible=visible,

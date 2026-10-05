@@ -566,18 +566,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: =If(CountRows(Filter(nfReq, Status in ["SUBMITTED", "ADMIN REVIEW"])) > 0, "waiting for the store", "nothing waiting")
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiADsh1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -645,18 +645,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="stock held, awaiting collection"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiADsh2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -724,18 +724,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="shortages needing a PR"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiADsh3:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -803,18 +803,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="of " & CountRows(nfStock) & " components"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiADsh4:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -882,18 +882,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="below reorder threshold"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - tiBDsh:
                 Control: GroupContainer@1.4.0
                 Variant: AutoLayout
@@ -986,18 +986,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="raised, awaiting approval"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBDsh1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1065,18 +1065,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="ordered, awaiting GRN / delivery"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBDsh2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1144,18 +1144,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="expiring or expired"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBDsh3:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1224,18 +1224,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="at last purchase price"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - tiCDsh:
                 Control: GroupContainer@1.4.0
                 Variant: AutoLayout
@@ -1328,18 +1328,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="raised by you"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiCDsh1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1407,18 +1407,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="in the lab catalogue"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiCDsh2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1486,18 +1486,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="check before you plan a build"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiCDsh3:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1565,18 +1565,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="will need purchasing"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - cdReqDsh:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
@@ -1626,7 +1626,7 @@
                         Size: =13
                         Text: =Upper(If(gRole in ["Lab Admin", "Lab Lead"], "Needs your action", "Your requests"))
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - cdReqGoDsh:
@@ -2073,7 +2073,7 @@
                         Size: =13
                         Text: =Upper("Need something the lab does not stock?")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - cdNpTDsh:
@@ -2176,7 +2176,7 @@
                         Size: =13
                         Text: =Upper("Low and out of stock")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - cdLowGoDsh:

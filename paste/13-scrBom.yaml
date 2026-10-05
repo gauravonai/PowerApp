@@ -523,7 +523,7 @@
                         Size: =13
                         Text: =Upper("1 · Paste your BOM")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - txtBom:
@@ -758,18 +758,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="in this BOM"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBom1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -837,18 +837,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="can be issued today"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBom2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -916,18 +916,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="not enough in store"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBom3:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -995,18 +995,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="not in the catalogue at all"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiBom4:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -1075,18 +1075,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="at last purchase price"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - cdRBom:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
@@ -1137,7 +1137,7 @@
                         Size: =13
                         Text: =Upper("2 · Comparison")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - reqBom:

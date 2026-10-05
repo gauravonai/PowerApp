@@ -563,7 +563,7 @@ Screens:
                               Size: =13
                               Text: =Upper("Request")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - kvRdK0:
@@ -1045,7 +1045,7 @@ Screens:
                               Size: =13
                               Text: =Upper("Request the shortfall separately")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - sfTRd:
@@ -1315,7 +1315,7 @@ Screens:
                               Size: =13
                               Text: =Upper("BOM lines")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - lnRdHb:
@@ -2002,7 +2002,7 @@ Screens:
                                     Text: ="Create invoice"
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"] && LookUp(nfReq, RequestNo = gReqNo).Status in ["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]
                                     Width: =160
-                                    X: =Parent.Width - 372
+                                    X: =Parent.Width - 568
                                     Y: =12
                               - cmpRd:
                                   Control: Classic/Button
@@ -2054,8 +2054,9 @@ Screens:
                                     Text: =If(gRole in ["Lab Admin", "Lab Lead"], "Reserve first, then type the quantity physically leaving the shelf in Release now.", "Read-only. The store reserves and releases material from here.")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Visible: =!(gRole in ["Lab Admin", "Lab Lead"] && LookUp(nfReq, RequestNo = gReqNo).Status in ["SUBMITTED", "ADMIN REVIEW"])
-                                    Width: =520
-                                    X: =140
+                                    Width: =480
+                                    Wrap: =true
+                                    X: =16
                                     Y: =12
                   - cdHRd:
                       Control: GroupContainer@1.4.0
@@ -2106,7 +2107,7 @@ Screens:
                               Size: =13
                               Text: =Upper("History")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - hgRd:

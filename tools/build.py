@@ -114,13 +114,13 @@ def main():
     model = {"formulas": formulas, "onstart": onstart, "startscreen": start, "screens": [s for s, _, _ in scr],
              "controls": []}
 
-    def flat(c, sname, gal):
-        model["controls"].append({"name": c.name, "type": c.ctype, "screen": sname, "gallery": gal,
+    def flat(c, sname, gal, parent):
+        model["controls"].append({"name": c.name, "type": c.ctype, "screen": sname, "gallery": gal, "parent": parent,
                                   "props": {k: pa._fmt(v) for k, v in c.props.items()}})
         for ch in c.children:
-            flat(ch, sname, c.name if c.ctype == pa.GALLERY else gal)
+            flat(ch, sname, c.name if c.ctype == pa.GALLERY else gal, c.name)
     for sname, _, root in scr:
-        flat(root, sname, None)
+        flat(root, sname, None, None)
     with open(os.path.join(OUT, "app.json"), "w") as f:
         json.dump(model, f, ensure_ascii=False)
 

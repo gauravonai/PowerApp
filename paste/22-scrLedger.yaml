@@ -748,7 +748,7 @@
                         Size: =8
                         Text: ="DATE"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =84
+                        Width: =80
                         X: =16
                         Y: =0
                   - lgLgH1:
@@ -766,8 +766,8 @@
                         Size: =8
                         Text: ="PART"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =144
-                        X: =106
+                        Width: =134
+                        X: =102
                         Y: =0
                   - lgLgH2:
                       Control: Label@2.5.1
@@ -784,8 +784,8 @@
                         Size: =8
                         Text: ="DESCRIPTION"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =204
-                        X: =256
+                        Width: =174
+                        X: =242
                         Y: =0
                   - lgLgH3:
                       Control: Label@2.5.1
@@ -802,8 +802,8 @@
                         Size: =8
                         Text: ="HARNESS"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =90
-                        X: =466
+                        Width: =84
+                        X: =422
                         Y: =0
                   - lgLgH4:
                       Control: Label@2.5.1
@@ -820,8 +820,8 @@
                         Size: =8
                         Text: ="MACHINE"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =80
-                        X: =562
+                        Width: =74
+                        X: =512
                         Y: =0
                   - lgLgH5:
                       Control: Label@2.5.1
@@ -838,8 +838,8 @@
                         Size: =8
                         Text: ="TYPE"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =76
-                        X: =648
+                        Width: =74
+                        X: =592
                         Y: =0
                   - lgLgH6:
                       Control: Label@2.5.1
@@ -856,8 +856,8 @@
                         Size: =8
                         Text: ="QTY"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =56
-                        X: =730
+                        Width: =54
+                        X: =672
                         Y: =0
                   - lgLgH8:
                       Control: Label@2.5.1
@@ -874,8 +874,8 @@
                         Size: =8
                         Text: ="ISSUED TO"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =94
-                        X: =800
+                        Width: =90
+                        X: =740
                         Y: =0
                   - lgLgH9:
                       Control: Label@2.5.1
@@ -892,8 +892,8 @@
                         Size: =8
                         Text: ="ISSUED BY"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =78
-                        X: =900
+                        Width: =74
+                        X: =836
                         Y: =0
                   - lgLgH10:
                       Control: Label@2.5.1
@@ -910,8 +910,8 @@
                         Size: =8
                         Text: ="REFERENCE"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =86
-                        X: =984
+                        Width: =84
+                        X: =916
                         Y: =0
                   - lgLgH11:
                       Control: Label@2.5.1
@@ -928,8 +928,8 @@
                         Size: =8
                         Text: ="UNIT COST"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =54
-                        X: =1076
+                        Width: =62
+                        X: =1006
                         Y: =0
                   - lgLgGal:
                       Control: Gallery@2.15.0
@@ -963,7 +963,7 @@
                               Size: =11
                               Text: =If(IsBlank(ThisItem.Date), "—", Text(ThisItem.Date, "dd-mmm-yyyy"))
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =82
+                              Width: =78
                               X: =16
                               Y: =0
                         - lgLgC1:
@@ -981,8 +981,8 @@
                               Size: =11
                               Text: =ThisItem.PartNo
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =142
-                              X: =106
+                              Width: =132
+                              X: =102
                               Y: =0
                         - lgLgC2:
                             Control: Label@2.5.1
@@ -999,8 +999,8 @@
                               Size: =12
                               Text: =ThisItem.Description
                               VerticalAlign: =VerticalAlign.Bottom
-                              Width: =202
-                              X: =256
+                              Width: =172
+                              X: =242
                               Y: =4
                         - lgLgC2s:
                             Control: Label@2.5.1
@@ -1017,8 +1017,8 @@
                               Size: =10
                               Text: =ThisItem.Reason
                               VerticalAlign: =VerticalAlign.Top
-                              Width: =202
-                              X: =256
+                              Width: =172
+                              X: =242
                               Y: =24.0
                         - lgLgC3:
                             Control: Label@2.5.1
@@ -1035,8 +1035,8 @@
                               Size: =11
                               Text: =Coalesce(ThisItem.Harness, "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =88
-                              X: =466
+                              Width: =82
+                              X: =422
                               Y: =0
                         - lgLgC4:
                             Control: Label@2.5.1
@@ -1053,8 +1053,8 @@
                               Size: =12
                               Text: =Coalesce(ThisItem.Machine, "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =78
-                              X: =562
+                              Width: =72
+                              X: =512
                               Y: =0
                         - lgLgC5:
                             Control: Label@2.5.1
@@ -1074,9 +1074,9 @@
                               Size: =8
                               Text: =Upper(ThisItem.Type)
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =74
+                              Width: =72
                               Wrap: =false
-                              X: =648
+                              X: =592
                               Y: =12
                         - lgLgC6:
                             Control: Label@2.5.1
@@ -1093,8 +1093,8 @@
                               Size: =12
                               Text: =If(ThisItem.SQty > 0, "+", "") & Text(ThisItem.SQty, "#,##0")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =54
-                              X: =730
+                              Width: =52
+                              X: =672
                               Y: =0
                         - lgLgC7:
                             Control: Label@2.5.1
@@ -1112,7 +1112,7 @@
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =0
-                              X: =792
+                              X: =732
                               Y: =0
                         - lgLgC8:
                             Control: Label@2.5.1
@@ -1129,8 +1129,8 @@
                               Size: =12
                               Text: =Coalesce(ThisItem.IssuedTo, "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =92
-                              X: =800
+                              Width: =88
+                              X: =740
                               Y: =0
                         - lgLgC9:
                             Control: Label@2.5.1
@@ -1147,8 +1147,8 @@
                               Size: =11
                               Text: =ThisItem.IssuedBy
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =76
-                              X: =900
+                              Width: =72
+                              X: =836
                               Y: =0
                         - lgLgC10:
                             Control: Label@2.5.1
@@ -1165,8 +1165,8 @@
                               Size: =11
                               Text: =Coalesce(ThisItem.Reference, "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =84
-                              X: =984
+                              Width: =82
+                              X: =916
                               Y: =0
                         - lgLgC11:
                             Control: Label@2.5.1
@@ -1183,8 +1183,8 @@
                               Size: =12
                               Text: =If(ThisItem.UnitCost > 0, "₹" & Text(ThisItem.UnitCost, "#,##0.00"), "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =52
-                              X: =1076
+                              Width: =60
+                              X: =1006
                               Y: =0
                         - lgLgSep:
                             Control: Rectangle@2.3.0

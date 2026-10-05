@@ -606,18 +606,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="all periods"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                         - tiIl1:
                             Control: GroupContainer@1.4.0
                             Variant: ManualLayout
@@ -686,18 +686,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="sum of TotalCost"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                         - tiIl2:
                             Control: GroupContainer@1.4.0
                             Variant: ManualLayout
@@ -765,18 +765,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="numbered " & nfInvPrefix & "…"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                         - tiIl3:
                             Control: GroupContainer@1.4.0
                             Variant: ManualLayout
@@ -844,18 +844,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="not yet issued"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                   - fltIl:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -977,7 +977,7 @@ Screens:
                               Size: =8
                               Text: ="INVOICE"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =164
+                              Width: =154
                               X: =16
                               Y: =0
                         - ivIlH1:
@@ -995,8 +995,8 @@ Screens:
                               Size: =8
                               Text: ="DATE"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =94
-                              X: =186
+                              Width: =90
+                              X: =176
                               Y: =0
                         - ivIlH2:
                             Control: Label@2.5.1
@@ -1013,8 +1013,8 @@ Screens:
                               Size: =8
                               Text: ="BUSINESS UNIT"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =124
-                              X: =286
+                              Width: =104
+                              X: =272
                               Y: =0
                         - ivIlH3:
                             Control: Label@2.5.1
@@ -1031,8 +1031,8 @@ Screens:
                               Size: =8
                               Text: ="HARNESS"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =124
-                              X: =416
+                              Width: =114
+                              X: =382
                               Y: =0
                         - ivIlH4:
                             Control: Label@2.5.1
@@ -1049,8 +1049,8 @@ Screens:
                               Size: =8
                               Text: ="REQUEST"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =124
-                              X: =546
+                              Width: =114
+                              X: =502
                               Y: =0
                         - ivIlH5:
                             Control: Label@2.5.1
@@ -1067,8 +1067,8 @@ Screens:
                               Size: =8
                               Text: ="CIRCUITS"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =58
-                              X: =676
+                              Width: =54
+                              X: =622
                               Y: =0
                         - ivIlH6:
                             Control: Label@2.5.1
@@ -1086,7 +1086,7 @@ Screens:
                               Text: ="TOTAL"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =104
-                              X: =740
+                              X: =682
                               Y: =0
                         - ivIlH8:
                             Control: Label@2.5.1
@@ -1103,8 +1103,8 @@ Screens:
                               Size: =8
                               Text: ="STATUS"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =94
-                              X: =860
+                              Width: =84
+                              X: =802
                               Y: =0
                         - ivIlGal:
                             Control: Gallery@2.15.0
@@ -1138,7 +1138,7 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.InvoiceNo
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =162
+                                    Width: =152
                                     X: =16
                                     Y: =0
                               - ivIlC1:
@@ -1156,8 +1156,8 @@ Screens:
                                     Size: =11
                                     Text: =If(IsBlank(ThisItem.InvoiceDate), "—", Text(ThisItem.InvoiceDate, "dd-mmm-yyyy"))
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =92
-                                    X: =186
+                                    Width: =88
+                                    X: =176
                                     Y: =0
                               - ivIlC2:
                                   Control: Label@2.5.1
@@ -1174,8 +1174,8 @@ Screens:
                                     Size: =12
                                     Text: =ThisItem.BusinessUnit
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =122
-                                    X: =286
+                                    Width: =102
+                                    X: =272
                                     Y: =0
                               - ivIlC3:
                                   Control: Label@2.5.1
@@ -1192,8 +1192,8 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.HarnessPartNos
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =122
-                                    X: =416
+                                    Width: =112
+                                    X: =382
                                     Y: =0
                               - ivIlC4:
                                   Control: Label@2.5.1
@@ -1210,8 +1210,8 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.RefRequest
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =122
-                                    X: =546
+                                    Width: =112
+                                    X: =502
                                     Y: =0
                               - ivIlC5:
                                   Control: Label@2.5.1
@@ -1228,8 +1228,8 @@ Screens:
                                     Size: =12
                                     Text: =Text(ThisItem.NoOfCircuits, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =56
-                                    X: =676
+                                    Width: =52
+                                    X: =622
                                     Y: =0
                               - ivIlC6:
                                   Control: Label@2.5.1
@@ -1247,7 +1247,7 @@ Screens:
                                     Text: ="₹" & Text(ThisItem.TotalCost, "#,##0.00")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =102
-                                    X: =740
+                                    X: =682
                                     Y: =0
                               - ivIlC7:
                                   Control: Label@2.5.1
@@ -1265,7 +1265,7 @@ Screens:
                                     Text: =""
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =2
-                                    X: =850
+                                    X: =792
                                     Y: =0
                               - ivIlC8:
                                   Control: Label@2.5.1
@@ -1285,9 +1285,9 @@ Screens:
                                     Size: =8
                                     Text: =Upper(ThisItem.Status)
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =92
+                                    Width: =82
                                     Wrap: =false
-                                    X: =860
+                                    X: =802
                                     Y: =11
                               - ivIlC9:
                                   Control: Classic/Button
@@ -1317,8 +1317,8 @@ Screens:
                                     RadiusTopRight: =2
                                     Size: =10
                                     Text: ="Open"
-                                    Width: =64
-                                    X: =960
+                                    Width: =56
+                                    X: =892
                                     Y: =8
                               - ivIlC9e:
                                   Control: Classic/Button
@@ -1349,8 +1349,8 @@ Screens:
                                     Size: =10
                                     Text: ="Edit"
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"]
-                                    Width: =56
-                                    X: =1030
+                                    Width: =50
+                                    X: =952
                                     Y: =8
                               - ivIlC9i:
                                   Control: Classic/Button
@@ -1382,8 +1382,8 @@ Screens:
                                     Size: =10
                                     Text: ="Issue"
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"] && ThisItem.Status = "DRAFT"
-                                    Width: =60
-                                    X: =1092
+                                    Width: =56
+                                    X: =1006
                                     Y: =8
                               - ivIlSep:
                                   Control: Rectangle@2.3.0

@@ -533,7 +533,7 @@ Screens:
                               Size: =13
                               Text: =Upper("Load a BOM first")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - eTNr:
@@ -636,7 +636,7 @@ Screens:
                               Size: =13
                               Text: =Upper("1 · Project information")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - machNrLb:
@@ -1208,7 +1208,7 @@ Screens:
                               Size: =13
                               Text: =Upper("2 · BOM — " & CountRows(colBom) & " lines" & If(CountRows(Filter(colBom, Status <> "AVAILABLE")) > 0, ", " & CountRows(Filter(colBom, Status <> "AVAILABLE")) & " need purchasing", ""))
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - editNr:

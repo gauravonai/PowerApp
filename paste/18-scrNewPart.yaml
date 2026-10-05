@@ -523,7 +523,7 @@
                         Size: =13
                         Text: =Upper("Entry sheet")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - add1Np:

@@ -523,7 +523,7 @@
                         Size: =13
                         Text: =Upper("Job details")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - frLbCs:
@@ -841,7 +841,7 @@
                         Size: =13
                         Text: =Upper("Input")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - onlyCs:
@@ -981,7 +981,7 @@
                         Size: =13
                         Text: =Upper("Material cost (BOM) — " & "₹" & Text(Sum(colCostLines, Qty * UnitCost), "#,##0.00"))
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - maCs:
@@ -1016,23 +1016,95 @@
                         Width: =96
                         X: =Parent.Width - 112
                         Y: =9
-                  - mhCs:
+                  - mh0Cs:
                       Control: Label@2.5.1
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
                         Font: =fMono
-                        FontWeight: =FontWeight.Normal
+                        FontWeight: =FontWeight.Bold
                         Height: =18
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =8
-                        Text: ="SR   PART NUMBER (A)                                                                        QTY (B)         COST / UNIT (C)            COST (B×C)"
+                        Text: ="SR"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =1060
+                        Width: =36
                         X: =16
+                        Y: =52
+                  - mh1Cs:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="PART NUMBER (A)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =260
+                        X: =56
+                        Y: =52
+                  - mh2Cs:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="QTY (B)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =110
+                        X: =636
+                        Y: =52
+                  - mh3Cs:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="COST / UNIT (C)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =130
+                        X: =756
+                        Y: =52
+                  - mh4Cs:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="COST (B×C)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =896
                         Y: =52
                   - mgCs:
                       Control: Gallery@2.15.0
@@ -1326,7 +1398,7 @@
                         Size: =13
                         Text: =Upper("Calculated")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - cvCsK0:
@@ -1637,7 +1709,7 @@
                         Size: =13
                         Text: =Upper("Assumptions (Finance-locked, read only)")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - avCsK0:

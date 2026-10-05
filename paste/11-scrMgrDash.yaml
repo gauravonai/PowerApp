@@ -565,18 +565,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: =Text(Sum(nfStock, Max(0, OnHand)), "#,##0") & " units in stock"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiMgr1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -644,18 +644,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="products tracked"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiMgr2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -723,18 +723,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="below reorder threshold"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiMgr3:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -802,18 +802,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="deliveries billed"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiMgr4:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -881,18 +881,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: =If(CountRows(nfCalib) = 0, "Calibration tab is empty", CountRows(Filter(nfCalib, !IsBlank(Days) && Days < 0)) & " overdue, " & CountRows(Filter(nfCalib, !IsBlank(Days) && Days >= 0 && Days <= 30)) & " within 30 days")
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiMgr5:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -960,18 +960,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="within 45 days or expired"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - sp1Mgr:
                 Control: GroupContainer@1.4.0
                 Variant: AutoLayout
@@ -1045,7 +1045,7 @@
                               Size: =13
                               Text: =Upper("Revenue")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - revTotMgr:
@@ -1250,7 +1250,7 @@
                               Size: =13
                               Text: =Upper("Ongoing Purchases (PR/PO) Status")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - prOpenMgr:
@@ -1448,7 +1448,7 @@
                               Size: =13
                               Text: =Upper("Deliveries")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - delNMgr:
@@ -1538,7 +1538,7 @@
                               Size: =13
                               Text: =Upper("Projects")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - pjK1Mgr:
@@ -1699,7 +1699,7 @@
                         Size: =13
                         Text: =Upper("Calibration — due and overdue")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - clMgrHb:
@@ -2030,7 +2030,7 @@
                         Size: =13
                         Text: =Upper("Calibration")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - cal0TMgr:

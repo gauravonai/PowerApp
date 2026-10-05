@@ -523,7 +523,7 @@
                         Size: =13
                         Text: =Upper("Receive material")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - pnInLb:
@@ -945,7 +945,7 @@
                         HoverColor: =cOnJcb
                         HoverFill: =cJcbDark
                         OnSelect: |-
-                          =With({p: LookUp(nfStock, PN = Upper(Trim(pnIn.Text))), qn: IfError(Value(qtyIn.Text), 0), t: typIn.Selected.Value}, If(IsBlank(p), Notify("That part number is not in the catalogue.", NotificationType.Error), qn <= 0, Notify("Enter a quantity greater than zero.", NotificationType.Error), t in ["ADJUST+", "ADJUST-", "SCRAP"] && IsBlank(Trim(rsnIn.Text)), Notify("A reason is required for an adjustment or scrap.", NotificationType.Error), t in ["ADJUST-", "SCRAP"] && qn > p.OnHand, Notify("Only " & p.OnHand & " " & p.UOM & " of " & p.PartNo & " is physically in store. Cannot remove " & qn & ".", NotificationType.Error), Set(gBusy, true); Collect(tblMoves, {Date: DateAdd(dtIn.SelectedDate, 12, TimeUnit.Hours), PartNo: p.PartNo, Type: If(t in ["PO", "FOC"], "RECEIPT", t), Qty: qn, Reference: Trim(refIn.Text), UnitCost: IfError(Value(costIn.Text), p.UnitCost), By: nfEmail, Reason: Trim(rsnIn.Text) & If(t = "FOC", If(IsBlank(Trim(rsnIn.Text)), "FOC", " (FOC)"), ""), EntryId: "TXN-" & Text(GUID())}); If(!IsBlank(Trim(locIn.Text)) && Trim(locIn.Text) <> Coalesce(p.Location, ""), Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = p.PN), {Location: Trim(locIn.Text)})); Notify("Recorded " & qn & " " & p.UOM & " of " & p.PartNo & ". Stock is now " & (p.OnHand + If(t in ["ADJUST-", "SCRAP"], -qn, qn)) & ".", NotificationType.Success); Reset(qtyIn); Reset(pnIn); Reset(refIn); Reset(rsnIn); Reset(costIn); Reset(locIn); Set(gBusy, false)))
+                          =With({p: LookUp(nfStock, PN = Upper(Trim(pnIn.Text))), qn: IfError(Value(qtyIn.Text), 0), t: typIn.Selected.Value}, If(IsBlank(p), Notify("That part number is not in the catalogue.", NotificationType.Error), qn <= 0, Notify("Enter a quantity greater than zero.", NotificationType.Error), t in ["ADJUST+", "ADJUST-", "SCRAP"] && IsBlank(Trim(rsnIn.Text)), Notify("A reason is required for an adjustment or scrap.", NotificationType.Error), t in ["ADJUST-", "SCRAP"] && qn > p.OnHand, Notify("Only " & p.OnHand & " " & p.UOM & " of " & p.PartNo & " is physically in store. Cannot remove " & qn & ".", NotificationType.Error), Set(gBusy, true); Collect(tblMoves, {Date: DateAdd(dtIn.SelectedDate, 12, TimeUnit.Hours), PartNo: p.PartNo, Type: If(t in ["PO", "FOC"], "RECEIPT", t), Qty: qn, Reference: Trim(refIn.Text), UnitCost: Coalesce(IfError(Value(costIn.Text), Blank()), p.UnitCost), By: nfEmail, Reason: Trim(rsnIn.Text) & If(t = "FOC", If(IsBlank(Trim(rsnIn.Text)), "FOC", " (FOC)"), ""), EntryId: "TXN-" & Text(GUID())}); If(!IsBlank(Trim(locIn.Text)) && Trim(locIn.Text) <> Coalesce(p.Location, ""), Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = p.PN), {Location: Trim(locIn.Text)})); Notify("Recorded " & qn & " " & p.UOM & " of " & p.PartNo & ". Stock is now " & (p.OnHand + If(t in ["ADJUST-", "SCRAP"], -qn, qn)) & ".", NotificationType.Success); Reset(qtyIn); Reset(pnIn); Reset(refIn); Reset(rsnIn); Reset(costIn); Reset(locIn); Set(gBusy, false)))
                         PaddingLeft: =6
                         PaddingRight: =6
                         PressedBorderColor: =cJcb
@@ -1009,7 +1009,7 @@
                         Size: =13
                         Text: =Upper("Last 15 movements")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - rcInHb:

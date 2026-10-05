@@ -678,14 +678,14 @@ def scr_reqdetail():
             disabled=BUSY),
         btn("rel" + K, '"RELEASE"', "Parent.Width - 392", 12, 140, 36, release,
             visible='%s && %s in nfHoldStatus' % (canact, st), disabled=BUSY),
-        btn("inv" + K, '"Create invoice"', "Parent.Width - 372", 12, 160, 36,
+        btn("inv" + K, '"Create invoice"', "Parent.Width - 568", 12, 160, 36,
             'Set(gInvEdit, ""); Set(gInvReq, gReqNo); Navigate(scrInvoice, ScreenTransition.None)', kind="secondary",
             visible='%s && %s in ["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]' % (canact, st)),
         btn("cmp" + K, '"Mark completed"', "Parent.Width - 196", 12, 180, 36,
             simple("COMPLETED", " closed.", "Success"), visible='%s && %s = "RELEASED"' % (canact, st), disabled=BUSY),
         lbl("hint" + K, 'If(%s, "Reserve first, then type the quantity physically leaving the shelf in Release now.", '
                         '"Read-only. The store reserves and releases material from here.")' % canact,
-            140, 12, 520, 36, size=11, color="cInk3", visible='!(%s && %s in ["SUBMITTED", "ADMIN REVIEW"])' % (canact, st)),
+            16, 12, 480, 36, size=11, color="cInk3", wrap=True, visible='!(%s && %s in ["SUBMITTED", "ADMIN REVIEW"])' % (canact, st)),
     ]
     lines = card("cdL" + K, "BOM lines", 440, linetbl + [box("act" + K, 0, 380, "Parent.Width", 60, acts, fill="cPanel2",
                                                              border="cLine")])
@@ -832,27 +832,27 @@ def scr_newpartq():
     K = "Nq"
 
     def approve(n, x, w, rh):
-        return [btn(n, '"Approve"', x, 9, 80, 28,
+        return [btn(n, '"Approve"', x, 9, 70, 28,
                     'Patch(tblNewPart, LookUp(tblNewPart, Text(RequestNo) = ThisItem.RequestNo && Value(Text(SrNo)) = ThisItem.SrNo), '
                     '{Status: "APPROVED"}); Notify("Row approved. Add it to the Parts tab once it has a part number.", '
                     'NotificationType.Success)', visible='%s && ThisItem.Status = "SUBMITTED"' % ADMIN, size=10),
-                btn(n + "r", '"Reject"', x + 86, 9, 70, 28,
+                btn(n + "r", '"Reject"', x + 74, 9, 56, 28,
                     'Patch(tblNewPart, LookUp(tblNewPart, Text(RequestNo) = ThisItem.RequestNo && Value(Text(SrNo)) = ThisItem.SrNo), '
                     '{Status: "REJECTED"})', kind="danger", visible='%s && ThisItem.Status = "SUBMITTED"' % ADMIN, size=10)]
     items = ('With({s: Upper(Trim(q%s.Text)), f: st%s.Selected.Value}, Sort(Filter(nfNewPart, (f = "All" || Status = f) && '
              '(IsBlank(s) || s in Upper(RequestNo & " " & RequesterName & " " & PartName & " " & MakeBrand & " " & HSNCode))), '
              'DateRaised, SortOrder.Descending))' % (K, K))
-    cols = [Col("Request", 130, "ThisItem.RequestNo", "mono", sub='"Sr " & ThisItem.SrNo'),
-            Col("Requester", 120, "ThisItem.RequesterName"),
-            Col("Part / Machine", 200, "ThisItem.PartName", sub="ThisItem.OtherSpecs"),
-            Col("Category", 120, 'ThisItem.Category & If(IsBlank(ThisItem.SubCategory), "", " · " & ThisItem.SubCategory)'),
-            Col("Plant", 56, "ThisItem.PlantCode", "mono"),
-            Col("Make", 110, 'ThisItem.MakeBrand & " " & ThisItem.ModelNo'),
-            Col("HSN", 80, "ThisItem.HSNCode", "mono"),
-            Col("UOM", 44, "ThisItem.UOM", "muted"),
-            Col("Status", 100, "ThisItem.Status", "pill"),
+    cols = [Col("Request", 120, "ThisItem.RequestNo", "mono", sub='"Sr " & ThisItem.SrNo'),
+            Col("Requester", 110, "ThisItem.RequesterName"),
+            Col("Part / Machine", 160, "ThisItem.PartName", sub="ThisItem.OtherSpecs"),
+            Col("Category", 100, 'ThisItem.Category & If(IsBlank(ThisItem.SubCategory), "", " · " & ThisItem.SubCategory)'),
+            Col("Plant", 50, "ThisItem.PlantCode", "mono"),
+            Col("Make", 90, 'ThisItem.MakeBrand & " " & ThisItem.ModelNo'),
+            Col("HSN", 76, "ThisItem.HSNCode", "mono"),
+            Col("UOM", 40, "ThisItem.UOM", "muted"),
+            Col("Status", 96, "ThisItem.Status", "pill"),
             Col("Raised", 0 or None, fdate("ThisItem.DateRaised"), "mono")]
-    cols[-1].w = 90
+    cols[-1].w = 86
     cols.append(Col("", None, None, "custom", make=approve))
     content = [head(K, '"NEW PURCHASE PARTS"', '"Parts engineers have asked the lab to buy for the first time."'),
                sec("flt" + K, 36, [dd("st" + K, 0, 0, 200, 36, '["All", "SUBMITTED", "APPROVED", "REJECTED", "DRAFT"]'),
@@ -877,7 +877,7 @@ def scr_inward():
         '" is physically in store. Cannot remove " & qn & ".", NotificationType.Error), '
         'Set(gBusy, true); '
         'Collect(tblMoves, {Date: %(D)s, PartNo: p.PartNo, Type: If(t in ["PO", "FOC"], "RECEIPT", t), Qty: qn, '
-        'Reference: Trim(ref%(K)s.Text), UnitCost: IfError(Value(cost%(K)s.Text), p.UnitCost), By: nfEmail, '
+        'Reference: Trim(ref%(K)s.Text), UnitCost: Coalesce(IfError(Value(cost%(K)s.Text), Blank()), p.UnitCost), By: nfEmail, '
         'Reason: Trim(rsn%(K)s.Text) & If(t = "FOC", If(IsBlank(Trim(rsn%(K)s.Text)), "FOC", " (FOC)"), ""), '
         'EntryId: "TXN-" & Text(GUID())}); '
         'If(!IsBlank(Trim(loc%(K)s.Text)) && Trim(loc%(K)s.Text) <> Coalesce(p.Location, ""), '
@@ -931,18 +931,18 @@ def scr_ledger():
              'Filter(nfLedger, (t = "All types" || Type = t) && (IsBlank(d0) || Date >= d0) && (IsBlank(d1) || Date <= d1) && '
              '(IsBlank(s) || s in Upper(PartNo & " " & Description & " " & Reference & " " & Harness & " " & Machine & " " & '
              'IssuedTo & " " & IssuedBy & " " & Reason))))' % {"K": K})
-    cols = [Col("Date", 90, fdate("ThisItem.Date"), "mono"),
-            Col("Part", 150, "ThisItem.PartNo", "mono"),
-            Col("Description", 210, "ThisItem.Description", sub="ThisItem.Reason"),
-            Col("Harness", 96, 'Coalesce(ThisItem.Harness, "—")', "mono"),
-            Col("Machine", 86, 'Coalesce(ThisItem.Machine, "—")'),
-            Col("Type", 82, "ThisItem.Type", "pill"),
-            Col("Qty", 62, 'If(ThisItem.SQty > 0, "+", "") & %s' % num("ThisItem.SQty"), align="Right", bold=True,
+    cols = [Col("Date", 86, fdate("ThisItem.Date"), "mono"),
+            Col("Part", 140, "ThisItem.PartNo", "mono"),
+            Col("Description", 180, "ThisItem.Description", sub="ThisItem.Reason"),
+            Col("Harness", 90, 'Coalesce(ThisItem.Harness, "—")', "mono"),
+            Col("Machine", 80, 'Coalesce(ThisItem.Machine, "—")'),
+            Col("Type", 80, "ThisItem.Type", "pill"),
+            Col("Qty", 60, 'If(ThisItem.SQty > 0, "+", "") & %s' % num("ThisItem.SQty"), align="Right", bold=True,
                 color="If(ThisItem.SQty < 0, cStop, cOk)"),
             Col("", 8, '""'),
-            Col("Issued to", 100, 'Coalesce(ThisItem.IssuedTo, "—")'),
-            Col("Issued by", 84, "ThisItem.IssuedBy", "muted"),
-            Col("Reference", 92, 'Coalesce(ThisItem.Reference, "—")', "mono"),
+            Col("Issued to", 96, 'Coalesce(ThisItem.IssuedTo, "—")'),
+            Col("Issued by", 80, "ThisItem.IssuedBy", "muted"),
+            Col("Reference", 90, 'Coalesce(ThisItem.Reference, "—")', "mono"),
             Col("Unit cost", None, 'If(ThisItem.UnitCost > 0, %s, "—")' % inr("ThisItem.UnitCost"), align="Right")]
     content = [head(K, '"STOCK TRANSACTIONS"', 'CountRows(nfMoves) & " movements. Nothing here can be edited or deleted — '
                                                'corrections are new reversing rows."'),
@@ -1088,9 +1088,10 @@ def scr_invoice():
             icon("lX" + K, 1036, 5, 30, 30, "Cancel", color="cStop", onselect="Remove(colInvLines, ThisItem)"),
             rect("lSp" + K, 0, 39, "Parent.TemplateWidth", 1, "cLine")]
     mat = card("cdM" + K, '"Material (BOM) — " & CountRows(colInvLines) & " lines · " & ' + inr("Sum(colInvLines, Qty * UnitCost)"),
-               330, [lbl("mh" + K, '"SR   PART NUMBER (A)                               DESCRIPTION                                                        '
-                                   'QTY (B)            COST / UNIT (C)        COST (B×C)"', 16, 52, 1060, 18, size=8,
-                         color="cInk3", font=MONO),
+               330, [lbl("mh%d%s" % (i, K), q(t), 16 + x, 52, w, 18, size=8, color="cInk3", font=MONO, bold=True,
+                         align=a) for i, (t, x, w, a) in enumerate([("SR", 0, 36, "Left"), ("PART NUMBER (A)", 40, 220, "Left"),
+                         ("DESCRIPTION", 270, 380, "Left"), ("QTY (B)", 660, 110, "Left"), ("COST / UNIT (C)", 780, 120, "Left"),
+                         ("COST (B×C)", 910, 120, "Right")])] + [
                      gallery("mg" + K, 16, 72, "Parent.Width - 32", 240, "colInvLines", 40, lrow)],
                right=[btn("ma" + K, '"+ Add row"', "Parent.Width - 112", 9, 96, 28,
                           'Collect(colInvLines, {Sr: Coalesce(Max(colInvLines, Sr), 0) + 1, PartNo: "", Description: "", '
@@ -1160,24 +1161,24 @@ def scr_invlist():
              'ToName))), InvoiceDate, SortOrder.Descending))' % (K, K))
 
     def acts(n, x, w, rh):
-        return [btn(n, '"Open"', x, 8, 64, 28, 'Set(gInvEdit, ThisItem.InvoiceNo); Set(gInvReq, ThisItem.RefRequest); '
+        return [btn(n, '"Open"', x, 8, 56, 28, 'Set(gInvEdit, ThisItem.InvoiceNo); Set(gInvReq, ThisItem.RefRequest); '
                                                'Set(gPrintKind, "invoice"); Navigate(scrPrint, ScreenTransition.None)',
                     kind="secondary", size=10),
-                btn(n + "e", '"Edit"', x + 70, 8, 56, 28, 'Set(gInvEdit, ThisItem.InvoiceNo); Set(gInvReq, ""); '
+                btn(n + "e", '"Edit"', x + 60, 8, 50, 28, 'Set(gInvEdit, ThisItem.InvoiceNo); Set(gInvReq, ""); '
                                                           'Clear(colInvLines); Navigate(scrInvoice, ScreenTransition.None)',
                     kind="secondary", size=10, visible=ADMIN),
-                btn(n + "i", '"Issue"', x + 132, 8, 60, 28,
+                btn(n + "i", '"Issue"', x + 114, 8, 56, 28,
                     'Patch(tblInvoice, LookUp(tblInvoice, Text(InvoiceNo) = ThisItem.InvoiceNo), {Status: "ISSUED"})',
                     size=10, visible='%s && ThisItem.Status = "DRAFT"' % ADMIN)]
-    cols = [Col("Invoice", 170, "ThisItem.InvoiceNo", "mono"),
-            Col("Date", 100, fdate("ThisItem.InvoiceDate"), "mono"),
-            Col("Business unit", 130, "ThisItem.BusinessUnit"),
-            Col("Harness", 130, "ThisItem.HarnessPartNos", "mono"),
-            Col("Request", 130, "ThisItem.RefRequest", "mono"),
-            Col("Circuits", 64, num("ThisItem.NoOfCircuits"), align="Right"),
+    cols = [Col("Invoice", 160, "ThisItem.InvoiceNo", "mono"),
+            Col("Date", 96, fdate("ThisItem.InvoiceDate"), "mono"),
+            Col("Business unit", 110, "ThisItem.BusinessUnit"),
+            Col("Harness", 120, "ThisItem.HarnessPartNos", "mono"),
+            Col("Request", 120, "ThisItem.RefRequest", "mono"),
+            Col("Circuits", 60, num("ThisItem.NoOfCircuits"), align="Right"),
             Col("Total", 110, inr("ThisItem.TotalCost"), align="Right", bold=True),
             Col("", 10, '""'),
-            Col("Status", 100, "ThisItem.Status", "pill"),
+            Col("Status", 90, "ThisItem.Status", "pill"),
             Col("", None, None, "custom", make=acts)]
     t = tiles("ti" + K, [("g", "Invoices", "CountRows(nfInv)", '"all periods"'),
                          ("a", "Billed value", inrs("nfRevTotal"), '"sum of TotalCost"'),
@@ -1249,8 +1250,10 @@ def scr_cost():
                   '{Sr: I.Value, PartNo: Coalesce(p.PartNo, b.PN), Description: Coalesce(p.Description, ""), Qty: b.Q, '
                   'UnitCost: If(b.C > 0, b.C, Coalesce(p.UnitCost, 0))})))' % {"K": K})
     mat = card("cdM" + K, '"Material cost (BOM) — " & ' + inr("Sum(colCostLines, Qty * UnitCost)"), 520, [
-        lbl("mh" + K, '"SR   PART NUMBER (A)                                                                        QTY (B)         '
-                      'COST / UNIT (C)            COST (B×C)"', 16, 52, 1060, 18, size=8, color="cInk3", font=MONO),
+        *[lbl("mh%d%s" % (i, K), q(t), 16 + x, 52, w, 18, size=8, color="cInk3", font=MONO, bold=True, align=a)
+          for i, (t, x, w, a) in enumerate([("SR", 0, 36, "Left"), ("PART NUMBER (A)", 40, 260, "Left"),
+                                            ("QTY (B)", 620, 110, "Left"), ("COST / UNIT (C)", 740, 130, "Left"),
+                                            ("COST (B×C)", 880, 140, "Right")])],
         gallery("mg" + K, 16, 72, "Parent.Width - 32", 260, "colCostLines", 38, crow),
         lbl("bpLb" + K, '"UPLOAD BOM — PASTE  Part Number (A)  Qty (B)  Cost / unit (C)  — ONE LINE PER PART"', 16, 342, 900, 16,
             size=9, color="cInk3", font=MONO),
@@ -1471,14 +1474,14 @@ def scr_proc():
              '(IsBlank(s) || s in Upper(PRNumber & " " & Summary & " " & PONumber & " " & Vendor & " " & ServiceType))), '
              'DateRaised, SortOrder.Descending))' % (K, K))
     cols = [Col("PR number", 110, "ThisItem.PRNumber", "mono"),
-            Col("Summary", 190, "ThisItem.Summary", sub='ThisItem.ServiceType & " · qty " & ThisItem.Qty'),
-            Col("Raised", 90, fdate("ThisItem.DateRaised"), "mono",
+            Col("Summary", 160, "ThisItem.Summary", sub='ThisItem.ServiceType & " · qty " & ThisItem.Qty'),
+            Col("Raised", 100, fdate("ThisItem.DateRaised"), "mono",
                 sub='If(IsBlank(ThisItem.DateRaised), "", DateDiff(ThisItem.DateRaised, Today(), TimeUnit.Days) & "d old")'),
-            Col("Approved by", 100, 'Coalesce(ThisItem.ApprovedBy, "—")'),
-            Col("PO", 110, 'Coalesce(ThisItem.PONumber, "—")', "mono", sub="ThisItem.Vendor"),
-            Col("PO amount", 90, 'If(ThisItem.POAmount > 0, %s, "—")' % inr("ThisItem.POAmount"), align="Right"),
+            Col("Approved by", 90, 'Coalesce(ThisItem.ApprovedBy, "—")'),
+            Col("PO", 100, 'Coalesce(ThisItem.PONumber, "—")', "mono", sub="ThisItem.Vendor"),
+            Col("PO amount", 84, 'If(ThisItem.POAmount > 0, %s, "—")' % inr("ThisItem.POAmount"), align="Right"),
             Col("", 10, '""'),
-            Col("Stage", 140, "ThisItem.Stage", "pill"),
+            Col("Stage", 130, "ThisItem.Stage", "pill"),
             Col("", None, None, "custom", make=acts)]
     # edit / new panel
     kids = []
@@ -1509,7 +1512,7 @@ def scr_proc():
              dd("vp" + K, 16, vy + 18, 300, 34, prepend('"—"', "Sort(Distinct(Filter(nfProc, !IsBlank(Vendor)), Vendor), Value)"),
                 onchange='If(Self.Selected.Value <> "—", Set(gVendorPick, Self.Selected.Value); Reset(pfVendor%s))' % K)]
     vals = ", ".join(
-        "%s: %s" % (f, ("IfError(Value(pf%s%s.Text), 0)" % (f, K)) if k == "n" else
+        "%s: %s" % (f, ("Coalesce(IfError(Value(pf%s%s.Text), 0), 0)" % (f, K)) if k == "n" else
                     noon("pf%s%s.SelectedDate" % (f, K)) if k == "d" else
                     ("pf%s%s.Selected.Value" % (f, K)) if k.startswith("dd:") else ("Trim(pf%s%s.Text)" % (f, K)))
         for f, _, k in PROCF)

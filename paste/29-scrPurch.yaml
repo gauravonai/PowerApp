@@ -597,18 +597,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="across all open requests"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiPu1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -676,18 +676,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: =CountRows(Filter(nfPurch, Stage <> "RECEIVED")) & " still open"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiPu2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -755,18 +755,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="units to be bought"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - cdEPu:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
@@ -817,7 +817,7 @@
                         Size: =13
                         Text: =Upper(If(IsBlank(gEditPurch), "New purchase line", "Purchase line — " & gEditPurch))
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - pe0PuLb:
@@ -1433,7 +1433,7 @@
                         Size: =13
                         Text: =Upper("Shortfall across every open request")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - pullPu:
@@ -1957,7 +1957,7 @@
                         Size: =13
                         Text: =Upper("Purchase tab — what is on order")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - ptPuHb:

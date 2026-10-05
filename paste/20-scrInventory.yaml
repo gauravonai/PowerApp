@@ -588,7 +588,7 @@
                         Size: =13
                         Text: =Upper("Add a new component to the Parts tab")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - apPnInvLb:
@@ -1111,7 +1111,7 @@
                         Size: =13
                         Text: =Upper("Retire a component")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - rtTInv:

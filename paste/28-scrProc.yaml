@@ -597,18 +597,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="across all stages"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiPc1:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -677,18 +677,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="legacy paid references"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiPc2:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -757,18 +757,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="free of charge"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
                   - tiPc3:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -837,18 +837,18 @@
                               Color: =cInk3
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =26
+                              Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =10
+                              Size: =9
                               Text: ="PO amount on the PR/PO tracker"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =Parent.Width - 24
                               Wrap: =true
                               X: =16
-                              Y: =68
+                              Y: =66
             - cdFPc:
                 Control: GroupContainer@1.4.0
                 Variant: ManualLayout
@@ -899,7 +899,7 @@
                         Size: =13
                         Text: =Upper(If(IsBlank(gEditPr), "New PR / PO entry", "Edit " & gEditPr))
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - pfPRNumberPcLb:
@@ -1951,7 +1951,7 @@
                         HoverColor: =cOnJcb
                         HoverFill: =cJcbDark
                         OnSelect: |-
-                          =With({no: Trim(pfPRNumberPc.Text)}, If(IsBlank(no) || IsBlank(Trim(pfSummaryPc.Text)), Notify("PR number and summary are required.", NotificationType.Error), IsBlank(gEditPr) && !IsBlank(LookUp(tblProc, Text(PRNumber) = no)), Notify("A PR with that number already exists.", NotificationType.Error), With({rec: {PRNumber: Trim(pfPRNumberPc.Text), Department: Trim(pfDepartmentPc.Text), Summary: Trim(pfSummaryPc.Text), ServiceType: pfServiceTypePc.Selected.Value, Qty: IfError(Value(pfQtyPc.Text), 0), DateRaised: DateAdd(pfDateRaisedPc.SelectedDate, 12, TimeUnit.Hours), RaisedBy: Trim(pfRaisedByPc.Text), ApprovedBy: Trim(pfApprovedByPc.Text), ApprovedDate: DateAdd(pfApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), PONumber: Trim(pfPONumberPc.Text), Vendor: Trim(pfVendorPc.Text), POAmount: IfError(Value(pfPOAmountPc.Text), 0), Stage: pfStagePc.Selected.Value, PODate: DateAdd(pfPODatePc.SelectedDate, 12, TimeUnit.Hours), DeliveredDate: DateAdd(pfDeliveredDatePc.SelectedDate, 12, TimeUnit.Hours), PRAmount: IfError(Value(pfPRAmountPc.Text), 0), InvestmentType: pfInvestmentTypePc.Selected.Value, POApprovedDate: DateAdd(pfPOApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), Ownership: Trim(pfOwnershipPc.Text), POCopyPath: Trim(pfPOCopyPathPc.Text), Notes: Trim(pfNotesPc.Text)}}, If(IsBlank(gEditPr), Collect(tblProc, rec), Patch(tblProc, LookUp(tblProc, Text(PRNumber) = gEditPr), rec))); Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, "")))
+                          =With({no: Trim(pfPRNumberPc.Text)}, If(IsBlank(no) || IsBlank(Trim(pfSummaryPc.Text)), Notify("PR number and summary are required.", NotificationType.Error), IsBlank(gEditPr) && !IsBlank(LookUp(tblProc, Text(PRNumber) = no)), Notify("A PR with that number already exists.", NotificationType.Error), With({rec: {PRNumber: Trim(pfPRNumberPc.Text), Department: Trim(pfDepartmentPc.Text), Summary: Trim(pfSummaryPc.Text), ServiceType: pfServiceTypePc.Selected.Value, Qty: Coalesce(IfError(Value(pfQtyPc.Text), 0), 0), DateRaised: DateAdd(pfDateRaisedPc.SelectedDate, 12, TimeUnit.Hours), RaisedBy: Trim(pfRaisedByPc.Text), ApprovedBy: Trim(pfApprovedByPc.Text), ApprovedDate: DateAdd(pfApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), PONumber: Trim(pfPONumberPc.Text), Vendor: Trim(pfVendorPc.Text), POAmount: Coalesce(IfError(Value(pfPOAmountPc.Text), 0), 0), Stage: pfStagePc.Selected.Value, PODate: DateAdd(pfPODatePc.SelectedDate, 12, TimeUnit.Hours), DeliveredDate: DateAdd(pfDeliveredDatePc.SelectedDate, 12, TimeUnit.Hours), PRAmount: Coalesce(IfError(Value(pfPRAmountPc.Text), 0), 0), InvestmentType: pfInvestmentTypePc.Selected.Value, POApprovedDate: DateAdd(pfPOApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), Ownership: Trim(pfOwnershipPc.Text), POCopyPath: Trim(pfPOCopyPathPc.Text), Notes: Trim(pfNotesPc.Text)}}, If(IsBlank(gEditPr), Collect(tblProc, rec), Patch(tblProc, LookUp(tblProc, Text(PRNumber) = gEditPr), rec))); Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, "")))
                         PaddingLeft: =6
                         PaddingRight: =6
                         PressedBorderColor: =cJcb
@@ -2088,7 +2088,7 @@
                         Size: =13
                         Text: =Upper(If(gRole in ["Lab Admin", "Lab Lead"], "PR / PO tracker — click a stage button to move a requisition forward", "PR / PO tracker (read only)"))
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - pcPcHb:
@@ -2142,7 +2142,7 @@
                         Size: =8
                         Text: ="SUMMARY"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =184
+                        Width: =154
                         X: =126
                         Y: =46
                   - pcPcH2:
@@ -2160,8 +2160,8 @@
                         Size: =8
                         Text: ="RAISED"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =84
-                        X: =316
+                        Width: =94
+                        X: =286
                         Y: =46
                   - pcPcH3:
                       Control: Label@2.5.1
@@ -2178,8 +2178,8 @@
                         Size: =8
                         Text: ="APPROVED BY"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =94
-                        X: =406
+                        Width: =84
+                        X: =386
                         Y: =46
                   - pcPcH4:
                       Control: Label@2.5.1
@@ -2196,8 +2196,8 @@
                         Size: =8
                         Text: ="PO"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =104
-                        X: =506
+                        Width: =94
+                        X: =476
                         Y: =46
                   - pcPcH5:
                       Control: Label@2.5.1
@@ -2214,8 +2214,8 @@
                         Size: =8
                         Text: ="PO AMOUNT"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =84
-                        X: =616
+                        Width: =78
+                        X: =576
                         Y: =46
                   - pcPcH7:
                       Control: Label@2.5.1
@@ -2232,8 +2232,8 @@
                         Size: =8
                         Text: ="STAGE"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =134
-                        X: =716
+                        Width: =124
+                        X: =670
                         Y: =46
                   - pcPcGal:
                       Control: Gallery@2.15.0
@@ -2285,7 +2285,7 @@
                               Size: =12
                               Text: =ThisItem.Summary
                               VerticalAlign: =VerticalAlign.Bottom
-                              Width: =182
+                              Width: =152
                               X: =126
                               Y: =4
                         - pcPcC1s:
@@ -2303,7 +2303,7 @@
                               Size: =10
                               Text: =ThisItem.ServiceType & " · qty " & ThisItem.Qty
                               VerticalAlign: =VerticalAlign.Top
-                              Width: =182
+                              Width: =152
                               X: =126
                               Y: =25.0
                         - pcPcC2:
@@ -2321,8 +2321,8 @@
                               Size: =11
                               Text: =If(IsBlank(ThisItem.DateRaised), "—", Text(ThisItem.DateRaised, "dd-mmm-yyyy"))
                               VerticalAlign: =VerticalAlign.Bottom
-                              Width: =82
-                              X: =316
+                              Width: =92
+                              X: =286
                               Y: =4
                         - pcPcC2s:
                             Control: Label@2.5.1
@@ -2339,8 +2339,8 @@
                               Size: =10
                               Text: =If(IsBlank(ThisItem.DateRaised), "", DateDiff(ThisItem.DateRaised, Today(), TimeUnit.Days) & "d old")
                               VerticalAlign: =VerticalAlign.Top
-                              Width: =82
-                              X: =316
+                              Width: =92
+                              X: =286
                               Y: =25.0
                         - pcPcC3:
                             Control: Label@2.5.1
@@ -2357,8 +2357,8 @@
                               Size: =12
                               Text: =Coalesce(ThisItem.ApprovedBy, "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =92
-                              X: =406
+                              Width: =82
+                              X: =386
                               Y: =0
                         - pcPcC4:
                             Control: Label@2.5.1
@@ -2375,8 +2375,8 @@
                               Size: =11
                               Text: =Coalesce(ThisItem.PONumber, "—")
                               VerticalAlign: =VerticalAlign.Bottom
-                              Width: =102
-                              X: =506
+                              Width: =92
+                              X: =476
                               Y: =4
                         - pcPcC4s:
                             Control: Label@2.5.1
@@ -2393,8 +2393,8 @@
                               Size: =10
                               Text: =ThisItem.Vendor
                               VerticalAlign: =VerticalAlign.Top
-                              Width: =102
-                              X: =506
+                              Width: =92
+                              X: =476
                               Y: =25.0
                         - pcPcC5:
                             Control: Label@2.5.1
@@ -2411,8 +2411,8 @@
                               Size: =12
                               Text: =If(ThisItem.POAmount > 0, "₹" & Text(ThisItem.POAmount, "#,##0.00"), "—")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =82
-                              X: =616
+                              Width: =76
+                              X: =576
                               Y: =0
                         - pcPcC6:
                             Control: Label@2.5.1
@@ -2430,7 +2430,7 @@
                               Text: =""
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =2
-                              X: =706
+                              X: =660
                               Y: =0
                         - pcPcC7:
                             Control: Label@2.5.1
@@ -2450,9 +2450,9 @@
                               Size: =8
                               Text: =Upper(ThisItem.Stage)
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =132
+                              Width: =122
                               Wrap: =false
-                              X: =716
+                              X: =670
                               Y: =13
                         - pcPcC8:
                             Control: Classic/Button
@@ -2485,7 +2485,7 @@
                               Text: =Switch(ThisItem.Stage, "PR RAISED", "Mark approved", "APPROVED", "Raise PO", "PO RAISED", "Mark GRN in progress", "GRN IN PROGRESS", "Mark delivered / closed", "")
                               Visible: =gRole in ["Lab Admin", "Lab Lead"] && !IsBlank(Switch(ThisItem.Stage, "PR RAISED", "Mark approved", "APPROVED", "Raise PO", "PO RAISED", "Mark GRN in progress", "GRN IN PROGRESS", "Mark delivered / closed", ""))
                               Width: =150
-                              X: =856
+                              X: =800
                               Y: =8
                         - pcPcC8e:
                             Control: Classic/Button
@@ -2517,7 +2517,7 @@
                               Text: ="Edit"
                               Visible: =gRole in ["Lab Admin", "Lab Lead"]
                               Width: =50
-                              X: =1012
+                              X: =956
                               Y: =8
                         - pcPcC8r:
                             Control: Classic/Button
@@ -2550,7 +2550,7 @@
                               Text: ="Reject"
                               Visible: =gRole in ["Lab Admin", "Lab Lead"] && !(ThisItem.Stage in ["DELIVERED (CLOSED)", "REJECTED"])
                               Width: =58
-                              X: =1068
+                              X: =1012
                               Y: =8
                         - pcPcSep:
                             Control: Rectangle@2.3.0
@@ -2629,7 +2629,7 @@
                         Size: =13
                         Text: =Upper("Shortages waiting for a purchase requisition")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - shPcHb:
@@ -2924,7 +2924,7 @@
                         Size: =13
                         Text: =Upper("Legacy purchase references (receipts in Movements)")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - lgPcHb:

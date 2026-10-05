@@ -564,7 +564,7 @@ Screens:
                               Size: =13
                               Text: =Upper("Add a person")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - taUsernameTmLb:

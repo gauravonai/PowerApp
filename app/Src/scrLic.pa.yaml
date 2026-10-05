@@ -606,18 +606,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="products"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                         - tiLc1:
                             Control: GroupContainer@1.4.0
                             Variant: ManualLayout
@@ -685,18 +685,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="expired or within 45 days"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                         - tiLc2:
                             Control: GroupContainer@1.4.0
                             Variant: ManualLayout
@@ -764,18 +764,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="across all products"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                         - tiLc3:
                             Control: GroupContainer@1.4.0
                             Variant: ManualLayout
@@ -844,18 +844,18 @@ Screens:
                                     Color: =cInk3
                                     Font: =fUI
                                     FontWeight: =FontWeight.Normal
-                                    Height: =26
+                                    Height: =30
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =10
+                                    Size: =9
                                     Text: ="sum of AnnualCost"
                                     VerticalAlign: =VerticalAlign.Top
                                     Width: =Parent.Width - 24
                                     Wrap: =true
                                     X: =16
-                                    Y: =68
+                                    Y: =66
                   - cdALc:
                       Control: GroupContainer@1.4.0
                       Variant: ManualLayout
@@ -906,7 +906,7 @@ Screens:
                               Size: =13
                               Text: =Upper("Add a licence")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - laSoftwareNameLcLb:
@@ -1352,7 +1352,7 @@ Screens:
                               Size: =13
                               Text: =Upper("Licences")
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =760
+                              Width: =Parent.Width - 220
                               X: =16
                               Y: =0
                         - lcHb:

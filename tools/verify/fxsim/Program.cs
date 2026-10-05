@@ -6,6 +6,7 @@ var mode = args[0];
 var host = new Host(args[1], args[2]);
 if (mode == "bind") return Bind.Run(host);
 if (mode == "sim") return Sim.Run(host);
+if (mode == "render") { var f = Sim.Run(host); return Render.RunAfterSim(host, args[3]); }
 return 2;
 
 static class Bind {

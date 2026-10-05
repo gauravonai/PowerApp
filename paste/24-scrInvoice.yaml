@@ -523,7 +523,7 @@
                         Size: =13
                         Text: =Upper("Job card / invoice header")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - noIvLb:
@@ -1713,7 +1713,7 @@
                         Size: =13
                         Text: =Upper("Material (BOM) — " & CountRows(colInvLines) & " lines · " & "₹" & Text(Sum(colInvLines, Qty * UnitCost), "#,##0.00"))
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - maIv:
@@ -1748,23 +1748,113 @@
                         Width: =96
                         X: =Parent.Width - 112
                         Y: =9
-                  - mhIv:
+                  - mh0Iv:
                       Control: Label@2.5.1
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
                         Font: =fMono
-                        FontWeight: =FontWeight.Normal
+                        FontWeight: =FontWeight.Bold
                         Height: =18
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =8
-                        Text: ="SR   PART NUMBER (A)                               DESCRIPTION                                                        QTY (B)            COST / UNIT (C)        COST (B×C)"
+                        Text: ="SR"
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =1060
+                        Width: =36
                         X: =16
+                        Y: =52
+                  - mh1Iv:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="PART NUMBER (A)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =220
+                        X: =56
+                        Y: =52
+                  - mh2Iv:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="DESCRIPTION"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =286
+                        Y: =52
+                  - mh3Iv:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="QTY (B)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =110
+                        X: =676
+                        Y: =52
+                  - mh4Iv:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="COST / UNIT (C)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =120
+                        X: =796
+                        Y: =52
+                  - mh5Iv:
+                      Control: Label@2.5.1
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =8
+                        Text: ="COST (B×C)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =120
+                        X: =926
                         Y: =52
                   - mgIv:
                       Control: Gallery@2.15.0
@@ -1997,7 +2087,7 @@
                         Size: =13
                         Text: =Upper("Calculated cost (Finance-locked formula)")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - cvIvK0:
@@ -2345,7 +2435,7 @@
                         Size: =13
                         Text: =Upper("Harness label photos")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =760
+                        Width: =Parent.Width - 220
                         X: =16
                         Y: =0
                   - amIv:

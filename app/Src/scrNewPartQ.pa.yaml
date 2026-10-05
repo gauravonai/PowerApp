@@ -604,7 +604,7 @@ Screens:
                               Size: =8
                               Text: ="REQUEST"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =124
+                              Width: =114
                               X: =16
                               Y: =0
                         - npNqH1:
@@ -622,8 +622,8 @@ Screens:
                               Size: =8
                               Text: ="REQUESTER"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =114
-                              X: =146
+                              Width: =104
+                              X: =136
                               Y: =0
                         - npNqH2:
                             Control: Label@2.5.1
@@ -640,8 +640,8 @@ Screens:
                               Size: =8
                               Text: ="PART / MACHINE"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =194
-                              X: =266
+                              Width: =154
+                              X: =246
                               Y: =0
                         - npNqH3:
                             Control: Label@2.5.1
@@ -658,8 +658,8 @@ Screens:
                               Size: =8
                               Text: ="CATEGORY"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =114
-                              X: =466
+                              Width: =94
+                              X: =406
                               Y: =0
                         - npNqH4:
                             Control: Label@2.5.1
@@ -676,8 +676,8 @@ Screens:
                               Size: =8
                               Text: ="PLANT"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =50
-                              X: =586
+                              Width: =44
+                              X: =506
                               Y: =0
                         - npNqH5:
                             Control: Label@2.5.1
@@ -694,8 +694,8 @@ Screens:
                               Size: =8
                               Text: ="MAKE"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =104
-                              X: =642
+                              Width: =84
+                              X: =556
                               Y: =0
                         - npNqH6:
                             Control: Label@2.5.1
@@ -712,8 +712,8 @@ Screens:
                               Size: =8
                               Text: ="HSN"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =74
-                              X: =752
+                              Width: =70
+                              X: =646
                               Y: =0
                         - npNqH7:
                             Control: Label@2.5.1
@@ -730,8 +730,8 @@ Screens:
                               Size: =8
                               Text: ="UOM"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =38
-                              X: =832
+                              Width: =34
+                              X: =722
                               Y: =0
                         - npNqH8:
                             Control: Label@2.5.1
@@ -748,8 +748,8 @@ Screens:
                               Size: =8
                               Text: ="STATUS"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =94
-                              X: =876
+                              Width: =90
+                              X: =762
                               Y: =0
                         - npNqH9:
                             Control: Label@2.5.1
@@ -766,8 +766,8 @@ Screens:
                               Size: =8
                               Text: ="RAISED"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =84
-                              X: =976
+                              Width: =80
+                              X: =858
                               Y: =0
                         - npNqGal:
                             Control: Gallery@2.15.0
@@ -801,7 +801,7 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.RequestNo
                                     VerticalAlign: =VerticalAlign.Bottom
-                                    Width: =122
+                                    Width: =112
                                     X: =16
                                     Y: =4
                               - npNqC0s:
@@ -819,7 +819,7 @@ Screens:
                                     Size: =10
                                     Text: ="Sr " & ThisItem.SrNo
                                     VerticalAlign: =VerticalAlign.Top
-                                    Width: =122
+                                    Width: =112
                                     X: =16
                                     Y: =24.0
                               - npNqC1:
@@ -837,8 +837,8 @@ Screens:
                                     Size: =12
                                     Text: =ThisItem.RequesterName
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =112
-                                    X: =146
+                                    Width: =102
+                                    X: =136
                                     Y: =0
                               - npNqC2:
                                   Control: Label@2.5.1
@@ -855,8 +855,8 @@ Screens:
                                     Size: =12
                                     Text: =ThisItem.PartName
                                     VerticalAlign: =VerticalAlign.Bottom
-                                    Width: =192
-                                    X: =266
+                                    Width: =152
+                                    X: =246
                                     Y: =4
                               - npNqC2s:
                                   Control: Label@2.5.1
@@ -873,8 +873,8 @@ Screens:
                                     Size: =10
                                     Text: =ThisItem.OtherSpecs
                                     VerticalAlign: =VerticalAlign.Top
-                                    Width: =192
-                                    X: =266
+                                    Width: =152
+                                    X: =246
                                     Y: =24.0
                               - npNqC3:
                                   Control: Label@2.5.1
@@ -891,8 +891,8 @@ Screens:
                                     Size: =12
                                     Text: =ThisItem.Category & If(IsBlank(ThisItem.SubCategory), "", " · " & ThisItem.SubCategory)
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =112
-                                    X: =466
+                                    Width: =92
+                                    X: =406
                                     Y: =0
                               - npNqC4:
                                   Control: Label@2.5.1
@@ -909,8 +909,8 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.PlantCode
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =48
-                                    X: =586
+                                    Width: =42
+                                    X: =506
                                     Y: =0
                               - npNqC5:
                                   Control: Label@2.5.1
@@ -927,8 +927,8 @@ Screens:
                                     Size: =12
                                     Text: =ThisItem.MakeBrand & " " & ThisItem.ModelNo
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =102
-                                    X: =642
+                                    Width: =82
+                                    X: =556
                                     Y: =0
                               - npNqC6:
                                   Control: Label@2.5.1
@@ -945,8 +945,8 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.HSNCode
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =72
-                                    X: =752
+                                    Width: =68
+                                    X: =646
                                     Y: =0
                               - npNqC7:
                                   Control: Label@2.5.1
@@ -963,8 +963,8 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.UOM
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =36
-                                    X: =832
+                                    Width: =32
+                                    X: =722
                                     Y: =0
                               - npNqC8:
                                   Control: Label@2.5.1
@@ -984,9 +984,9 @@ Screens:
                                     Size: =8
                                     Text: =Upper(ThisItem.Status)
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =92
+                                    Width: =88
                                     Wrap: =false
-                                    X: =876
+                                    X: =762
                                     Y: =12
                               - npNqC9:
                                   Control: Label@2.5.1
@@ -1003,8 +1003,8 @@ Screens:
                                     Size: =11
                                     Text: =If(IsBlank(ThisItem.DateRaised), "—", Text(ThisItem.DateRaised, "dd-mmm-yyyy"))
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =82
-                                    X: =976
+                                    Width: =78
+                                    X: =858
                                     Y: =0
                               - npNqC10:
                                   Control: Classic/Button
@@ -1036,8 +1036,8 @@ Screens:
                                     Size: =10
                                     Text: ="Approve"
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"] && ThisItem.Status = "SUBMITTED"
-                                    Width: =80
-                                    X: =1066
+                                    Width: =70
+                                    X: =944
                                     Y: =9
                               - npNqC10r:
                                   Control: Classic/Button
@@ -1069,8 +1069,8 @@ Screens:
                                     Size: =10
                                     Text: ="Reject"
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"] && ThisItem.Status = "SUBMITTED"
-                                    Width: =70
-                                    X: =1152
+                                    Width: =56
+                                    X: =1018
                                     Y: =9
                               - npNqSep:
                                   Control: Rectangle@2.3.0
