@@ -46,6 +46,10 @@ You'll see lots of **red errors** at first. That's expected, because the app doe
 
 ## 2.4 Run the start-up formula and look around
 
+0. **Quick check that the app formulas loaded:** Tree view → select **App** → in the property dropdown
+   (top left) choose **Formulas**. It should start with `// JCB EDS LAB MATERIAL PORTAL`. If it's empty,
+   paste `paste/00-App.Formulas.txt` there, then do the same for **OnStart** (`01-…`) and
+   **StartScreen** (`02-…`). See Route B step B.3.
 1. Left rail **Tree view** → select **App** → top bar **⋯ → Run OnStart** (or right-click App → Run OnStart).
 2. Press **F5** (Preview). You should land on **Dashboard** as yourself. Your name and role come from the
    Users tab, matched on your Microsoft 365 email.

@@ -45,6 +45,7 @@ Instead I ran every check I could from outside, using Microsoft's own tools and 
 | Every screen file matches Microsoft's pa.yaml v3 schema | `pa.schema.yaml` from microsoft/PowerApps-Tooling | 25/25 files valid |
 | Microsoft's own source deserializer accepts every file (the one `pac` uses) | `PaYamlSerializer` from the Power Platform CLI | 48/48 files (25 source + 23 paste) |
 | `.msapp` built by Microsoft's packer, then unpacked again | `pac canvas pack/unpack` 2.12.2 | packs; round trip byte-identical |
+| Every property name exists on that control (checked against the official control templates embedded in Microsoft's sample apps) | template manifests from microsoft/PowerApps-Tooling | 29,031 properties, 0 problems (only the single *Add picture* control couldn't be checked) |
 | Every formula is valid Power Fx syntax | Microsoft.PowerFx engine 1.8.1 | 29,130 formulas, 0 errors |
 | Every formula **type-checks** against your workbook's real columns (names, types, control references) | Microsoft.PowerFx engine + your tables | 29,041 property formulas, 0 errors |
 | The real button formulas, run on your real data | Power Fx engine (workflow simulation) | **79/79 checks pass** (list in docs/04) |
@@ -58,7 +59,7 @@ at 100 circuits and ₹33,616.30 at 200. Invoice numbers come out as `IDC EDS/26
 What they can't prove, because only Power Apps Studio on your tenant can:
 - whether Studio opens the `.msapp`. Packing from YAML is a **preview** feature of `pac`, so I give you Route B as a guaranteed fallback.
 - how the Excel connector types each column and how fast it is on your network
-- whether every classic-control property name I used is accepted. I stuck to the standard, well-known ones and left out control versions, which Microsoft's docs say makes Studio use the latest version.
+- the exact YAML type names of the classic controls (`Classic/Button`, `Classic/TextInput`, `Classic/DropDown`, `Classic/DatePicker`, `HtmlViewer`, `Timer`, `AddMedia`). They follow the naming in a Studio-saved 2026 Microsoft sample (`Classic/Icon`, where the modern controls own the plain names). I left out versions, which Microsoft's docs say makes Studio use the latest. Property names *are* verified (row above).
 - exact fonts and pixels, printing (`Print()`), and the OneDrive photo upload
 
 **My honest score: 8.5 / 10.** It isn't 10 because of the first-open risks listed above, not because of

@@ -7,6 +7,7 @@ SCHEMA=${SCHEMA:-tools/verify/pa.schema.yaml}
 echo "== build";                python3 tools/build.py
 echo "== yaml + schema";        python3 tools/verify/schema_check.py "$SCHEMA"
 echo "== Microsoft serializer"; dotnet tools/verify/pav/bin/Release/net10.0/pav.dll app/Src paste
+echo "== property names";     python3 tools/verify/prop_check.py
 echo "== Power Fx parse";       python3 tools/verify/make_parse_list.py && dotnet tools/verify/fxparse/bin/Release/net8.0/fxh.dll parse tools/out/parse.json | tail -1
 python3 tools/verify/export_data.py excel/EDS-Lab-Data-PowerApps.xlsx tools/out/data.json >/dev/null
 python3 tools/verify/prep_bind.py tools/out/app.json tools/out/bind.json >/dev/null
