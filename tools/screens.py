@@ -4,7 +4,7 @@ Each screen = one root container (header + left nav + scrolling content column),
 Route B can paste a whole screen with ONE "Paste code".
 """
 from pa import (Ctl, box, lbl, rect, btn, inp, dd, date, gallery, img, icon, pill, q, MONO, UI, ADDMEDIA, TIMER)
-from ui import (W, sec, head, card, tiles, Col, table, field, meter, kv, num, inr, inrs, fdate, noon, hist, cost)
+from ui import (prepend, W, sec, head, card, tiles, Col, table, field, meter, kv, num, inr, inrs, fdate, noon, hist, cost)
 from appfx import nav_switch
 
 ADMIN = 'gRole in ["Lab Admin", "Lab Lead"]'
@@ -273,7 +273,7 @@ def stock_table(K, items, admin_edit=False, h=520):
 
 def stock_filters(K, quality=False):
     kids = [inp("q" + K, 0, 0, 330, 36, hint="Part number, description or location"),
-            dd("c" + K, 344, 0, 220, 36, 'Ungroup(Table({T: ["All categories"]}, {T: nfCategories}), T)'),
+            dd("c" + K, 344, 0, 220, 36, prepend('"All categories"', "nfCategories")),
             dd("s" + K, 578, 0, 200, 36, '["Any status", "IN STOCK", "LOW STOCK", "OUT OF STOCK", "FULLY RESERVED"]')]
     if quality:
         kids.append(dd("dq" + K, 792, 0, 200, 36, '["Any data quality", "OK", "With issues"]'))
@@ -457,7 +457,7 @@ def scr_newreq():
         'IfError(Value(circ%(K)s.Text), 0) <= 0, Notify("No. of circuits must be a number above zero - the cost sheet runs on it.", NotificationType.Error), '
         'Set(gBusy, true); '
         'With({no: "REQ-" & nfYearPfx & "-" & Text(nfNextReqSeq, "00000")}, '
-        'Patch(tblRequests, Defaults(tblRequests), {RequestNo: no, Kind: "", Status: "SUBMITTED", '
+        'Collect(tblRequests, {RequestNo: no, Kind: "", Status: "SUBMITTED", '
         'RaisedByEmail: nfEmail, RaisedByName: nfMeName, DateRaised: %(NOON)s, Machine: Trim(mach%(K)s.Text), '
         'ProjectCode: Trim(pcode%(K)s.Text), HarnessPartNo: Trim(harn%(K)s.Text), BuildStage: stage%(K)s.Selected.Value, '
         'BusinessUnit: bu%(K)s.Selected.Value, CostCentre: Trim(cc%(K)s.Text), BUContact: Trim(buc%(K)s.Text), '
@@ -465,7 +465,7 @@ def scr_newreq():
         'ScopeOfWork: Trim(scope%(K)s.Text), ParentRequest: "", LastUpdated: Text(Now(), "yyyy-mm-ddThh:mm:ss"), '
         'LastUpdatedBy: nfMeName, History: "[" & JSON({t: Text(Now(), "yyyy-mm-ddThh:mm:ss"), by: nfMeName, '
         'a: "Submitted with " & CountRows(colBom) & " lines"}, JSONFormat.Compact) & "]"}); '
-        'Collect(tblReqLines, ForAll(colBom As B, {RequestNo: no, Sr: B.Sr, PartNo: B.PartNo, Description: B.Description, '
+        'ForAll(colBom As B, Collect(tblReqLines, {RequestNo: no, Sr: B.Sr, PartNo: B.PartNo, Description: B.Description, '
         'QtyRequested: B.Qty, QtyReserved: 0, QtyReleased: 0, UOM: B.UOM, '
         'LineStatus: If(!B.Found, "NEW PART", B.Qty <= B.Avail, "AVAILABLE", B.Avail <= 0, "SHORTAGE", "PARTIAL"), '
         'UnitCost: B.UnitCost, StoreLocation: If(B.Location = "—", "", B.Location), Remarks: ""})); '
@@ -627,6 +627,7 @@ def scr_reqdetail():
         'With({calc: ForAll(Filter(nfLines, RequestNo = gReqNo) As L, With({p: LookUp(nfStock, PN = L.PN)}, '
         'With({take: If(IsBlank(p), 0, Max(0, Min(p.Avail, L.QtyRequested - L.QtyReserved)))}, '
         '{Sr: L.Sr, PN: L.PN, PartNo: L.PartNo, Desc: L.Description, Req: L.QtyRequested, NewResv: L.QtyReserved + take, '
+        'Gap: L.QtyRequested - (L.QtyReserved + take), '
         'St: If(IsBlank(p), "NEW PART", L.QtyReserved + take >= L.QtyRequested, "AVAILABLE", '
         'L.QtyReserved + take > 0, "PARTIAL", "SHORTAGE")})))}, '
         'ForAll(calc As C, Patch(tblReqLines, LookUp(tblReqLines, Text(RequestNo) = gReqNo && Value(Text(Sr)) = C.Sr), '
@@ -640,18 +641,18 @@ def scr_reqdetail():
         'Notify(got & " line(s) fully reserved" & If(part + nsh > 0, ", " & (part + nsh) & " still short - added to '
         'Ongoing Purchase", "") & ".", NotificationType.Success))); Set(gBusy, false)'
         % {"H1": hist("gReqNo", '"Reserved stock — " & got & " full, " & part & " partial, " & nsh & " short"'),
-           "PURCH": purch_add("Filter(calc, Req - NewResv > 0)", "Req - NewResv")})
+           "PURCH": purch_add("Filter(calc, Gap > 0)")})
     release = (
         'With({req: %(R)s, calc: ForAll(lnRdGal.AllItems As G, With({qq: IfError(Value(G.lnRdC9.Text), 0), '
         'pend: G.QtyReserved - G.QtyReleased, onh: Coalesce(LookUp(nfStock, PN = G.PN).OnHand, 0)}, '
         '{Sr: G.Sr, PN: G.PN, PartNo: G.PartNo, Desc: G.Description, Req: G.QtyRequested, Resv: G.QtyReserved, '
-        'Rel: G.QtyReleased, Cost: G.UnitCost, St: G.LineStatus, Q: If(pend > 0, qq, 0), '
+        'Rel: G.QtyReleased, Cost: G.UnitCost, St: G.LineStatus, Q: If(pend > 0, qq, 0), Gap: G.QtyRequested - G.QtyReserved, '
         'Ok: pend > 0 && qq > 0 && qq <= pend && qq <= onh, Bad: pend > 0 && qq > 0 && (qq > pend || qq > onh)}))}, '
         'If(CountRows(Filter(calc, Bad)) > 0, Notify("Line " & First(Filter(calc, Bad)).PartNo & ": you can release at most '
         'what is reserved for it and what is physically on the shelf.", NotificationType.Error), '
         'CountRows(Filter(calc, Ok)) = 0, Notify("Enter a quantity to release on at least one line.", NotificationType.Warning), '
         'Set(gBusy, true); '
-        'Collect(tblMoves, ForAll(Filter(calc, Ok) As C, {Date: %(NOON)s, PartNo: C.PartNo, Type: "ISSUE", Qty: C.Q, '
+        'ForAll(Filter(calc, Ok) As C, Collect(tblMoves, {Date: %(NOON)s, PartNo: C.PartNo, Type: "ISSUE", Qty: C.Q, '
         'Reference: gReqNo, UnitCost: C.Cost, By: nfEmail, Reason: "Issued to " & req.RaisedByName & " for " & '
         'req.HarnessPartNo, EntryId: "TXN-" & Text(GUID())})); '
         'ForAll(Filter(calc, Ok) As C, Patch(tblReqLines, LookUp(tblReqLines, Text(RequestNo) = gReqNo && Value(Text(Sr)) = C.Sr), '
@@ -663,7 +664,7 @@ def scr_reqdetail():
         'Notify(n & " line(s) issued. Stock in the Excel is reduced by exactly that quantity.", NotificationType.Success)); '
         'Set(gBusy, false)))'
         % {"R": R, "NOON": noon(), "H2": hist("gReqNo", '"Released material on " & n & " line(s)"'),
-           "PURCH": purch_add("Filter(calc, Req - Resv > 0)", "Req - Resv")})
+           "PURCH": purch_add("Filter(calc, Gap > 0)")})
     simple = lambda status, msg, nt: (
         'Patch(tblRequests, LookUp(tblRequests, Text(RequestNo) = gReqNo), {Status: "%s", LastUpdated: '
         'Text(Now(), "yyyy-mm-ddThh:mm:ss"), LastUpdatedBy: nfMeName, History: %s}); Notify(gReqNo & "%s", '
@@ -698,7 +699,7 @@ def scr_reqdetail():
         'If(IsBlank(pn), Notify("Part number is required.", NotificationType.Error), '
         'qn <= 0, Notify("Quantity must be more than zero.", NotificationType.Error), '
         'With({p: LookUp(nfStock, PN = pn), sl: %(SL)s}, '
-        'Patch(tblRequests, Defaults(tblRequests), {RequestNo: no, Kind: "SHORTAGE", Status: "SUBMITTED", '
+        'Collect(tblRequests, {RequestNo: no, Kind: "SHORTAGE", Status: "SUBMITTED", '
         'RaisedByEmail: r.RaisedByEmail, RaisedByName: r.RaisedByName, DateRaised: %(NOON)s, Machine: r.Machine, '
         'ProjectCode: r.ProjectCode, HarnessPartNo: r.HarnessPartNo, BuildStage: r.BuildStage, BusinessUnit: r.BusinessUnit, '
         'CostCentre: r.CostCentre, BUContact: r.BUContact, DCContact: r.DCContact, NoOfCircuits: r.NoOfCircuits, '
@@ -752,14 +753,14 @@ def scr_reqdetail():
     shell(K, "scrReqDetail", "queue", content)
 
 
-def purch_add(rows, gap_expr):
+def purch_add(rows):
     """Every line still short after a reserve/release lands on Ongoing Purchase (once per part + request)."""
     return ('ForAll(%s As G, With({ex: LookUp(tblPurch, Upper(Trim(Text(PartNo))) = G.PN && Text(RequestNo) = gReqNo)}, '
-            'If(IsBlank(ex), Collect(tblPurch, {PartNo: G.PartNo, Description: G.Desc, QtyRequired: G.%s, QtyConfirmed: 0, '
+            'If(IsBlank(ex), Collect(tblPurch, {PartNo: G.PartNo, Description: G.Desc, QtyRequired: G.Gap, QtyConfirmed: 0, '
             'RequestNo: gReqNo, RaisedBy: nfMeName, PRNumber: "", SupplierNo: "", SupplierName: "", Stage: "REQUIRED", '
             'DateRaised: %s, Notes: LookUp(nfReq, RequestNo = gReqNo).RaisedByName & " waiting"}), '
-            'Upper(Text(ex.Stage)) = "REQUIRED", Patch(tblPurch, ex, {QtyRequired: G.%s}))))'
-            % (rows, gap_expr, noon(), gap_expr))
+            'Upper(Text(ex.Stage)) = "REQUIRED", Patch(tblPurch, ex, {QtyRequired: G.Gap}))))'
+            % (rows, noon()))
 
 
 # =====================================================================  BRAND NEW PURCHASE PART
@@ -791,7 +792,7 @@ def scr_newpart():
     row.append(rect("sep" + K, 0, 85, "Parent.TemplateWidth", 1, "cLine"))
     blank = ('{Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", '
              'MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}')
-    add = lambda n: 'With({base: Coalesce(Max(colNP, Id), 0)}, Collect(colNP, ForAll(Sequence(%d) As S, %s)))' % (n, blank)
+    add = lambda n: 'With({base: Coalesce(Max(colNP, Id), 0)}, ForAll(Sequence(%d) As S, Collect(colNP, %s)))' % (n, blank)
     req_checks = ", ".join('{n: "%s", v: r.%s}' % (t, f) for f, t, rq, _ in NPCOLS if rq)
     submit = (
         'With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, '
@@ -801,12 +802,12 @@ def scr_newpart():
         'CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", '
         'NotificationType.Error), '
         'With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, '
-        'Collect(tblNewPart, ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, '
+        'ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, '
         '{SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, '
         'PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, '
         'Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: %s}))); '
         'Notify(no & " submitted with " & CountRows(live) & " part(s). The store turns these into a PR.", NotificationType.Success); '
-        'Clear(colNP); With({base: 0}, Collect(colNP, ForAll(Sequence(3) As S, %s)))))))'
+        'Clear(colNP); With({base: 0}, ForAll(Sequence(3) As S, Collect(colNP, %s)))))))'
         % (req_checks, noon(), blank))
     sheet = card("cdS" + K, "Entry sheet", 600, [
         lbl("h1" + K, '"SR   ·   REQUESTER *  ·  CATEGORY *  ·  SUB CATEGORY  ·  PLANT CODE *  ·  PART / MACHINE NAME *"',
@@ -818,7 +819,7 @@ def scr_newpart():
                        '" with a part name. There is no row limit and no dropdowns — type anything."',
             16, 540, 640, 40, size=11, color="cInk3", wrap=True),
         btn("clr" + K, '"Clear sheet"', "Parent.Width - 330", 544, 130, 38,
-            'Clear(colNP); With({base: 0}, Collect(colNP, ForAll(Sequence(3) As S, %s)))' % blank, kind="secondary"),
+            'Clear(colNP); With({base: 0}, ForAll(Sequence(3) As S, Collect(colNP, %s)))' % blank, kind="secondary"),
         btn("go" + K, '"Submit to store"', "Parent.Width - 190", 544, 174, 38, submit)],
         right=[btn("add1" + K, '"+ Add row"', "Parent.Width - 232", 9, 100, 28, add(1), kind="secondary", size=10),
                btn("add10" + K, '"+ 10 rows"', "Parent.Width - 120", 9, 104, 28, add(10), kind="secondary", size=10)])
@@ -1040,8 +1041,8 @@ def scr_invoice():
     kids += field("st" + K, "Status", 372, 60, 200, lambda n, x, y, w, h: dd(
         n, x, y, w, h, '["DRAFT", "ISSUED"]', default='If(!IsBlank(gInvEdit), %s.Status, "DRAFT")' % E))
     kids += [lbl("fr" + K + "Lb", '"FILL FROM A REQUEST"', 588, 60, 300, 16, size=9, color="cInk3", font=MONO),
-             dd("fr" + K, 588, 78, 300, 34, 'Ungroup(Table({T: ["— choose —"]}, {T: Sort(Filter(nfReq, Status in '
-                                         '["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]), DateRaised, SortOrder.Descending).RequestNo}), T)',
+             dd("fr" + K, 588, 78, 300, 34, prepend('"— choose —"', 'ForAll(Sort(Filter(nfReq, Status in ["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]), '
+                                         'DateRaised, SortOrder.Descending), RequestNo)'),
                 onchange='If(Self.Selected.Value <> "— choose —", Set(gInvEdit, ""); Set(gInvReq, Self.Selected.Value))'),
              btn("ld" + K, '"Load BOM from request"', 900, 78, 174, 34,
                  'If(IsBlank(gInvReq), Notify("Pick a request first.", NotificationType.Warning), '
@@ -1126,8 +1127,7 @@ def scr_invoice():
         'Set(gBusy, true); '
         'With({paths: Concat(ForAll(colShots As S, OneDriveForBusiness.CreateFile("/EDS Lab Portal Photos", S.Name, S.Img).Path), '
         'Value, ";")}, '
-        'Patch(tblInvoice, If(IsBlank(LookUp(tblInvoice, Text(InvoiceNo) = no)), Defaults(tblInvoice), '
-        'LookUp(tblInvoice, Text(InvoiceNo) = no)), {InvoiceNo: no, InvoiceDate: %(D1)s, ToName: ToName%(K)s.Text, '
+        'With({rec: {InvoiceNo: no, InvoiceDate: %(D1)s, ToName: ToName%(K)s.Text, '
         'CCName: CCName%(K)s.Text, FromName: FromName%(K)s.Text, FromExt: FromExt%(K)s.Text, FromMobile: FromMobile%(K)s.Text, '
         'HarnessPartNos: HarnessPartNos%(K)s.Text, JobDescription: JobDescription%(K)s.Text, BusinessUnit: BusinessUnit%(K)s.Text, '
         'BUContact: BUContact%(K)s.Text, CostCentre: CostCentre%(K)s.Text, ApplicationDesc: ApplicationDesc%(K)s.Text, '
@@ -1135,7 +1135,8 @@ def scr_invoice():
         'DCMobile: DCMobile%(K)s.Text, JobReceived: %(D2)s, StartDate: %(D3)s, CompletionDate: %(D4)s, '
         'MaterialCost: Round(c.mat, 2), AssemblyCost: Round(c.asm, 2), TransportCost: c.trn, TotalCost: Round(c.tot, 2), '
         'RefRequest: RefRequest%(K)s.Text, ImagePath: Concat(Filter(Table({v: Coalesce(%(E)s.ImagePath, "")}, {v: paths}), '
-        '!IsBlank(v)), v, ";"), Status: st%(K)s.Selected.Value, Notes: Notes%(K)s.Text})); '
+        '!IsBlank(v)), v, ";"), Status: st%(K)s.Selected.Value, Notes: Notes%(K)s.Text}}, If(IsBlank(LookUp(tblInvoice, Text(InvoiceNo) = no)), '
+        'Collect(tblInvoice, rec), Patch(tblInvoice, LookUp(tblInvoice, Text(InvoiceNo) = no), rec)))); '
         'Set(gInvEdit, no); Set(gBusy, false); Clear(colShots); '
         'Notify(no & " saved to the Invoice tab.", NotificationType.Success)))'
         % {"K": K, "C": C, "E": E, "D1": noon("InvoiceDate%s.SelectedDate" % K), "D2": noon("JobReceived%s.SelectedDate" % K),
@@ -1210,7 +1211,7 @@ def scr_cost():
     R = "LookUp(nfReq, RequestNo = gCostReq)"
     job = card("cdJ" + K, "Job details", 200, [
         lbl("frLb" + K, '"FILL FROM A REQUEST"', 16, 58, 300, 16, size=9, color="cInk3", font=MONO),
-        dd("fr" + K, 16, 76, 300, 34, 'Ungroup(Table({T: ["— choose —"]}, {T: Sort(nfReq, DateRaised, SortOrder.Descending).RequestNo}), T)',
+        dd("fr" + K, 16, 76, 300, 34, prepend('"— choose —"', "ForAll(Sort(nfReq, DateRaised, SortOrder.Descending), RequestNo)"),
            onchange='If(Self.Selected.Value <> "— choose —", Set(gCostReq, Self.Selected.Value); '
                     'ClearCollect(colCostLines, ForAll(Filter(nfLines, RequestNo = gCostReq) As L, {Sr: L.Sr, PartNo: L.PartNo, '
                     'Description: L.Description, Qty: If(L.QtyReleased > 0, L.QtyReleased, L.QtyRequested), '
@@ -1407,7 +1408,7 @@ def scr_print():
                   'text-align:center\'>Harness label Images</p></div>"')
     paths = 'Filter(ForAll(Split(Coalesce(%s.ImagePath, ""), ";") As S, {P: Trim(S.Value)}), !IsBlank(P))' % V
     kids = [
-        rect("bg" + K, 0, 0, 1366, 768, "White"),
+        rect("bg" + K, 0, 0, 1366, 768, "RGBA(255, 255, 255, 1)"),
         box("tb" + K, 0, 0, 1366, 48, [
             btn("bk" + K, '"‹ Back"', 12, 8, 100, 32,
                 'If(gPrintKind = "cost", Navigate(scrCost, ScreenTransition.None), Navigate(scrInvList, ScreenTransition.None))',
@@ -1418,7 +1419,7 @@ def scr_print():
         Ctl("htm" + K, "HtmlViewer", {"X": 40, "Y": "If(gPrinting, 10, 58)", "Width": 1286,
                                       "Height": 'If(gPrintKind = "invoice" && CountRows(%s) > 0, 520, If(gPrinting, 750, 700))' % paths,
                                       "HtmlText": 'If(gPrintKind = "invoice", %s, %s)' % (inv_html, cost_html),
-                                      "Color": "Black", "Size": 11, "PaddingTop": 0, "PaddingLeft": 0}),
+                                      "Color": "RGBA(0, 0, 0, 1)", "Size": 11, "PaddingTop": 0, "PaddingLeft": 0}),
         gallery("ph" + K, 40, 580, 1286, 180, paths, 176, [
             img("phI" + K, 4, 4, 300, 168, "OneDriveForBusiness.GetFileContentByPath(ThisItem.P)",
                 extra={"BorderColor": "RGBA(153,153,153,1)", "BorderThickness": 1})],
@@ -1427,7 +1428,7 @@ def scr_print():
                               "Start": "gPrinting", "AutoStart": "false", "Repeat": "false",
                               "OnTimerEnd": "Print(); Set(gPrinting, false)"}),
     ]
-    root = box("root" + K, 0, 0, 1366, 768, kids, fill="White", border="White", thick=0)
+    root = box("root" + K, 0, 0, 1366, 768, kids, fill="RGBA(255, 255, 255, 1)", border="RGBA(255, 255, 255, 1)", thick=0)
     SCREENS.append(("scrPrint", "", root))
 
 
@@ -1505,8 +1506,7 @@ def scr_proc():
         kids += field(n, label, x, y, 256, mk, req=fld_ in ("PRNumber", "Summary"))
     vy = 58 + ((len(PROCF) + 3) // 4) * 62
     kids += [lbl("vpL" + K, '"PICK A VENDOR USED BEFORE"', 16, vy, 300, 16, size=9, color="cInk3", font=MONO),
-             dd("vp" + K, 16, vy + 18, 300, 34, 'Ungroup(Table({T: ["—"]}, {T: Sort(Distinct(Filter(Ungroup(Table({A: '
-                                                'ShowColumns(Filter(nfProc, !IsBlank(Vendor)), Vendor)}), A), true), Vendor), Value)}), T)',
+             dd("vp" + K, 16, vy + 18, 300, 34, prepend('"—"', "Sort(Distinct(Filter(nfProc, !IsBlank(Vendor)), Vendor), Value)"),
                 onchange='If(Self.Selected.Value <> "—", Set(gVendorPick, Self.Selected.Value); Reset(pfVendor%s))' % K)]
     vals = ", ".join(
         "%s: %s" % (f, ("IfError(Value(pf%s%s.Text), 0)" % (f, K)) if k == "n" else
@@ -1517,7 +1517,7 @@ def scr_proc():
             'Notify("PR number and summary are required.", NotificationType.Error), '
             'IsBlank(gEditPr) && !IsBlank(LookUp(tblProc, Text(PRNumber) = no)), Notify("A PR with that number already exists.", '
             'NotificationType.Error), '
-            'Patch(tblProc, If(IsBlank(gEditPr), Defaults(tblProc), LookUp(tblProc, Text(PRNumber) = gEditPr)), {%(V)s}); '
+            'With({rec: {%(V)s}}, If(IsBlank(gEditPr), Collect(tblProc, rec), Patch(tblProc, LookUp(tblProc, Text(PRNumber) = gEditPr), rec))); '
             'Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, "")))'
             % {"K": K, "V": vals})
     kids += [btn("pfNo" + K, '"Cancel"', "Parent.Width - 300", vy + 18, 120, 36,
@@ -1549,7 +1549,7 @@ def scr_proc():
                     right=[btn("new" + K, '"+ New PR / PO entry"', "Parent.Width - 180", 8, 170, 30,
                                'Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, "proc")', visible=ADMIN, size=10)]),
                t, panel,
-               sec("flt" + K, 36, [dd("st" + K, 0, 0, 230, 36, 'Ungroup(Table({T: ["All stages"]}, {T: %s}), T)' % PROC_STAGES),
+               sec("flt" + K, 36, [dd("st" + K, 0, 0, 230, 36, prepend('"All stages"', PROC_STAGES)),
                                    inp("q" + K, 244, 0, 420, 36, hint="Search PR, summary, PO, vendor")]),
                card("cdT" + K, 'If(%s, "PR / PO tracker — click a stage button to move a requisition forward", "PR / PO tracker (read only)")'
                     % ADMIN, 470, table("pc" + K, items, cols, h=424, row_h=48, empty="Nothing raised yet"), title_is_formula=True),
@@ -1646,7 +1646,7 @@ def scr_purch():
                     right=[btn("new" + K, '"+ New purchase line"', "Parent.Width - 180", 8, 170, 30,
                                'Set(gEditPurch, ""); Set(gEditPurchReq, ""); Set(gPanel, "purch")', visible=ADMIN, size=10)]),
                t, panel, book,
-               sec("flt" + K, 36, [dd("st" + K, 0, 0, 200, 36, 'Ungroup(Table({T: ["All stages"]}, {T: %s}), T)' % PURCH_STAGES),
+               sec("flt" + K, 36, [dd("st" + K, 0, 0, 200, 36, prepend('"All stages"', PURCH_STAGES)),
                                    inp("q" + K, 214, 0, 420, 36, hint="Search part, request, PR or supplier")]),
                tab]
     shell(K, "scrPurch", "purch", content)

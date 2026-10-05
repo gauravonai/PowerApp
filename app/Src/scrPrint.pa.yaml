@@ -5,16 +5,16 @@
 Screens:
   scrPrint:
     Properties:
-      Fill: =White
+      Fill: =RGBA(255, 255, 255, 1)
     Children:
       - rootPr:
           Control: GroupContainer@1.4.0
           Variant: ManualLayout
           Properties:
-            BorderColor: =White
+            BorderColor: =RGBA(255, 255, 255, 1)
             BorderThickness: =0
             DropShadow: =DropShadow.None
-            Fill: =White
+            Fill: =RGBA(255, 255, 255, 1)
             Height: =768
             RadiusBottomLeft: =0
             RadiusBottomRight: =0
@@ -27,8 +27,8 @@ Screens:
             - bgPr:
                 Control: Rectangle@2.3.0
                 Properties:
-                  BorderColor: =White
-                  Fill: =White
+                  BorderColor: =RGBA(255, 255, 255, 1)
+                  Fill: =RGBA(255, 255, 255, 1)
                   Height: =768
                   Width: =1366
                   X: =0
@@ -134,7 +134,7 @@ Screens:
             - htmPr:
                 Control: HtmlViewer
                 Properties:
-                  Color: =Black
+                  Color: =RGBA(0, 0, 0, 1)
                   Height: |-
                     =If(gPrintKind = "invoice" && CountRows(Filter(ForAll(Split(Coalesce(LookUp(nfInv, InvoiceNo = gInvEdit).ImagePath, ""), ";") As S, {P: Trim(S.Value)}), !IsBlank(P))) > 0, 520, If(gPrinting, 750, 700))
                   HtmlText: |-

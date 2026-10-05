@@ -533,7 +533,7 @@
                         HoverColor: =cInk
                         HoverFill: =cPanel2
                         Items: |-
-                          =Ungroup(Table({T: ["All categories"]}, {T: nfCategories}), T)
+                          =With({T: nfCategories}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "All categories", Index(T, I.Value - 1).Value)))
                         PaddingLeft: =10
                         PressedColor: =cInk
                         PressedFill: =cPanel2

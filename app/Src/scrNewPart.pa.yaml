@@ -552,7 +552,7 @@ Screens:
                               HoverColor: =cInk
                               HoverFill: =cLine
                               OnSelect: |-
-                                =With({base: Coalesce(Max(colNP, Id), 0)}, Collect(colNP, ForAll(Sequence(1) As S, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))
+                                =With({base: Coalesce(Max(colNP, Id), 0)}, ForAll(Sequence(1) As S, Collect(colNP, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))
                               PaddingLeft: =6
                               PaddingRight: =6
                               PressedBorderColor: =cLine2
@@ -584,7 +584,7 @@ Screens:
                               HoverColor: =cInk
                               HoverFill: =cLine
                               OnSelect: |-
-                                =With({base: Coalesce(Max(colNP, Id), 0)}, Collect(colNP, ForAll(Sequence(10) As S, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))
+                                =With({base: Coalesce(Max(colNP, Id), 0)}, ForAll(Sequence(10) As S, Collect(colNP, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))
                               PaddingLeft: =6
                               PaddingRight: =6
                               PressedBorderColor: =cLine2
@@ -1050,7 +1050,7 @@ Screens:
                               HoverColor: =cInk
                               HoverFill: =cLine
                               OnSelect: |-
-                                =Clear(colNP); With({base: 0}, Collect(colNP, ForAll(Sequence(3) As S, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))
+                                =Clear(colNP); With({base: 0}, ForAll(Sequence(3) As S, Collect(colNP, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))
                               PaddingLeft: =6
                               PaddingRight: =6
                               PressedBorderColor: =cLine2
@@ -1082,7 +1082,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cJcbDark
                               OnSelect: |-
-                                =With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, With({bad: Filter(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {Row: I.Value, Miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(Trim(v))), n, ", ")})), !IsBlank(Miss))}, If(CountRows(live) = 0, Notify("Fill in at least one part name before submitting.", NotificationType.Error), CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", NotificationType.Error), With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, Collect(tblNewPart, ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: DateAdd(Today(), 12, TimeUnit.Hours)}))); Notify(no & " submitted with " & CountRows(live) & " part(s). The store turns these into a PR.", NotificationType.Success); Clear(colNP); With({base: 0}, Collect(colNP, ForAll(Sequence(3) As S, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))))))
+                                =With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, With({bad: Filter(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {Row: I.Value, Miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(Trim(v))), n, ", ")})), !IsBlank(Miss))}, If(CountRows(live) = 0, Notify("Fill in at least one part name before submitting.", NotificationType.Error), CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", NotificationType.Error), With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, {SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: DateAdd(Today(), 12, TimeUnit.Hours)}))); Notify(no & " submitted with " & CountRows(live) & " part(s). The store turns these into a PR.", NotificationType.Success); Clear(colNP); With({base: 0}, ForAll(Sequence(3) As S, Collect(colNP, {Id: base + S.Value, RequesterName: nfMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""})))))))
                               PaddingLeft: =6
                               PaddingRight: =6
                               PressedBorderColor: =cJcb

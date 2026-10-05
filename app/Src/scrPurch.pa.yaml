@@ -1876,7 +1876,7 @@ Screens:
                               HoverColor: =cInk
                               HoverFill: =cPanel2
                               Items: |-
-                                =Ungroup(Table({T: ["All stages"]}, {T: ["REQUIRED", "PR RAISED", "PO RAISED", "IN TRANSIT", "RECEIVED"]}), T)
+                                =With({T: ["REQUIRED", "PR RAISED", "PO RAISED", "IN TRANSIT", "RECEIVED"]}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "All stages", Index(T, I.Value - 1).Value)))
                               PaddingLeft: =10
                               PressedColor: =cInk
                               PressedFill: =cPanel2

@@ -172,3 +172,9 @@ def cost(circ, mat):
             'asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(%s, 0), trn: kTransport, '
             'tot: Coalesce(%s, 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport}))'
             % (circ, mat, mat))
+
+
+def prepend(first, table_expr):
+    """A one-column (Value) table with an extra first option, e.g. "All categories" + the categories."""
+    return ('With({T: %s}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, %s, Index(T, I.Value - 1).Value)))'
+            % (table_expr, first))

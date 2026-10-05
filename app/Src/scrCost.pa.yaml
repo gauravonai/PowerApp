@@ -569,7 +569,7 @@ Screens:
                               HoverColor: =cInk
                               HoverFill: =cPanel2
                               Items: |-
-                                =Ungroup(Table({T: ["— choose —"]}, {T: Sort(nfReq, DateRaised, SortOrder.Descending).RequestNo}), T)
+                                =With({T: ForAll(Sort(nfReq, DateRaised, SortOrder.Descending), RequestNo)}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "— choose —", Index(T, I.Value - 1).Value)))
                               OnChange: |-
                                 =If(Self.Selected.Value <> "— choose —", Set(gCostReq, Self.Selected.Value); ClearCollect(colCostLines, ForAll(Filter(nfLines, RequestNo = gCostReq) As L, {Sr: L.Sr, PartNo: L.PartNo, Description: L.Description, Qty: If(L.QtyReleased > 0, L.QtyReleased, L.QtyRequested), UnitCost: If(L.UnitCost > 0, L.UnitCost, Coalesce(LookUp(nfParts, PN = L.PN).UnitCost, 0))})))
                               PaddingLeft: =10

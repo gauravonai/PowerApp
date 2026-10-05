@@ -87,7 +87,7 @@ def main():
         f.write(pa.HEADER + "EditorState:\n  ScreensOrder:\n" + "".join("    - %s\n" % s for s, _, _ in scr))
     for sname, _, root in scr:
         with open(os.path.join(SRC, sname + ".pa.yaml"), "w") as f:
-            f.write(pa.emit_screen(sname, {"Fill": "cBg" if sname != "scrPrint" else "White"}, root))
+            f.write(pa.emit_screen(sname, {"Fill": "cBg" if sname != "scrPrint" else "RGBA(255, 255, 255, 1)"}, root))
 
     # ---------------------------------------------------------- Route B: paste files
     with open(os.path.join(PASTE, "00-App.Formulas.txt"), "w") as f:
@@ -109,6 +109,20 @@ def main():
                 allf.append({"id": "%s.%s.%s" % (sname, c.name, k), "f": pa._fmt(v)})
     with open(os.path.join(OUT, "formulas.json"), "w") as f:
         json.dump(allf, f, ensure_ascii=False, indent=0)
+
+    # ---------------------------------------------------------- flat model for the engine binding test
+    model = {"formulas": formulas, "onstart": onstart, "startscreen": start, "screens": [s for s, _, _ in scr],
+             "controls": []}
+
+    def flat(c, sname, gal):
+        model["controls"].append({"name": c.name, "type": c.ctype, "screen": sname, "gallery": gal,
+                                  "props": {k: pa._fmt(v) for k, v in c.props.items()}})
+        for ch in c.children:
+            flat(ch, sname, c.name if c.ctype == pa.GALLERY else gal)
+    for sname, _, root in scr:
+        flat(root, sname, None)
+    with open(os.path.join(OUT, "app.json"), "w") as f:
+        json.dump(model, f, ensure_ascii=False)
 
     nctl = sum(1 for _, _, r in scr for _ in r.walk())
     print("screens: %d, controls: %d, formulas: %d" % (len(scr), nctl, len(allf)))

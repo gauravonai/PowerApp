@@ -229,7 +229,7 @@ App:
       nfReqView = AddColumns(nfReq,
           Lines, CountRows(Filter(nfLines As X, X.RequestNo = RequestNo)),
           ShortLines, CountRows(Filter(nfLines As X, X.RequestNo = RequestNo && X.LineStatus in ["SHORTAGE", "NEW PART"])),
-          ShortQty, Sum(Filter(nfLines As X, X.RequestNo = RequestNo), Max(0, X.QtyRequested - Max(X.QtyReserved, X.QtyReleased))),
+          ShortQty, Sum(Filter(nfLines As X, X.RequestNo = RequestNo), Max(0, QtyRequested - Max(QtyReserved, QtyReleased))),
           IsMine, RaisedByEmail = nfEmail);
       nfQueueCount = CountRows(Filter(nfReq, Status in ["SUBMITTED", "ADMIN REVIEW"]));
       nfMyOpenCount = CountRows(Filter(nfReq, RaisedByEmail = nfEmail && !(Status in nfDeadStatus)));

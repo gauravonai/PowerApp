@@ -1888,7 +1888,7 @@
                         HoverColor: =cInk
                         HoverFill: =cPanel2
                         Items: |-
-                          =Ungroup(Table({T: ["—"]}, {T: Sort(Distinct(Filter(Ungroup(Table({A: ShowColumns(Filter(nfProc, !IsBlank(Vendor)), Vendor)}), A), true), Vendor), Value)}), T)
+                          =With({T: Sort(Distinct(Filter(nfProc, !IsBlank(Vendor)), Vendor), Value)}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "—", Index(T, I.Value - 1).Value)))
                         OnChange: =If(Self.Selected.Value <> "—", Set(gVendorPick, Self.Selected.Value); Reset(pfVendorPc))
                         PaddingLeft: =10
                         PressedColor: =cInk
@@ -1951,7 +1951,7 @@
                         HoverColor: =cOnJcb
                         HoverFill: =cJcbDark
                         OnSelect: |-
-                          =With({no: Trim(pfPRNumberPc.Text)}, If(IsBlank(no) || IsBlank(Trim(pfSummaryPc.Text)), Notify("PR number and summary are required.", NotificationType.Error), IsBlank(gEditPr) && !IsBlank(LookUp(tblProc, Text(PRNumber) = no)), Notify("A PR with that number already exists.", NotificationType.Error), Patch(tblProc, If(IsBlank(gEditPr), Defaults(tblProc), LookUp(tblProc, Text(PRNumber) = gEditPr)), {PRNumber: Trim(pfPRNumberPc.Text), Department: Trim(pfDepartmentPc.Text), Summary: Trim(pfSummaryPc.Text), ServiceType: pfServiceTypePc.Selected.Value, Qty: IfError(Value(pfQtyPc.Text), 0), DateRaised: DateAdd(pfDateRaisedPc.SelectedDate, 12, TimeUnit.Hours), RaisedBy: Trim(pfRaisedByPc.Text), ApprovedBy: Trim(pfApprovedByPc.Text), ApprovedDate: DateAdd(pfApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), PONumber: Trim(pfPONumberPc.Text), Vendor: Trim(pfVendorPc.Text), POAmount: IfError(Value(pfPOAmountPc.Text), 0), Stage: pfStagePc.Selected.Value, PODate: DateAdd(pfPODatePc.SelectedDate, 12, TimeUnit.Hours), DeliveredDate: DateAdd(pfDeliveredDatePc.SelectedDate, 12, TimeUnit.Hours), PRAmount: IfError(Value(pfPRAmountPc.Text), 0), InvestmentType: pfInvestmentTypePc.Selected.Value, POApprovedDate: DateAdd(pfPOApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), Ownership: Trim(pfOwnershipPc.Text), POCopyPath: Trim(pfPOCopyPathPc.Text), Notes: Trim(pfNotesPc.Text)}); Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, "")))
+                          =With({no: Trim(pfPRNumberPc.Text)}, If(IsBlank(no) || IsBlank(Trim(pfSummaryPc.Text)), Notify("PR number and summary are required.", NotificationType.Error), IsBlank(gEditPr) && !IsBlank(LookUp(tblProc, Text(PRNumber) = no)), Notify("A PR with that number already exists.", NotificationType.Error), With({rec: {PRNumber: Trim(pfPRNumberPc.Text), Department: Trim(pfDepartmentPc.Text), Summary: Trim(pfSummaryPc.Text), ServiceType: pfServiceTypePc.Selected.Value, Qty: IfError(Value(pfQtyPc.Text), 0), DateRaised: DateAdd(pfDateRaisedPc.SelectedDate, 12, TimeUnit.Hours), RaisedBy: Trim(pfRaisedByPc.Text), ApprovedBy: Trim(pfApprovedByPc.Text), ApprovedDate: DateAdd(pfApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), PONumber: Trim(pfPONumberPc.Text), Vendor: Trim(pfVendorPc.Text), POAmount: IfError(Value(pfPOAmountPc.Text), 0), Stage: pfStagePc.Selected.Value, PODate: DateAdd(pfPODatePc.SelectedDate, 12, TimeUnit.Hours), DeliveredDate: DateAdd(pfDeliveredDatePc.SelectedDate, 12, TimeUnit.Hours), PRAmount: IfError(Value(pfPRAmountPc.Text), 0), InvestmentType: pfInvestmentTypePc.Selected.Value, POApprovedDate: DateAdd(pfPOApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), Ownership: Trim(pfOwnershipPc.Text), POCopyPath: Trim(pfPOCopyPathPc.Text), Notes: Trim(pfNotesPc.Text)}}, If(IsBlank(gEditPr), Collect(tblProc, rec), Patch(tblProc, LookUp(tblProc, Text(PRNumber) = gEditPr), rec))); Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, "")))
                         PaddingLeft: =6
                         PaddingRight: =6
                         PressedBorderColor: =cJcb
@@ -1998,7 +1998,7 @@
                         HoverColor: =cInk
                         HoverFill: =cPanel2
                         Items: |-
-                          =Ungroup(Table({T: ["All stages"]}, {T: ["PR RAISED", "APPROVED", "PO RAISED", "GRN IN PROGRESS", "DELIVERED (CLOSED)", "REJECTED"]}), T)
+                          =With({T: ["PR RAISED", "APPROVED", "PO RAISED", "GRN IN PROGRESS", "DELIVERED (CLOSED)", "REJECTED"]}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "All stages", Index(T, I.Value - 1).Value)))
                         PaddingLeft: =10
                         PressedColor: =cInk
                         PressedFill: =cPanel2
