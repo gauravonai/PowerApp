@@ -1,5 +1,5 @@
 - rootBom:
-    Control: GroupContainer@1.4.0
+    Control: GroupContainer
     Variant: ManualLayout
     Properties:
       BorderColor: =cBg
@@ -16,7 +16,7 @@
       Y: =0
     Children:
       - hdrBgBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -25,7 +25,7 @@
             X: =0
             Y: =0
       - hdrLnBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -34,7 +34,7 @@
             X: =0
             Y: =55
       - hdrMkBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -43,7 +43,7 @@
             X: =16
             Y: =10
       - hdrMkTBom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -61,7 +61,7 @@
             X: =16
             Y: =10
       - hdrT1Bom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -79,7 +79,7 @@
             X: =62
             Y: =8
       - hdrT2Bom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -97,7 +97,7 @@
             X: =62
             Y: =23
       - hdrDivBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -106,7 +106,7 @@
             X: =690
             Y: =12
       - hdrAvBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -115,7 +115,7 @@
             X: =706
             Y: =12
       - hdrAvTBom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -133,7 +133,7 @@
             X: =706
             Y: =12
       - hdrNmBom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -151,7 +151,7 @@
             X: =746
             Y: =10
       - hdrRlBom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cJcb
@@ -169,7 +169,7 @@
             X: =746
             Y: =29
       - hdrSrcBom:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -248,7 +248,7 @@
             X: =1246
             Y: =13
       - navBgBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -257,7 +257,7 @@
             X: =0
             Y: =56
       - navLnBom:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -266,7 +266,7 @@
             X: =223
             Y: =56
       - navGalBom:
-          Control: Gallery@2.15.0
+          Control: Gallery
           Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
           Properties:
             BorderColor: =cLine
@@ -303,7 +303,7 @@
             Y: =70
           Children:
             - navSelBgBom:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cPanel
                   Fill: =cPanel
@@ -313,7 +313,7 @@
                   X: =0
                   Y: =0
             - navSelBarBom:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cJcb
                   Fill: =cJcb
@@ -323,7 +323,7 @@
                   X: =0
                   Y: =0
             - navHdrBom:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk3
@@ -343,7 +343,7 @@
                   X: =18
                   Y: =16
             - navItmBom:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =If(ThisItem.Key = "bom", cInk, cInk2)
@@ -363,7 +363,7 @@
                   X: =21
                   Y: =0
             - navCntBom:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Center
                   Color: =cJcb
@@ -384,7 +384,7 @@
                   X: =178
                   Y: =10
       - bodyBom:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer
           Variant: AutoLayout
           Properties:
             BorderColor: =cBg
@@ -410,7 +410,7 @@
             Y: =56
           Children:
             - hdBom:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -426,7 +426,7 @@
                   RadiusTopRight: =0
                 Children:
                   - hdTBom:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -444,7 +444,7 @@
                         X: =0
                         Y: =4
                   - hdSBom:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -462,7 +462,7 @@
                         X: =0
                         Y: =44
                   - hdLBom:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -471,7 +471,7 @@
                         X: =0
                         Y: =71
             - cdPBom:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -487,7 +487,7 @@
                   RadiusTopRight: =0
                 Children:
                   - cdPBomTb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel2
                         Fill: =cPanel2
@@ -496,7 +496,7 @@
                         X: =0
                         Y: =0
                   - cdPBomTl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -505,7 +505,7 @@
                         X: =0
                         Y: =46
                   - cdPBomTt:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -645,7 +645,7 @@
                         X: =470
                         Y: =196
                   - hintBom:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -663,7 +663,7 @@
                         X: =576
                         Y: =196
             - tiBom:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: AutoLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -688,7 +688,7 @@
                   Visible: =CountRows(colBom) > 0
                 Children:
                   - tiBom0:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -703,7 +703,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiBom0Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine2
                               Fill: =cLine2
@@ -712,7 +712,7 @@
                               X: =0
                               Y: =0
                         - tiBom0T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -730,7 +730,7 @@
                               X: =16
                               Y: =14
                         - tiBom0V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -748,7 +748,7 @@
                               X: =16
                               Y: =32
                         - tiBom0S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -767,7 +767,7 @@
                               X: =16
                               Y: =66
                   - tiBom1:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -782,7 +782,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiBom1Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cOk
                               Fill: =cOk
@@ -791,7 +791,7 @@
                               X: =0
                               Y: =0
                         - tiBom1T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -809,7 +809,7 @@
                               X: =16
                               Y: =14
                         - tiBom1V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -827,7 +827,7 @@
                               X: =16
                               Y: =32
                         - tiBom1S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -846,7 +846,7 @@
                               X: =16
                               Y: =66
                   - tiBom2:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -861,7 +861,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiBom2Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cStop
                               Fill: =cStop
@@ -870,7 +870,7 @@
                               X: =0
                               Y: =0
                         - tiBom2T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -888,7 +888,7 @@
                               X: =16
                               Y: =14
                         - tiBom2V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -906,7 +906,7 @@
                               X: =16
                               Y: =32
                         - tiBom2S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -925,7 +925,7 @@
                               X: =16
                               Y: =66
                   - tiBom3:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -940,7 +940,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiBom3Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cSteel
                               Fill: =cSteel
@@ -949,7 +949,7 @@
                               X: =0
                               Y: =0
                         - tiBom3T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -967,7 +967,7 @@
                               X: =16
                               Y: =14
                         - tiBom3V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -985,7 +985,7 @@
                               X: =16
                               Y: =32
                         - tiBom3S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -1004,7 +1004,7 @@
                               X: =16
                               Y: =66
                   - tiBom4:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -1019,7 +1019,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiBom4Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cJcb
                               Fill: =cJcb
@@ -1028,7 +1028,7 @@
                               X: =0
                               Y: =0
                         - tiBom4T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -1046,7 +1046,7 @@
                               X: =16
                               Y: =14
                         - tiBom4V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1065,7 +1065,7 @@
                               X: =16
                               Y: =32
                         - tiBom4S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -1084,7 +1084,7 @@
                               X: =16
                               Y: =66
             - cdRBom:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -1101,7 +1101,7 @@
                   Visible: =CountRows(colBom) > 0
                 Children:
                   - cdRBomTb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel2
                         Fill: =cPanel2
@@ -1110,7 +1110,7 @@
                         X: =0
                         Y: =0
                   - cdRBomTl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -1119,7 +1119,7 @@
                         X: =0
                         Y: =46
                   - cdRBomTt:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -1169,7 +1169,7 @@
                         X: =Parent.Width - 196
                         Y: =9
                   - cmpBomHb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel
                         Fill: =cPanel
@@ -1178,7 +1178,7 @@
                         X: =0
                         Y: =46
                   - cmpBomHl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -1187,7 +1187,7 @@
                         X: =0
                         Y: =75
                   - cmpBomH0:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1205,7 +1205,7 @@
                         X: =16
                         Y: =46
                   - cmpBomH1:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1223,7 +1223,7 @@
                         X: =56
                         Y: =46
                   - cmpBomH2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1241,7 +1241,7 @@
                         X: =226
                         Y: =46
                   - cmpBomH3:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1259,7 +1259,7 @@
                         X: =476
                         Y: =46
                   - cmpBomH4:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1277,7 +1277,7 @@
                         X: =536
                         Y: =46
                   - cmpBomH5:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1295,7 +1295,7 @@
                         X: =606
                         Y: =46
                   - cmpBomH6:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1313,7 +1313,7 @@
                         X: =662
                         Y: =46
                   - cmpBomH7:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1331,7 +1331,7 @@
                         X: =722
                         Y: =46
                   - cmpBomH8:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1349,7 +1349,7 @@
                         X: =782
                         Y: =46
                   - cmpBomH9:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1367,7 +1367,7 @@
                         X: =828
                         Y: =46
                   - cmpBomH10:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1385,7 +1385,7 @@
                         X: =908
                         Y: =46
                   - cmpBomGal:
-                      Control: Gallery@2.15.0
+                      Control: Gallery
                       Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
                       Properties:
                         BorderColor: =cLine
@@ -1401,7 +1401,7 @@
                         Y: =76
                       Children:
                         - cmpBomC0:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -1419,7 +1419,7 @@
                               X: =16
                               Y: =0
                         - cmpBomC1:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1437,7 +1437,7 @@
                               X: =56
                               Y: =0
                         - cmpBomC2:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1455,7 +1455,7 @@
                               X: =226
                               Y: =0
                         - cmpBomC3:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk
@@ -1473,7 +1473,7 @@
                               X: =476
                               Y: =0
                         - cmpBomC4:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk
@@ -1491,7 +1491,7 @@
                               X: =536
                               Y: =0
                         - cmpBomC5:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk2
@@ -1509,7 +1509,7 @@
                               X: =606
                               Y: =0
                         - cmpBomC6:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk
@@ -1527,7 +1527,7 @@
                               X: =662
                               Y: =0
                         - cmpBomC7:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =If(ThisItem.Short > 0, cStop, cInk)
@@ -1545,7 +1545,7 @@
                               X: =722
                               Y: =0
                         - cmpBomC8:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -1563,7 +1563,7 @@
                               X: =782
                               Y: =0
                         - cmpBomC9:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1581,7 +1581,7 @@
                               X: =828
                               Y: =0
                         - cmpBomC10:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Center
                               BorderColor: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).C, cInk3)
@@ -1603,7 +1603,7 @@
                               X: =908
                               Y: =9
                         - cmpBomSep:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
@@ -1612,7 +1612,7 @@
                               X: =0
                               Y: =39
                   - cmpBomEmp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk2
@@ -1631,7 +1631,7 @@
                         X: =0
                         Y: =106
                   - noteBom:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3

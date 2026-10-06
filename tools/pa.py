@@ -7,20 +7,18 @@ below, then emitted twice from the same objects:
   * paste/<NN>-<Screen>.yaml          -> "Paste code" into Studio (Route B)
 
 Control type ids
-  Pinned versions are the ones a February-2026 Power Apps Studio wrote into
-  Microsoft's own test app (PowerApps-Tooling, AlmTestApp-asManyEntitiesAsPossible.msapp).
-  Classic input controls are written WITHOUT a version: per Microsoft's pa.yaml
-  docs, "If no version is specified, the most current version of the control
-  is used", which avoids a paste failing on a version mismatch.
+  Written WITHOUT a version: per Microsoft's pa.yaml docs, "If no version is specified,
+  the most current version of the control is used". (Pinned versions from an older
+  sample produced PA2105 "older than the current version" warnings in Studio.)
 """
 import re
 
-CONTAINER = "GroupContainer@1.4.0"
-LABEL = "Label@2.5.1"
-RECT = "Rectangle@2.3.0"
-IMAGE = "Image@2.2.3"
-ICON = "Classic/Icon@2.5.0"
-GALLERY = "Gallery@2.15.0"
+CONTAINER = "GroupContainer"
+LABEL = "Label"
+RECT = "Rectangle"
+IMAGE = "Image"
+ICON = "Classic/Icon"
+GALLERY = "Gallery"
 GALLERY_VARIANT = "BrowseLayout_Vertical_OneTextVariant_ver5.0"
 BUTTON = "Classic/Button"
 TEXTINPUT = "Classic/TextInput"
@@ -260,7 +258,7 @@ def date(name, x, y, w, h, default="Today()", visible=None, extra=None):
     p = {"X": x, "Y": y, "Width": w, "Height": h, "DefaultDate": default, "Format": q("dd-mmm-yyyy"),
          "Fill": "cSunk", "Color": "cInk", "BorderColor": "cLine2", "BorderThickness": 1,
          "IconBackground": "cPanel2", "IconFill": "cJcb",
-         "CalendarHeaderFill": "cJcb", "Size": 12, "Font": UI, "PaddingLeft": 10,
+         "Size": 12, "Font": UI, "PaddingLeft": 10,
          "IsEditable": "false", "StartYear": 2020, "EndYear": 2040}
     if visible is not None:
         p["Visible"] = visible

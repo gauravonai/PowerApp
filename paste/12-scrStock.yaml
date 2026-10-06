@@ -1,5 +1,5 @@
 - rootStk:
-    Control: GroupContainer@1.4.0
+    Control: GroupContainer
     Variant: ManualLayout
     Properties:
       BorderColor: =cBg
@@ -16,7 +16,7 @@
       Y: =0
     Children:
       - hdrBgStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -25,7 +25,7 @@
             X: =0
             Y: =0
       - hdrLnStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -34,7 +34,7 @@
             X: =0
             Y: =55
       - hdrMkStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -43,7 +43,7 @@
             X: =16
             Y: =10
       - hdrMkTStk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -61,7 +61,7 @@
             X: =16
             Y: =10
       - hdrT1Stk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -79,7 +79,7 @@
             X: =62
             Y: =8
       - hdrT2Stk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -97,7 +97,7 @@
             X: =62
             Y: =23
       - hdrDivStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -106,7 +106,7 @@
             X: =690
             Y: =12
       - hdrAvStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -115,7 +115,7 @@
             X: =706
             Y: =12
       - hdrAvTStk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -133,7 +133,7 @@
             X: =706
             Y: =12
       - hdrNmStk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -151,7 +151,7 @@
             X: =746
             Y: =10
       - hdrRlStk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cJcb
@@ -169,7 +169,7 @@
             X: =746
             Y: =29
       - hdrSrcStk:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -248,7 +248,7 @@
             X: =1246
             Y: =13
       - navBgStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -257,7 +257,7 @@
             X: =0
             Y: =56
       - navLnStk:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -266,7 +266,7 @@
             X: =223
             Y: =56
       - navGalStk:
-          Control: Gallery@2.15.0
+          Control: Gallery
           Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
           Properties:
             BorderColor: =cLine
@@ -303,7 +303,7 @@
             Y: =70
           Children:
             - navSelBgStk:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cPanel
                   Fill: =cPanel
@@ -313,7 +313,7 @@
                   X: =0
                   Y: =0
             - navSelBarStk:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cJcb
                   Fill: =cJcb
@@ -323,7 +323,7 @@
                   X: =0
                   Y: =0
             - navHdrStk:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk3
@@ -343,7 +343,7 @@
                   X: =18
                   Y: =16
             - navItmStk:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =If(ThisItem.Key = "stock", cInk, cInk2)
@@ -363,7 +363,7 @@
                   X: =21
                   Y: =0
             - navCntStk:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Center
                   Color: =cJcb
@@ -384,7 +384,7 @@
                   X: =178
                   Y: =10
       - bodyStk:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer
           Variant: AutoLayout
           Properties:
             BorderColor: =cBg
@@ -410,7 +410,7 @@
             Y: =56
           Children:
             - hdStk:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -426,7 +426,7 @@
                   RadiusTopRight: =0
                 Children:
                   - hdTStk:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -444,7 +444,7 @@
                         X: =0
                         Y: =4
                   - hdSStk:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -462,7 +462,7 @@
                         X: =0
                         Y: =44
                   - hdLStk:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -471,7 +471,7 @@
                         X: =0
                         Y: =71
             - fltStk:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -565,7 +565,7 @@
                         X: =578
                         Y: =0
                   - cntStk:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -583,7 +583,7 @@
                         X: =800
                         Y: =0
             - tbStk:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -599,7 +599,7 @@
                   RadiusTopRight: =0
                 Children:
                   - stStkHb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel
                         Fill: =cPanel
@@ -608,7 +608,7 @@
                         X: =0
                         Y: =0
                   - stStkHl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -617,7 +617,7 @@
                         X: =0
                         Y: =29
                   - stStkH0:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -635,7 +635,7 @@
                         X: =16
                         Y: =0
                   - stStkH1:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -653,7 +653,7 @@
                         X: =196
                         Y: =0
                   - stStkH2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -671,7 +671,7 @@
                         X: =456
                         Y: =0
                   - stStkH3:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -689,7 +689,7 @@
                         X: =576
                         Y: =0
                   - stStkH4:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -707,7 +707,7 @@
                         X: =686
                         Y: =0
                   - stStkH5:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -725,7 +725,7 @@
                         X: =796
                         Y: =0
                   - stStkH6:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -743,7 +743,7 @@
                         X: =852
                         Y: =0
                   - stStkH7:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -761,7 +761,7 @@
                         X: =918
                         Y: =0
                   - stStkH8:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -779,7 +779,7 @@
                         X: =968
                         Y: =0
                   - stStkGal:
-                      Control: Gallery@2.15.0
+                      Control: Gallery
                       Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
                       Properties:
                         BorderColor: =cLine
@@ -796,7 +796,7 @@
                         Y: =30
                       Children:
                         - stStkC0:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -814,7 +814,7 @@
                               X: =16
                               Y: =0
                         - stStkC1:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -832,7 +832,7 @@
                               X: =196
                               Y: =0
                         - stStkC2:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -850,7 +850,7 @@
                               X: =456
                               Y: =0
                         - stStkC3:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -868,7 +868,7 @@
                               X: =576
                               Y: =0
                         - stStkC4Mb:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
@@ -877,7 +877,7 @@
                               X: =686
                               Y: =18
                         - stStkC4Mf:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: |-
                                 =With({p: If(ThisItem.RefQty > 0, Min(1, Max(0, ThisItem.OnHand / ThisItem.RefQty)), If(ThisItem.OnHand > 0, 1, 0))}, If(p <= 0.2, cStop, p <= 0.4, cWarn, cOk))
@@ -888,7 +888,7 @@
                               X: =686
                               Y: =18
                         - stStkC4:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk
@@ -906,7 +906,7 @@
                               X: =732
                               Y: =0
                         - stStkC5:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk2
@@ -924,7 +924,7 @@
                               X: =796
                               Y: =0
                         - stStkC6:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk
@@ -942,7 +942,7 @@
                               X: =852
                               Y: =0
                         - stStkC7:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -960,7 +960,7 @@
                               X: =918
                               Y: =0
                         - stStkC8:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Center
                               BorderColor: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).C, cInk3)
@@ -982,7 +982,7 @@
                               X: =968
                               Y: =10
                         - stStkSep:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
@@ -991,7 +991,7 @@
                               X: =0
                               Y: =41
                   - stStkEmp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk2
@@ -1010,7 +1010,7 @@
                         X: =0
                         Y: =60
                   - stStkEmp2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk3

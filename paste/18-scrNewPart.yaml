@@ -1,5 +1,5 @@
 - rootNp:
-    Control: GroupContainer@1.4.0
+    Control: GroupContainer
     Variant: ManualLayout
     Properties:
       BorderColor: =cBg
@@ -16,7 +16,7 @@
       Y: =0
     Children:
       - hdrBgNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -25,7 +25,7 @@
             X: =0
             Y: =0
       - hdrLnNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -34,7 +34,7 @@
             X: =0
             Y: =55
       - hdrMkNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -43,7 +43,7 @@
             X: =16
             Y: =10
       - hdrMkTNp:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -61,7 +61,7 @@
             X: =16
             Y: =10
       - hdrT1Np:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -79,7 +79,7 @@
             X: =62
             Y: =8
       - hdrT2Np:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -97,7 +97,7 @@
             X: =62
             Y: =23
       - hdrDivNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -106,7 +106,7 @@
             X: =690
             Y: =12
       - hdrAvNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -115,7 +115,7 @@
             X: =706
             Y: =12
       - hdrAvTNp:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -133,7 +133,7 @@
             X: =706
             Y: =12
       - hdrNmNp:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -151,7 +151,7 @@
             X: =746
             Y: =10
       - hdrRlNp:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cJcb
@@ -169,7 +169,7 @@
             X: =746
             Y: =29
       - hdrSrcNp:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -248,7 +248,7 @@
             X: =1246
             Y: =13
       - navBgNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -257,7 +257,7 @@
             X: =0
             Y: =56
       - navLnNp:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -266,7 +266,7 @@
             X: =223
             Y: =56
       - navGalNp:
-          Control: Gallery@2.15.0
+          Control: Gallery
           Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
           Properties:
             BorderColor: =cLine
@@ -303,7 +303,7 @@
             Y: =70
           Children:
             - navSelBgNp:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cPanel
                   Fill: =cPanel
@@ -313,7 +313,7 @@
                   X: =0
                   Y: =0
             - navSelBarNp:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cJcb
                   Fill: =cJcb
@@ -323,7 +323,7 @@
                   X: =0
                   Y: =0
             - navHdrNp:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk3
@@ -343,7 +343,7 @@
                   X: =18
                   Y: =16
             - navItmNp:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =If(ThisItem.Key = "newpart", cInk, cInk2)
@@ -363,7 +363,7 @@
                   X: =21
                   Y: =0
             - navCntNp:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Center
                   Color: =cJcb
@@ -384,7 +384,7 @@
                   X: =178
                   Y: =10
       - bodyNp:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer
           Variant: AutoLayout
           Properties:
             BorderColor: =cBg
@@ -410,7 +410,7 @@
             Y: =56
           Children:
             - hdNp:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -426,7 +426,7 @@
                   RadiusTopRight: =0
                 Children:
                   - hdTNp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -444,7 +444,7 @@
                         X: =0
                         Y: =4
                   - hdSNp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -462,7 +462,7 @@
                         X: =0
                         Y: =44
                   - hdLNp:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -471,7 +471,7 @@
                         X: =0
                         Y: =71
             - cdSNp:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -487,7 +487,7 @@
                   RadiusTopRight: =0
                 Children:
                   - cdSNpTb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel2
                         Fill: =cPanel2
@@ -496,7 +496,7 @@
                         X: =0
                         Y: =0
                   - cdSNpTl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -505,7 +505,7 @@
                         X: =0
                         Y: =46
                   - cdSNpTt:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -587,7 +587,7 @@
                         X: =Parent.Width - 120
                         Y: =9
                   - h1Np:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -605,7 +605,7 @@
                         X: =16
                         Y: =50
                   - h2Np:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -623,7 +623,7 @@
                         X: =16
                         Y: =66
                   - galNp:
-                      Control: Gallery@2.15.0
+                      Control: Gallery
                       Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
                       Properties:
                         BorderColor: =cLine
@@ -639,7 +639,7 @@
                         Y: =88
                       Children:
                         - srLNp:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Center
                               Color: =cInk3
@@ -976,7 +976,7 @@
                               X: =894
                               Y: =44
                         - delNp:
-                            Control: Classic/Icon@2.5.0
+                            Control: Classic/Icon
                             Properties:
                               AccessibleLabel: ="Remove this row"
                               Color: =cStop
@@ -993,7 +993,7 @@
                               X: =1040
                               Y: =24
                         - sepNp:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
@@ -1002,7 +1002,7 @@
                               X: =0
                               Y: =85
                   - cntNp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3

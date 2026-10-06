@@ -1,5 +1,5 @@
 {
-"Label@2.5.1": [
+"Label": [
 "Align",
 "AutoHeight",
 "BorderColor",
@@ -229,7 +229,6 @@
 "BorderStyle",
 "BorderThickness",
 "CalendarCellHeight",
-"CalendarHeaderFill",
 "CalendarPlaceholderWidth",
 "CalendarWidth",
 "Color",
@@ -289,7 +288,7 @@
 "minimumHeight",
 "minimumWidth"
 ],
-"Rectangle@2.3.0": [
+"Rectangle": [
 "AccessibleLabel",
 "BorderColor",
 "BorderStyle",
@@ -322,7 +321,7 @@
 "minimumHeight",
 "minimumWidth"
 ],
-"Image@2.2.3": [
+"Image": [
 "AccessibleLabel",
 "ApplyEXIFOrientation",
 "AutoDisableOnSelect",
@@ -378,7 +377,7 @@
 "minimumHeight",
 "minimumWidth"
 ],
-"Classic/Icon@2.5.0": [
+"Classic/Icon": [
 "AccessibleLabel",
 "AutoDisableOnSelect",
 "BorderColor",
@@ -419,7 +418,7 @@
 "minimumHeight",
 "minimumWidth"
 ],
-"Gallery@2.15.0": [
+"Gallery": [
 "AccessibleLabel",
 "AllItems",
 "AllItemsCount",
@@ -478,7 +477,7 @@
 "minimumHeight",
 "minimumWidth"
 ],
-"GroupContainer@1.4.0": [
+"GroupContainer": [
 "BorderColor",
 "BorderStyle",
 "BorderThickness",

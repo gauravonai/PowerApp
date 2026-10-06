@@ -1,5 +1,5 @@
 - rootPr:
-    Control: GroupContainer@1.4.0
+    Control: GroupContainer
     Variant: ManualLayout
     Properties:
       BorderColor: =RGBA(255, 255, 255, 1)
@@ -16,7 +16,7 @@
       Y: =0
     Children:
       - bgPr:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =RGBA(255, 255, 255, 1)
             Fill: =RGBA(255, 255, 255, 1)
@@ -25,7 +25,7 @@
             X: =0
             Y: =0
       - tbPr:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer
           Variant: ManualLayout
           Properties:
             BorderColor: =cLine
@@ -105,7 +105,7 @@
                   X: =124
                   Y: =8
             - tbNPr:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk3
@@ -137,7 +137,7 @@
             X: =40
             Y: =If(gPrinting, 10, 58)
       - phPr:
-          Control: Gallery@2.15.0
+          Control: Gallery
           Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
           Properties:
             BorderColor: =cLine
@@ -157,7 +157,7 @@
             Y: =580
           Children:
             - phIPr:
-                Control: Image@2.2.3
+                Control: Image
                 Properties:
                   BorderColor: =RGBA(153,153,153,1)
                   BorderThickness: =1

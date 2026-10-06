@@ -1,5 +1,5 @@
 - rootPu:
-    Control: GroupContainer@1.4.0
+    Control: GroupContainer
     Variant: ManualLayout
     Properties:
       BorderColor: =cBg
@@ -16,7 +16,7 @@
       Y: =0
     Children:
       - hdrBgPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -25,7 +25,7 @@
             X: =0
             Y: =0
       - hdrLnPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -34,7 +34,7 @@
             X: =0
             Y: =55
       - hdrMkPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -43,7 +43,7 @@
             X: =16
             Y: =10
       - hdrMkTPu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -61,7 +61,7 @@
             X: =16
             Y: =10
       - hdrT1Pu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -79,7 +79,7 @@
             X: =62
             Y: =8
       - hdrT2Pu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -97,7 +97,7 @@
             X: =62
             Y: =23
       - hdrDivPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -106,7 +106,7 @@
             X: =690
             Y: =12
       - hdrAvPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cJcb
             Fill: =cJcb
@@ -115,7 +115,7 @@
             X: =706
             Y: =12
       - hdrAvTPu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Center
             Color: =cOnJcb
@@ -133,7 +133,7 @@
             X: =706
             Y: =12
       - hdrNmPu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk
@@ -151,7 +151,7 @@
             X: =746
             Y: =10
       - hdrRlPu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cJcb
@@ -169,7 +169,7 @@
             X: =746
             Y: =29
       - hdrSrcPu:
-          Control: Label@2.5.1
+          Control: Label
           Properties:
             Align: =Align.Left
             Color: =cInk3
@@ -248,7 +248,7 @@
             X: =1246
             Y: =13
       - navBgPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cBg
             Fill: =cBg
@@ -257,7 +257,7 @@
             X: =0
             Y: =56
       - navLnPu:
-          Control: Rectangle@2.3.0
+          Control: Rectangle
           Properties:
             BorderColor: =cLine
             Fill: =cLine
@@ -266,7 +266,7 @@
             X: =223
             Y: =56
       - navGalPu:
-          Control: Gallery@2.15.0
+          Control: Gallery
           Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
           Properties:
             BorderColor: =cLine
@@ -303,7 +303,7 @@
             Y: =70
           Children:
             - navSelBgPu:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cPanel
                   Fill: =cPanel
@@ -313,7 +313,7 @@
                   X: =0
                   Y: =0
             - navSelBarPu:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cJcb
                   Fill: =cJcb
@@ -323,7 +323,7 @@
                   X: =0
                   Y: =0
             - navHdrPu:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk3
@@ -343,7 +343,7 @@
                   X: =18
                   Y: =16
             - navItmPu:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =If(ThisItem.Key = "purch", cInk, cInk2)
@@ -363,7 +363,7 @@
                   X: =21
                   Y: =0
             - navCntPu:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Center
                   Color: =cJcb
@@ -384,7 +384,7 @@
                   X: =178
                   Y: =10
       - bodyPu:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer
           Variant: AutoLayout
           Properties:
             BorderColor: =cBg
@@ -410,7 +410,7 @@
             Y: =56
           Children:
             - hdPu:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -426,7 +426,7 @@
                   RadiusTopRight: =0
                 Children:
                   - hdTPu:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -444,7 +444,7 @@
                         X: =0
                         Y: =4
                   - hdSPu:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -462,7 +462,7 @@
                         X: =0
                         Y: =44
                   - hdLPu:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -503,7 +503,7 @@
                         X: =Parent.Width - 180
                         Y: =8
             - tiPu:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: AutoLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -527,7 +527,7 @@
                   RadiusTopRight: =0
                 Children:
                   - tiPu0:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -542,7 +542,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiPu0Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cStop
                               Fill: =cStop
@@ -551,7 +551,7 @@
                               X: =0
                               Y: =0
                         - tiPu0T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -569,7 +569,7 @@
                               X: =16
                               Y: =14
                         - tiPu0V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -587,7 +587,7 @@
                               X: =16
                               Y: =32
                         - tiPu0S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -606,7 +606,7 @@
                               X: =16
                               Y: =66
                   - tiPu1:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -621,7 +621,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiPu1Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cJcb
                               Fill: =cJcb
@@ -630,7 +630,7 @@
                               X: =0
                               Y: =0
                         - tiPu1T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -648,7 +648,7 @@
                               X: =16
                               Y: =14
                         - tiPu1V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -666,7 +666,7 @@
                               X: =16
                               Y: =32
                         - tiPu1S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -685,7 +685,7 @@
                               X: =16
                               Y: =66
                   - tiPu2:
-                      Control: GroupContainer@1.4.0
+                      Control: GroupContainer
                       Variant: ManualLayout
                       Properties:
                         BorderColor: =cLine
@@ -700,7 +700,7 @@
                         RadiusTopRight: =0
                       Children:
                         - tiPu2Bar:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cWarn
                               Fill: =cWarn
@@ -709,7 +709,7 @@
                               X: =0
                               Y: =0
                         - tiPu2T:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -727,7 +727,7 @@
                               X: =16
                               Y: =14
                         - tiPu2V:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -745,7 +745,7 @@
                               X: =16
                               Y: =32
                         - tiPu2S:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -764,7 +764,7 @@
                               X: =16
                               Y: =66
             - cdEPu:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -781,7 +781,7 @@
                   Visible: =gPanel = "purch"
                 Children:
                   - cdEPuTb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel2
                         Fill: =cPanel2
@@ -790,7 +790,7 @@
                         X: =0
                         Y: =0
                   - cdEPuTl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -799,7 +799,7 @@
                         X: =0
                         Y: =46
                   - cdEPuTt:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -817,7 +817,7 @@
                         X: =16
                         Y: =0
                   - pe0PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -863,7 +863,7 @@
                         X: =16
                         Y: =76
                   - pe1PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -908,7 +908,7 @@
                         X: =284
                         Y: =76
                   - pe2PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -954,7 +954,7 @@
                         X: =820
                         Y: =76
                   - pe3PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1000,7 +1000,7 @@
                         X: =16
                         Y: =138
                   - pe4PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1045,7 +1045,7 @@
                         X: =284
                         Y: =138
                   - pe5PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1090,7 +1090,7 @@
                         X: =552
                         Y: =138
                   - pe6PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1135,7 +1135,7 @@
                         X: =820
                         Y: =138
                   - pe7PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1179,7 +1179,7 @@
                         X: =16
                         Y: =200
                   - pe8PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1201,7 +1201,6 @@
                       Properties:
                         BorderColor: =cLine2
                         BorderThickness: =1
-                        CalendarHeaderFill: =cJcb
                         Color: =cInk
                         DefaultDate: =LookUp(nfPurch, PartNo = gEditPurch && RequestNo = gEditPurchReq).ExpectedDate
                         EndYear: =2040
@@ -1219,7 +1218,7 @@
                         X: =284
                         Y: =200
                   - pe9PuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1264,7 +1263,7 @@
                         X: =552
                         Y: =200
                   - peAPuLb:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1373,7 +1372,7 @@
                         X: =Parent.Width - 170
                         Y: =262
             - cdBPu:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -1389,7 +1388,7 @@
                   RadiusTopRight: =0
                 Children:
                   - cdBPuTb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel2
                         Fill: =cPanel2
@@ -1398,7 +1397,7 @@
                         X: =0
                         Y: =0
                   - cdBPuTl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -1407,7 +1406,7 @@
                         X: =0
                         Y: =46
                   - cdBPuTt:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -1458,7 +1457,7 @@
                         X: =Parent.Width - 300
                         Y: =9
                   - bkPuHb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel
                         Fill: =cPanel
@@ -1467,7 +1466,7 @@
                         X: =0
                         Y: =46
                   - bkPuHl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -1476,7 +1475,7 @@
                         X: =0
                         Y: =75
                   - bkPuH0:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1494,7 +1493,7 @@
                         X: =16
                         Y: =46
                   - bkPuH1:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1512,7 +1511,7 @@
                         X: =186
                         Y: =46
                   - bkPuH2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1530,7 +1529,7 @@
                         X: =426
                         Y: =46
                   - bkPuH4:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1548,7 +1547,7 @@
                         X: =520
                         Y: =46
                   - bkPuH5:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1566,7 +1565,7 @@
                         X: =680
                         Y: =46
                   - bkPuH6:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1584,7 +1583,7 @@
                         X: =850
                         Y: =46
                   - bkPuGal:
-                      Control: Gallery@2.15.0
+                      Control: Gallery
                       Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
                       Properties:
                         BorderColor: =cLine
@@ -1600,7 +1599,7 @@
                         Y: =76
                       Children:
                         - bkPuC0:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1618,7 +1617,7 @@
                               X: =16
                               Y: =4
                         - bkPuC0s:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -1636,7 +1635,7 @@
                               X: =16
                               Y: =23.0
                         - bkPuC1:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1654,7 +1653,7 @@
                               X: =186
                               Y: =0
                         - bkPuC2:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cStop
@@ -1672,7 +1671,7 @@
                               X: =426
                               Y: =0
                         - bkPuC3:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1690,7 +1689,7 @@
                               X: =506
                               Y: =0
                         - bkPuC4:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1708,7 +1707,7 @@
                               X: =520
                               Y: =0
                         - bkPuC5:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1726,7 +1725,7 @@
                               X: =680
                               Y: =0
                         - bkPuC6:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -1777,7 +1776,7 @@
                               X: =960
                               Y: =8
                         - bkPuSep:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
@@ -1786,7 +1785,7 @@
                               X: =0
                               Y: =43
                   - bkPuEmp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk2
@@ -1805,7 +1804,7 @@
                         X: =0
                         Y: =106
                   - bkPuEmp2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk3
@@ -1824,7 +1823,7 @@
                         X: =0
                         Y: =136
             - fltPu:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =RGBA(0,0,0,0)
@@ -1893,7 +1892,7 @@
                         X: =214
                         Y: =0
             - cdTPu:
-                Control: GroupContainer@1.4.0
+                Control: GroupContainer
                 Variant: ManualLayout
                 Properties:
                   BorderColor: =cLine
@@ -1909,7 +1908,7 @@
                   RadiusTopRight: =0
                 Children:
                   - cdTPuTb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel2
                         Fill: =cPanel2
@@ -1918,7 +1917,7 @@
                         X: =0
                         Y: =0
                   - cdTPuTl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -1927,7 +1926,7 @@
                         X: =0
                         Y: =46
                   - cdTPuTt:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk
@@ -1945,7 +1944,7 @@
                         X: =16
                         Y: =0
                   - ptPuHb:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cPanel
                         Fill: =cPanel
@@ -1954,7 +1953,7 @@
                         X: =0
                         Y: =46
                   - ptPuHl:
-                      Control: Rectangle@2.3.0
+                      Control: Rectangle
                       Properties:
                         BorderColor: =cLine
                         Fill: =cLine
@@ -1963,7 +1962,7 @@
                         X: =0
                         Y: =75
                   - ptPuH0:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -1981,7 +1980,7 @@
                         X: =16
                         Y: =46
                   - ptPuH1:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -1999,7 +1998,7 @@
                         X: =176
                         Y: =46
                   - ptPuH2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Right
                         Color: =cInk3
@@ -2017,7 +2016,7 @@
                         X: =246
                         Y: =46
                   - ptPuH4:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -2035,7 +2034,7 @@
                         X: =332
                         Y: =46
                   - ptPuH5:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -2053,7 +2052,7 @@
                         X: =462
                         Y: =46
                   - ptPuH6:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -2071,7 +2070,7 @@
                         X: =562
                         Y: =46
                   - ptPuH7:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -2089,7 +2088,7 @@
                         X: =712
                         Y: =46
                   - ptPuH8:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Left
                         Color: =cInk3
@@ -2107,7 +2106,7 @@
                         X: =822
                         Y: =46
                   - ptPuGal:
-                      Control: Gallery@2.15.0
+                      Control: Gallery
                       Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
                       Properties:
                         BorderColor: =cLine
@@ -2124,7 +2123,7 @@
                         Y: =76
                       Children:
                         - ptPuC0:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -2142,7 +2141,7 @@
                               X: =16
                               Y: =4
                         - ptPuC0s:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -2160,7 +2159,7 @@
                               X: =16
                               Y: =24.0
                         - ptPuC1:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =cInk
@@ -2178,7 +2177,7 @@
                               X: =176
                               Y: =0
                         - ptPuC2:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Right
                               Color: =If(ThisItem.QtyConfirmed < ThisItem.QtyRequired, cWarn, cOk)
@@ -2196,7 +2195,7 @@
                               X: =246
                               Y: =0
                         - ptPuC3:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -2214,7 +2213,7 @@
                               X: =322
                               Y: =0
                         - ptPuC4:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -2232,7 +2231,7 @@
                               X: =332
                               Y: =0
                         - ptPuC5:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -2250,7 +2249,7 @@
                               X: =462
                               Y: =0
                         - ptPuC6:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -2268,7 +2267,7 @@
                               X: =562
                               Y: =4
                         - ptPuC6s:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk3
@@ -2286,7 +2285,7 @@
                               X: =562
                               Y: =24.0
                         - ptPuC7:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Center
                               BorderColor: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Stage)).C, cInk3)
@@ -2308,7 +2307,7 @@
                               X: =712
                               Y: =12
                         - ptPuC8:
-                            Control: Label@2.5.1
+                            Control: Label
                             Properties:
                               Align: =Align.Left
                               Color: =cInk
@@ -2358,7 +2357,7 @@
                               X: =922
                               Y: =8
                         - ptPuSep:
-                            Control: Rectangle@2.3.0
+                            Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
@@ -2367,7 +2366,7 @@
                               X: =0
                               Y: =45
                   - ptPuEmp:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk2
@@ -2386,7 +2385,7 @@
                         X: =0
                         Y: =106
                   - ptPuEmp2:
-                      Control: Label@2.5.1
+                      Control: Label
                       Properties:
                         Align: =Align.Center
                         Color: =cInk3

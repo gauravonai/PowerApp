@@ -8,7 +8,7 @@ Screens:
       Fill: =cBg
     Children:
       - rootNa:
-          Control: GroupContainer@1.4.0
+          Control: GroupContainer
           Variant: ManualLayout
           Properties:
             BorderColor: =cBg
@@ -25,7 +25,7 @@ Screens:
             Y: =0
           Children:
             - bgNa:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cBg
                   Fill: =cBg
@@ -34,7 +34,7 @@ Screens:
                   X: =0
                   Y: =0
             - mkNa:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cJcb
                   Fill: =cJcb
@@ -43,7 +43,7 @@ Screens:
                   X: =433
                   Y: =200
             - mkTNa:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Center
                   Color: =cOnJcb
@@ -61,7 +61,7 @@ Screens:
                   X: =433
                   Y: =200
             - t1Na:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk3
@@ -79,7 +79,7 @@ Screens:
                   X: =490
                   Y: =202
             - t2Na:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk
@@ -97,7 +97,7 @@ Screens:
                   X: =490
                   Y: =220
             - lnNa:
-                Control: Rectangle@2.3.0
+                Control: Rectangle
                 Properties:
                   BorderColor: =cJcb
                   Fill: =cJcb
@@ -106,7 +106,7 @@ Screens:
                   X: =433
                   Y: =262
             - hNa:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk
@@ -124,7 +124,7 @@ Screens:
                   X: =433
                   Y: =290
             - bNa:
-                Control: Label@2.5.1
+                Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk2

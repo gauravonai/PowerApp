@@ -93,7 +93,7 @@ public static class Render {
     string kind = t switch {
       var s when s.StartsWith("Label") => "label", var s when s.EndsWith("Button") => "button", var s when s.EndsWith("TextInput") => "input",
       var s when s.EndsWith("DropDown") => "dropdown", var s when s.EndsWith("DatePicker") => "date", var s when s.StartsWith("Rectangle") => "rect",
-      var s when s.StartsWith("Image") => "image", var s when s.EndsWith("Icon@2.5.0") => "icon", "HtmlViewer" => "html", "AddMedia" => "media", _ => "other" };
+      var s when s.StartsWith("Image") => "image", var s when s.EndsWith("Icon") => "icon", "HtmlViewer" => "html", "AddMedia" => "media", _ => "other" };
     if (kind == "other") return;
     Emit(kind, c, ax, ay, w, h, prm);
   }

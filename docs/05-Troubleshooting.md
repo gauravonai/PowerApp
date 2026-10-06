@@ -79,3 +79,10 @@ column (select the label in the gallery template → Width) or send me the scree
 **Print / Save as PDF** hides the toolbar, prints the current screen through the browser's print dialog,
 then brings the toolbar back. If your browser blocks the dialog, press Ctrl+P while on the print screen.
 For the cleanest PDF choose *Margins: None* and *Background graphics: On* in the print dialog.
+
+## 15. Import errors like "PA2108 Unknown property 'X' for control type 'Y'"
+Studio reads the screens and rejects a property that the *current* version of that control no longer has.
+Fixed so far: `CalendarHeaderFill` on Classic/DatePicker (removed 06-Oct-2026). The `PA2105 … older than the
+current version` warnings came from pinned control versions; all versions are now left out, so Studio uses
+its current ones. If you see another PA2108, send me the lines. It's one property, removed in one place,
+and every screen is regenerated.
