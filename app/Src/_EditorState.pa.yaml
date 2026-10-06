@@ -4,6 +4,8 @@
 # ************************************************************************************************
 EditorState:
   ScreensOrder:
+    - scrWelcome
+    - scrLogin
     - scrDash
     - scrMgrDash
     - scrStock
@@ -26,4 +28,4 @@ EditorState:
     - scrPurch
     - scrLic
     - scrTeam
-    - scrNoAccess
+    - scrAbout

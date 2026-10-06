@@ -40,7 +40,7 @@ public static class Render {
   static void Emit(string kind, JsonElement c, double x, double y, double w, double h, RecordValue prm, Dictionary<string, object> extra = null) {
     var d = new Dictionary<string, object> { ["k"] = kind, ["n"] = c.GetProperty("name").GetString(), ["x"] = x, ["y"] = y, ["w"] = w, ["h"] = h };
     foreach (var p in new[] { "Fill", "Color", "BorderColor" }) { var e = P(c, p); if (e != null) d[p] = Col(Ev(e, prm)); }
-    foreach (var p in new[] { "Text", "HintText", "Default", "Size", "FontWeight", "Align", "VerticalAlign", "Font", "BorderThickness", "Icon", "Image", "HtmlText", "PaddingLeft", "Wrap", "DefaultDate", "Mode" }) {
+    foreach (var p in new[] { "Text", "HintText", "Default", "Size", "FontWeight", "Align", "VerticalAlign", "Font", "BorderThickness", "Icon", "Image", "HtmlText", "PaddingLeft", "Wrap", "DefaultDate", "Mode", "RadiusTopLeft", "ImagePosition" }) {
       var e = P(c, p); if (e != null) d[p] = Str(Ev(e, prm));
     }
     if (kind == "dropdown") { var it = P(c, "Items"); var def = P(c, "Default"); d["Text"] = def != null ? Str(Ev(def, prm)) : Str(Ev("First(" + it + ").Value", prm)); }
@@ -108,6 +108,8 @@ public static class Render {
       if (par == null) roots[c.GetProperty("screen").GetString()] = c; else { if (!Kids.ContainsKey(par)) Kids[par] = new(); Kids[par].Add(c); }
     }
     Directory.CreateDirectory(outDir);
+    foreach (var (name, c) in h.Ctl) if (c.GetProperty("type").GetString() == "Timer")   // previews show timers as finished
+      h.SetCtl(name, "Value", FormulaValue.New(double.Parse(c.GetProperty("props").GetProperty("Duration").GetString())));
     // galleries: AllItems = their current Items, so "empty" labels behave like in Power Apps
     foreach (var (name, c) in h.Ctl) {
       if (!c.GetProperty("type").GetString().StartsWith("Gallery") || c.GetProperty("gallery").ValueKind == JsonValueKind.String) continue;
@@ -129,6 +131,13 @@ public static class Render {
       Draw(root, 0, 0, 1366, 768, null, 0, 0);
       File.WriteAllText(Path.Combine(outDir, scr + ".json"), JsonSerializer.Serialize(Out));
     }
+    // extra states of the login screen
+    foreach (var mode in new[] { "register", "setpw" }) {
+      h.Engine.Eval($"Set(gLoginMode, \"{mode}\"); Set(gPend, LookUp(tblUsers, Username = \"gaurav.shelke\"))", null, h.Opts);
+      Out = new(); Draw(roots["scrLogin"], 0, 0, 1366, 768, null, 0, 0);
+      File.WriteAllText(Path.Combine(outDir, "scrLogin-" + mode + ".json"), JsonSerializer.Serialize(Out));
+    }
+    h.Engine.Eval("Set(gLoginMode, \"login\")", null, h.Opts);
     Console.WriteLine($"rendered {roots.Count} screens to {outDir}");
     return 0;
   }

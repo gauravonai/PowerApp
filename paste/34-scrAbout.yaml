@@ -1,0 +1,1822 @@
+- rootAb:
+    Control: GroupContainer
+    Variant: ManualLayout
+    Properties:
+      BorderColor: =cBg
+      BorderThickness: =0
+      DropShadow: =DropShadow.None
+      Fill: =cBg
+      Height: =768
+      RadiusBottomLeft: =0
+      RadiusBottomRight: =0
+      RadiusTopLeft: =0
+      RadiusTopRight: =0
+      Width: =1366
+      X: =0
+      Y: =0
+    Children:
+      - bgAb:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =768
+            Image: =imgBg
+            ImagePosition: =ImagePosition.Fill
+            Width: =1366
+            X: =0
+            Y: =0
+      - bgShAb:
+          Control: Rectangle
+          Properties:
+            BorderColor: =RGBA(8, 6, 10, 0.55)
+            Fill: =RGBA(8, 6, 10, 0.55)
+            Height: =768
+            Width: =1366
+            X: =0
+            Y: =0
+      - hdrBgAb:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cGlass
+            Fill: =cGlass
+            Height: =56
+            Width: =1366
+            X: =0
+            Y: =0
+      - hdrLnAb:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =2
+            Image: =imgLine
+            ImagePosition: =ImagePosition.Stretch
+            Width: =1366
+            X: =0
+            Y: =55
+      - hdrLogoAb:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =40
+            Image: =imgLogo
+            ImagePosition: =ImagePosition.Fit
+            Width: =40
+            X: =14
+            Y: =8
+      - hdrT1Ab:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: ="EDS Lab Material Portal"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =330
+            X: =62
+            Y: =6
+      - hdrT2Ab:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Semibold
+            Height: =18
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="JCB India  ·  " & tLabName
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =330
+            X: =62
+            Y: =31
+      - hdrSyncAb:
+          Control: Classic/Button
+          Properties:
+            Align: =Align.Center
+            BorderColor: =cClear
+            BorderThickness: =0
+            Color: =If(nfHealthOk || !(gRole in ["Lab Admin", "Lab Lead"]), cOk, cWarn)
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk3
+            DisabledFill: =RGBA(255,255,255,0.05)
+            Fill: =cClear
+            FocusedBorderColor: =cJcb
+            FocusedBorderThickness: =2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            HoverBorderColor: =cClear
+            HoverColor: =cJcb
+            HoverFill: =cJcbWash
+            OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+            PaddingLeft: =8
+            PaddingRight: =8
+            PressedBorderColor: =cClear
+            PressedColor: =cJcb
+            PressedFill: =cJcbWash
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Size: =9
+            Text: =If(nfHealthOk || !(gRole in ["Lab Admin", "Lab Lead"]), "●  Live  ·  Synced ", "●  Check Data Health  ·  Synced ") & Text(gLastSync, "hh:mm")
+            Tooltip: ="Refresh all data now. Stock also refreshes by itself every 2 minutes."
+            Width: =200
+            X: =630
+            Y: =13
+      - hdrTmrAb:
+          Control: Timer
+          Properties:
+            AutoPause: =true
+            AutoStart: =true
+            Duration: =120000
+            Height: =10
+            OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+            Repeat: =true
+            Visible: =false
+            Width: =10
+            X: =0
+            Y: =0
+      - hdrAsLAb:
+          Control: Label
+          Properties:
+            Align: =Align.Right
+            Color: =cInk3
+            Font: =fUI
+            FontWeight: =FontWeight.Normal
+            Height: =30
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="View as"
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =CountRows(gRoleOptions) > 1
+            Width: =56
+            X: =840
+            Y: =13
+      - hdrAsAb:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =cInputLine
+            BorderThickness: =1
+            ChevronBackground: =cInput
+            ChevronFill: =cOrange
+            ChevronHoverBackground: =cJcb
+            ChevronHoverFill: =cOnJcb
+            Color: =cInputInk
+            Default: =If(gRole = "Lab Lead", "Lab Admin", gRole)
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk2
+            DisabledFill: =RGBA(255,255,255,0.10)
+            Fill: =cInput
+            FocusedBorderColor: =cOrange
+            FocusedBorderThickness: =2
+            Font: =fUI
+            Height: =30
+            HoverBorderColor: =cJcb
+            HoverColor: =cInputInk
+            HoverFill: =cInputHover
+            Items: =gRoleOptions
+            OnChange: =Set(gRole, If(Self.Selected.Value = "Lab Admin" && gIsLead, "Lab Lead", Self.Selected.Value)); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade)
+            PaddingLeft: =10
+            PressedBorderColor: =cJcb
+            PressedColor: =cInputInk
+            PressedFill: =cInput
+            SelectionColor: =cOnJcb
+            SelectionFill: =cJcb
+            Size: =10
+            Tooltip: ="Switch role without logging out (only the roles you hold)"
+            Visible: =CountRows(gRoleOptions) > 1
+            Width: =128
+            X: =902
+            Y: =13
+      - hdrAvAb:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =36
+            Image: =imgAvatar
+            ImagePosition: =ImagePosition.Fit
+            Width: =36
+            X: =1042
+            Y: =10
+      - hdrAvTAb:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cOnJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =36
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =gMeInitials
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =36
+            X: =1042
+            Y: =10
+      - hdrNmAb:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =gMeName
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =160
+            X: =1084
+            Y: =8
+      - hdrRlAb:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Semibold
+            Height: =18
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =gRole & " view"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =160
+            X: =1084
+            Y: =28
+      - hdrOutAb:
+          Control: Classic/Button
+          Properties:
+            Align: =Align.Center
+            BorderColor: =cLine2
+            BorderThickness: =1
+            Color: =cInk
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk3
+            DisabledFill: =RGBA(255,255,255,0.05)
+            Fill: =RGBA(255,255,255,0.08)
+            FocusedBorderColor: =cJcb
+            FocusedBorderThickness: =2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            HoverBorderColor: =cJcb
+            HoverColor: =cJcb
+            HoverFill: =cJcbWash
+            OnSelect: |-
+              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+            PaddingLeft: =8
+            PaddingRight: =8
+            PressedBorderColor: =cJcb
+            PressedColor: =cJcb
+            PressedFill: =cJcbWash
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Size: =10
+            Text: ="Log Out"
+            Tooltip: ="Back to the login page to choose a role (or let someone else sign in)"
+            Width: =100
+            X: =1252
+            Y: =12
+      - navBgAb:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cGlass
+            Fill: =cGlass
+            Height: =711
+            Width: =224
+            X: =0
+            Y: =57
+      - navLnAb:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cLine
+            Fill: =cLine
+            Height: =711
+            Width: =1
+            X: =223
+            Y: =57
+      - navGalAb:
+          Control: Gallery
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
+          Properties:
+            BorderColor: =cLine
+            BorderThickness: =0
+            Fill: =RGBA(0,0,0,0)
+            Height: =696
+            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+            OnSelect: |-
+              =If(!ThisItem.Hdr, Switch(ThisItem.Key,
+                "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
+                "stock", Navigate(scrStock, ScreenTransition.Fade),
+                "bom", Navigate(scrBom, ScreenTransition.Fade),
+                "newreq", Navigate(scrNewReq, ScreenTransition.Fade),
+                "myreq", Navigate(scrMyReq, ScreenTransition.Fade),
+                "newpart", Navigate(scrNewPart, ScreenTransition.Fade),
+                "queue", Navigate(scrQueue, ScreenTransition.Fade),
+                "newpartq", Navigate(scrNewPartQ, ScreenTransition.Fade),
+                "inventory", Navigate(scrInventory, ScreenTransition.Fade),
+                "inward", Navigate(scrInward, ScreenTransition.Fade),
+                "ledger", Navigate(scrLedger, ScreenTransition.Fade),
+                "demand", Navigate(scrDemand, ScreenTransition.Fade),
+                "invoice", Navigate(scrInvoice, ScreenTransition.Fade),
+                "invlist", Navigate(scrInvList, ScreenTransition.Fade),
+                "cost", Navigate(scrCost, ScreenTransition.Fade),
+                "proc", Navigate(scrProc, ScreenTransition.Fade),
+                "purch", Navigate(scrPurch, ScreenTransition.Fade),
+                "lic", Navigate(scrLic, ScreenTransition.Fade),
+                "team", Navigate(scrTeam, ScreenTransition.Fade),
+                "about", Navigate(scrAbout, ScreenTransition.Fade)))
+            ShowScrollbar: =false
+            TemplatePadding: =0
+            TemplateSize: =40
+            Width: =224
+            X: =0
+            Y: =64
+          Children:
+            - navHdrAb:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cOrange
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =24
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =10
+                  Text: =ThisItem.Label
+                  VerticalAlign: =VerticalAlign.Middle
+                  Visible: =ThisItem.Hdr
+                  Width: =190
+                  X: =18
+                  Y: =14
+            - navBtnAb:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Left
+                  BorderColor: =cClear
+                  BorderThickness: =0
+                  Color: =If(!ThisItem.Hdr && ThisItem.Key = "about", cOnJcb, cInk2)
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =If(!ThisItem.Hdr && ThisItem.Key = "about", cJcb, cClear)
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =If(!ThisItem.Hdr && ThisItem.Key = "about", FontWeight.Bold, FontWeight.Semibold)
+                  Height: =34
+                  HoverBorderColor: =cClear
+                  HoverColor: =If(!ThisItem.Hdr && ThisItem.Key = "about", cOnJcb, cJcb)
+                  HoverFill: =If(!ThisItem.Hdr && ThisItem.Key = "about", cJcb, cJcbWash)
+                  OnSelect: =Select(Parent)
+                  PaddingLeft: =40
+                  PaddingRight: =28
+                  PressedBorderColor: =cClear
+                  PressedColor: =cOnJcb
+                  PressedFill: =cOrange
+                  RadiusBottomLeft: =17
+                  RadiusBottomRight: =17
+                  RadiusTopLeft: =17
+                  RadiusTopRight: =17
+                  Size: =10
+                  Text: =ThisItem.Label
+                  Visible: =!ThisItem.Hdr
+                  Width: =204
+                  X: =10
+                  Y: =3
+            - navIcoAb:
+                Control: Classic/Icon
+                Properties:
+                  Color: =If(!ThisItem.Hdr && ThisItem.Key = "about", cOnJcb, cJcb)
+                  Height: =18
+                  HoverColor: =cOrange
+                  Icon: =ThisItem.Ico
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Visible: =!ThisItem.Hdr
+                  Width: =18
+                  X: =24
+                  Y: =11
+            - navCntAb:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =cClear
+                  BorderThickness: =0
+                  Color: =cJcb
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =If(!ThisItem.Hdr && ThisItem.Key = "about", cOnJcb, cJcbWash)
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =18
+                  HoverBorderColor: =cClear
+                  HoverColor: =cOnJcb
+                  HoverFill: =cJcb
+                  OnSelect: =Select(Parent)
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PressedBorderColor: =cClear
+                  PressedColor: =cJcb
+                  PressedFill: =cJcbWash
+                  RadiusBottomLeft: =9
+                  RadiusBottomRight: =9
+                  RadiusTopLeft: =9
+                  RadiusTopRight: =9
+                  Size: =9
+                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                  Width: =26
+                  X: =190
+                  Y: =11
+      - bodyAb:
+          Control: GroupContainer
+          Variant: AutoLayout
+          Properties:
+            BorderColor: =cClear
+            BorderThickness: =0
+            DropShadow: =DropShadow.None
+            Fill: =cClear
+            Height: =711
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            LayoutJustifyContent: =LayoutJustifyContent.Start
+            LayoutOverflowY: =LayoutOverflow.Scroll
+            PaddingBottom: =26
+            PaddingLeft: =26
+            PaddingRight: =26
+            PaddingTop: =26
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =1142
+            X: =224
+            Y: =57
+          Children:
+            - hdAb:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  BorderThickness: =0
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =0
+                  Height: =76
+                  LayoutMinHeight: =76
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - hdTAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =22
+                        Text: ="About"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =820
+                        X: =0
+                        Y: =2
+                  - hdSAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =22
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =If(gRole in ["Lab Admin", "Lab Lead"], "Who we are, what this portal does, and checks that the data is complete", "Who we are and what this portal does")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =1000
+                        X: =0
+                        Y: =42
+                  - hdLAb:
+                      Control: Image
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =3
+                        Image: =imgLine
+                        ImagePosition: =ImagePosition.Stretch
+                        Width: =260
+                        X: =0
+                        Y: =68
+            - cdAAb:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =250
+                  LayoutMinHeight: =250
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdAAbTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdAAbTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdAAbTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="About Us"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - tAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =60
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="The Electrical Development (EDS) Lab at JCB India, Pune builds and tests prototype wiring harnesses and electrical systems for new machines. Every build needs the right connectors, terminals, wire and tools on the shelf at the right time."
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =1050
+                        Wrap: =true
+                        X: =16
+                        Y: =58
+                  - t2Ab:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =60
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          ="This portal is how the lab runs its material: engineers check stock and raise requests from a BOM, the Lab Admin reserves and releases parts, managers approve and follow spend and deliveries."
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =1050
+                        Wrap: =true
+                        X: =16
+                        Y: =124
+                  - t3Ab:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Version 2.0  ·  October 2026"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =800
+                        X: =16
+                        Y: =200
+            - ftAb:
+                Control: GroupContainer
+                Variant: AutoLayout
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  BorderThickness: =0
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =0
+                  Height: =110
+                  LayoutAlignItems: =LayoutAlignItems.Stretch
+                  LayoutDirection: =LayoutDirection.Horizontal
+                  LayoutGap: =14
+                  LayoutJustifyContent: =LayoutJustifyContent.Start
+                  LayoutMinHeight: =110
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - ftAb0:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - ftAb0Bar:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cJcb
+                              Fill: =cJcb
+                              Height: =Parent.Height
+                              Width: =4
+                              X: =0
+                              Y: =0
+                        - ftAb0T:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="Live Stock"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =12
+                        - ftAb0V:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =36
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="Sum of Movements"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =30
+                        - ftAb0S:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =30
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="Never typed in, so it can never drift from the ledger"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 26
+                              Wrap: =true
+                              X: =18
+                              Y: =66
+                  - ftAb1:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - ftAb1Bar:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cOk
+                              Fill: =cOk
+                              Height: =Parent.Height
+                              Width: =4
+                              X: =0
+                              Y: =0
+                        - ftAb1T:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="Request to Release"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =12
+                        - ftAb1V:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =36
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="Reserve · Release"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =30
+                        - ftAb1S:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =30
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="Shortfalls go straight to Ongoing Purchase"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 26
+                              Wrap: =true
+                              X: =18
+                              Y: =66
+                  - ftAb2:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - ftAb2Bar:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cSteel
+                              Fill: =cSteel
+                              Height: =Parent.Height
+                              Width: =4
+                              X: =0
+                              Y: =0
+                        - ftAb2T:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="Approvals"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =12
+                        - ftAb2V:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =36
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="Admin + Manager"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =30
+                        - ftAb2S:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =30
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="Requests, brand new parts and PRs"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 26
+                              Wrap: =true
+                              X: =18
+                              Y: =66
+                  - ftAb3:
+                      Control: GroupContainer
+                      Variant: ManualLayout
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =1
+                        DropShadow: =DropShadow.None
+                        Fill: =cPanel
+                        FillPortions: =1
+                        LayoutMinWidth: =120
+                        RadiusBottomLeft: =12
+                        RadiusBottomRight: =12
+                        RadiusTopLeft: =12
+                        RadiusTopRight: =12
+                      Children:
+                        - ftAb3Bar:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cWarn
+                              Fill: =cWarn
+                              Height: =Parent.Height
+                              Width: =4
+                              X: =0
+                              Y: =0
+                        - ftAb3T:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
+                              Height: =18
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: ="Cost and Invoices"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =12
+                        - ftAb3V:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =36
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =14
+                              Text: ="Finance-Locked"
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =Parent.Width - 26
+                              X: =18
+                              Y: =30
+                        - ftAb3S:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =30
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: ="Cost sheet and invoice from the same numbers"
+                              VerticalAlign: =VerticalAlign.Top
+                              Width: =Parent.Width - 26
+                              Wrap: =true
+                              X: =18
+                              Y: =66
+            - cdHAb:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =330
+                  LayoutMinHeight: =330
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                  Visible: =gRole in ["Lab Admin", "Lab Lead"]
+                Children:
+                  - cdHAbTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdHAbTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdHAbTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: |-
+                          ="Data Health: Is the App Reading All of Excel?"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - hsAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="The workbook counts its own rows with Excel formulas (Settings tab). The app counts what it actually read. Both columns must match; then every stock figure in the app is the same as Excel."
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =1050
+                        Wrap: =true
+                        X: =16
+                        Y: =54
+                  - hlAbHb:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =RGBA(255,255,255,0.06)
+                        Fill: =RGBA(255,255,255,0.06)
+                        Height: =30
+                        Width: =1090
+                        X: =0
+                        Y: =100
+                  - hlAbHl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine2
+                        Fill: =cLine2
+                        Height: =1
+                        Width: =1090
+                        X: =0
+                        Y: =129
+                  - hlAbH0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Check"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =254
+                        X: =16
+                        Y: =100
+                  - hlAbH1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="In Excel"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =134
+                        X: =276
+                        Y: =100
+                  - hlAbH2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Read by the App"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =154
+                        X: =416
+                        Y: =100
+                  - hlAbH4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Result"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =114
+                        X: =606
+                        Y: =100
+                  - hlAbH5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="If Not OK"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =342
+                        X: =726
+                        Y: =100
+                  - hlAbGal:
+                      Control: Gallery
+                      Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =0
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =128
+                        Items: |-
+                          =Table({Check: "Parts rows", Excel: nXlParts, App: nAppParts, Ok: nXlParts = nAppParts, Fix: "Data row limit too low, or tblParts not connected"}, {Check: "Movement rows", Excel: nXlMoves, App: nAppMoves, Ok: nXlMoves = nAppMoves, Fix: "Set Settings > Data row limit to 2000"}, {Check: "Stock total (all parts)", Excel: nXlStock, App: nAppStock, Ok: Abs(nXlStock - nAppStock) < 0.001, Fix: "A movement row was not read, or has a Type the app does not know"})
+                        ShowScrollbar: =true
+                        TemplatePadding: =0
+                        TemplateSize: =40
+                        Width: =1090
+                        X: =0
+                        Y: =130
+                      Children:
+                        - hlAbC0:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.Check
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =252
+                              X: =16
+                              Y: =0
+                        - hlAbC1:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =If(IsBlank(ThisItem.Excel), "Not set up", Text(ThisItem.Excel, "#,##0"))
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =132
+                              X: =276
+                              Y: =0
+                        - hlAbC2:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =Text(ThisItem.App, "#,##0")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =152
+                              X: =416
+                              Y: =0
+                        - hlAbC3:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =""
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =22
+                              X: =576
+                              Y: =0
+                        - hlAbC4:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =Coalesce(LookUp(nfPill, K = Upper(If(IsBlank(ThisItem.Excel), "NOT SET UP", ThisItem.Ok, "OK", "ISSUES"))).C, cInk3)
+                              BorderThickness: =1
+                              Color: =Coalesce(LookUp(nfPill, K = Upper(If(IsBlank(ThisItem.Excel), "NOT SET UP", ThisItem.Ok, "OK", "ISSUES"))).C, cInk3)
+                              Fill: =RGBA(0,0,0,0.25)
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =22
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =9
+                              Text: =Coalesce(LookUp(nfPill, K = Upper(If(IsBlank(ThisItem.Excel), "NOT SET UP", ThisItem.Ok, "OK", "ISSUES"))).D, If(IsBlank(ThisItem.Excel), "NOT SET UP", ThisItem.Ok, "OK", "ISSUES"))
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =112
+                              Wrap: =false
+                              X: =606
+                              Y: =9
+                        - hlAbC5:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =40
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =10
+                              Text: =If(ThisItem.Ok, "—", ThisItem.Fix)
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =340
+                              X: =726
+                              Y: =0
+                        - hlAbSep:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cLine
+                              Fill: =cLine
+                              Height: =1
+                              Width: =Parent.TemplateWidth
+                              X: =0
+                              Y: =39
+                  - hlAbEmp:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Center
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =14
+                        Text: ="Nothing here yet"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Visible: =CountRows(hlAbGal.AllItems) = 0
+                        Width: =1090
+                        X: =0
+                        Y: =160
+                  - hsyAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Last read from Excel at " & Text(gLastSync, "hh:mm:ss") & ". The app re-reads stock every 2 minutes and before every BOM compare."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =700
+                        Wrap: =true
+                        X: =16
+                        Y: =270
+                  - hrfAb:
+                      Control: Classic/Button
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =cJcb
+                        BorderThickness: =1
+                        Color: =cOnJcb
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =cJcb
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =38
+                        HoverBorderColor: =cOrange
+                        HoverColor: =cOnJcb
+                        HoverFill: =cOrange
+                        OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify(nfHealthText & ".", If(nfHealthOk, NotificationType.Success, NotificationType.Warning))
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PressedBorderColor: =cOrange
+                        PressedColor: =cOnJcb
+                        PressedFill: =cOrange
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =11
+                        Text: ="Re-read Excel Now"
+                        Width: =180
+                        X: =Parent.Width - 196
+                        Y: =274
+            - cdOAb:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =200
+                  LayoutMinHeight: =200
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                  Visible: =gRole in ["Lab Admin", "Lab Lead"]
+                Children:
+                  - cdOAbTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdOAbTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdOAbTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Check One Part Against Excel"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - osAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =22
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Type a part number and compare these figures with the LiveStock tab in Excel."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =700
+                        X: =16
+                        Y: =54
+                  - pqAb:
+                      Control: Classic/TextInput
+                      Properties:
+                        BorderColor: =cInputLine
+                        BorderThickness: =1
+                        Color: =cInputInk
+                        Default: =""
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk2
+                        DisabledFill: =RGBA(255,255,255,0.10)
+                        Fill: =cInput
+                        FocusedBorderColor: =cOrange
+                        FocusedBorderThickness: =2
+                        Font: =fMono
+                        Height: =38
+                        HintText: ="Part number, for example 7219/0373"
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cInputInk
+                        HoverFill: =cInputHover
+                        PaddingLeft: =10
+                        PaddingRight: =6
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cInputInk
+                        PressedFill: =cInput
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Size: =12
+                        Width: =300
+                        X: =16
+                        Y: =86
+                  - orAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =38
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =If(IsBlank(Trim(pqAb.Text)), "", IsBlank(LookUp(nfStock, PN = Upper(Trim(pqAb.Text)))), "Not in the catalogue (or retired).", LookUp(nfStock, PN = Upper(Trim(pqAb.Text))).PartNo & "  ·  on hand " & Text(LookUp(nfStock, PN = Upper(Trim(pqAb.Text))).OnHand, "#,##0") & "  ·  reserved " & Text(LookUp(nfStock, PN = Upper(Trim(pqAb.Text))).Reserved, "#,##0") & "  ·  available " & Text(LookUp(nfStock, PN = Upper(Trim(pqAb.Text))).Avail, "#,##0") & "  ·  from " & CountRows(Filter(nfMoves, PN = LookUp(nfStock, PN = Upper(Trim(pqAb.Text))).PN)) & " movement rows")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =740
+                        X: =332
+                        Y: =86
+                  - onAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: |-
+                          ="On hand is the sum of the Movements rows for that part: receipts, returns and adjustments up, issues, scrap and adjustments down."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =1000
+                        Wrap: =true
+                        X: =16
+                        Y: =136
+            - cdPAb:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =150
+                  LayoutMinHeight: =150
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                  Visible: =gRole in ["Lab Admin", "Lab Lead"]
+                Children:
+                  - cdPAbTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdPAbTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdPAbTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Photo Storage Check"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - psAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Harness label photos are saved to OneDrive > EDS Lab Portal Photos. Press Test to confirm the folder and the OneDrive connection work for you."
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =760
+                        Wrap: =true
+                        X: =16
+                        Y: =54
+                  - prAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =If(StartsWith(gPhotoCheck, "OK"), cOk, cWarn)
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =36
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: =gPhotoCheck
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =820
+                        Wrap: =true
+                        X: =16
+                        Y: =98
+                  - ptAb:
+                      Control: Classic/Button
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =cLine2
+                        BorderThickness: =1
+                        Color: =cInk
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =RGBA(255,255,255,0.08)
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =38
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cJcb
+                        HoverFill: =cJcbWash
+                        OnSelect: |-
+                          =Set(gPhotoCheck, IfError("OK: folder found at " & OneDriveForBusiness.GetFileMetadataByPath("/EDS Lab Portal Photos").Path & ". Photos will save.", "Problem: " & FirstError.Message & ". Create the folder EDS Lab Portal Photos in your OneDrive and make sure the OneDrive for Business connection is added (Data panel)."))
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cJcb
+                        PressedFill: =cJcbWash
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =11
+                        Text: ="Test Photo Storage"
+                        Width: =180
+                        X: =Parent.Width - 196
+                        Y: =56
+            - cdRAb:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =190
+                  LayoutMinHeight: =190
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdRAbTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdRAbTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdRAbTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="How Roles Work"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - r1Ab:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: ="Engineer"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =200
+                        X: =16
+                        Y: =56
+                  - r1tAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Checks stock, compares a BOM, raises requests and brand new parts, follows them to release."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =850
+                        X: =220
+                        Y: =56
+                  - r2Ab:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: ="Lab Admin / Lab Lead"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =200
+                        X: =16
+                        Y: =88
+                  - r2tAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Approves, reserves and releases material, receives stock, invoices, purchasing, team access. Can view every role."
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =850
+                        Wrap: =true
+                        X: =220
+                        Y: =88
+                  - r3Ab:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: ="Manager"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =200
+                        X: =16
+                        Y: =136
+                  - r3tAb:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =11
+                        Text: ="Approves requests, brand new parts and PRs; dashboards for revenue, spend and deliveries. Can also work as an Engineer."
+                        VerticalAlign: =VerticalAlign.Top
+                        Width: =850
+                        Wrap: =true
+                        X: =220
+                        Y: =136

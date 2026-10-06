@@ -34,15 +34,68 @@ public static class Sim {
       if (v != null) Sel(name, v);
     }
 
-    Console.WriteLine("== 1. sign-in and role");
+    Console.WriteLine("== 1. log in: username + password from the Users tab");
     E(h.App.GetProperty("onstart").GetString()); Touch();
-    Ok(S("gRole") == "Lab Lead", "gaurav.shelke@jcb.com is found in Users and gets role Lab Lead (got " + S("gRole") + ")");
-    Ok(S("nfMeName") == "Gaurav Shelke" && S("nfMeInitials") == "GS", "name and initials come from the Users row");
-    var roleExpr = h.App.GetProperty("named").EnumerateArray().First(x => x.GetProperty("name").GetString() == "nfRoleCanon").GetProperty("expr").GetString();
-    foreach (var (raw, wantRole) in new[] { ("Lab Lead", "Lab Lead"), ("lab admin", "Lab Admin"), ("Admin", "Lab Admin"), ("Store", "Lab Admin"), ("Lab In-charge", "Lab Admin"), ("Manager", "Manager"), ("mgr", "Manager"), ("Engineer", "Engineer"), ("Tester", "Engineer"), ("", "Engineer") }) {
-      var got = S(roleExpr.Replace("Text(nfMeRow.Role)", "\"" + raw + "\""));
+    var tests = h.App.GetProperty("tests");
+    Ok(S("gRole") == "" && S("gMeName") == "", "nobody is signed in when the app opens");
+    var canon = tests.GetProperty("role_canon").GetString();
+    foreach (var (raw, wantRole) in new[] { ("Lab Lead", "Lab Lead"), ("lab admin", "Lab Admin"), ("Admin", "Lab Admin"), ("Store", "Lab Admin"), ("Lab In-charge", "Lab Admin"), ("Manager", "Manager"), ("mgr", "Manager"), ("Engineer", "Engineer"), ("Tester", "Engineer"), ("", "Engineer"), ("Pending", "Pending"), ("disabled", "Disabled") }) {
+      var got = S(canon.Replace("RAWROLE", "\"" + raw + "\""));
       Ok(got == wantRole, $"role text '{raw}' -> {wantRole} (got {got})");
     }
+    var hx = tests.GetProperty("hash_fx").GetString();
+    foreach (var v in tests.GetProperty("hash_vectors").EnumerateArray()) {
+      var pw = v[0].GetString(); var salt = v[1].GetString(); var wantH = v[2].GetString();
+      var got = S(hx.Replace("\"PW\"", "\"" + pw.Replace("\"", "\"\"") + "\"").Replace("\"SALT\"", "\"" + salt + "\""));
+      Ok(got == wantH, $"password scramble of '{pw}' matches the reference implementation ({got.Substring(0, 13)}...)");
+    }
+    void Login(string u, string p) { Txt("usrLi", u); Txt("pwdLi", p); Do("goLi"); }
+    void Logout() { Do("hdrOutDsh"); }
+    Login("", ""); Ok(S("gLoginMsg") == "Type your username.", "empty username -> 'Type your username.'");
+    Login("nobody.here", "x"); Ok(S("gLoginMsg").StartsWith("No account"), "unknown username refused");
+    Login("Gaurav.Shelke", "");
+    Ok(S("gLoginMode") == "setpw" && S("gRole") == "", "first login of gaurav.shelke (no password yet, same person as this PC's account) -> choose a password");
+    Txt("np1Li", "abc"); Txt("np2Li", "abc"); Do("spLi"); Ok(S("gLoginMsg").StartsWith("At least 6"), "password 'abc' refused (too short)");
+    Txt("np1Li", "abcdefg"); Txt("np2Li", "abcdefg"); Do("spLi"); Ok(S("gLoginMsg").StartsWith("At least 6"), "password without a number refused");
+    Txt("np1Li", "abc123"); Txt("np2Li", "abc124"); Do("spLi"); Ok(S("gLoginMsg").Contains("do not match"), "mismatched confirmation refused");
+    Txt("np2Li", "abc123"); Do("spLi");
+    var hv = tests.GetProperty("hash_vectors")[0][2].GetString();
+    Ok(S("gRole") == "Lab Lead" && S("gMeName") == "Gaurav Shelke" && S("gMeInitials") == "GS" && MockNav.Log.LastOrDefault() == "scrDash", "password saved and logged in: Gaurav Shelke, GS, Lab Lead, Dashboard");
+    Ok(S("LookUp(tblUsers, Username = \"gaurav.shelke\").Password") == hv && !S("LookUp(tblUsers, Username = \"gaurav.shelke\").Password").Contains("abc123"), "Users.Password holds the scrambled value, never 'abc123'");
+    Ok(N("CountRows(gRoleOptions)") == 3, "Lab Lead can view as Engineer / Lab Admin / Manager");
+    Logout(); Ok(S("gRole") == "" && MockNav.Log.LastOrDefault() == "scrLogin", "Log Out clears the session and returns to the login page");
+    Login("gaurav.shelke", "abc999"); Ok(S("gRole") == "" && S("gLoginMsg") == "That password is not right." && N("gLoginTries") == 1, "wrong password refused, attempt counted");
+    Login("gaurav.shelke", "abc123"); Ok(S("gRole") == "Lab Lead" && N("gLoginTries") == 0, "right password logs in");
+    var eng = "akshay.aadarsh";
+    var engRow = (RecordValue)E($"LookUp(tblUsers, Username = \"{eng}\")");
+    Logout(); Login(eng, "whatever");
+    Ok(S("gRole") == "" && S("gLoginMsg").Contains("no password yet"), "another person with no password cannot claim the account from this PC");
+    Login("gaurav.shelke", "abc123");
+    Do("tmC6t", "OnSelect", FormulaValue.NewRecordFromFields(new NamedValue("ThisItem", engRow)));
+    var code = S("gTempCode"); code = code.Substring(code.Length - 6);
+    Ok(S($"LookUp(tblUsers, Username = \"{eng}\").Password").StartsWith("t1$") && code.All(char.IsDigit), $"Lab Lead gives {eng} a temporary password ({code}), stored scrambled");
+    Logout(); Login(eng, code);
+    Ok(S("gLoginMode") == "setpw", "temporary password accepted -> must choose own password");
+    Txt("np1Li", "Pune2026x"); Txt("np2Li", "Pune2026x"); Do("spLi");
+    Ok(S("gRole") == "Engineer" && N("CountRows(gRoleOptions)") == 1, "engineer logged in, Engineer only");
+    Logout(); Login(eng, code); Ok(S("gRole") == "", "the temporary password no longer works once used");
+    E($"Patch(tblUsers, LookUp(tblUsers, Username = \"{eng}\"), {{Role: \"Engineer, Manager\"}})"); Touch();
+    Login(eng, "Pune2026x");
+    Ok(S("gRole") == "Engineer" && N("CountRows(gRoleOptions)") == 2 && S("Last(gRoleOptions).Value") == "Manager", "Role 'Engineer, Manager' -> opens as Engineer, can switch to Manager");
+    Logout();
+    E("Set(gLoginMode, \"register\")");
+    foreach (var (c, v) in new[] { ("rgNLi", "Test Person"), ("rgULi", "test.person"), ("rgBLi", "EDS"), ("rgMLi", ""), ("rgP1Li", "abc12345"), ("rgP2Li", "abc12345") }) Txt(c, v);
+    Do("rsLi");
+    Ok(S("LookUp(tblUsers, Username = \"test.person\").Role") == "Pending" && S("gLoginMsg").StartsWith("✓"), "Register creates a Pending row in Users");
+    Do("rsLi"); Ok(S("gLoginMsg").Contains("already exists"), "registering the same username twice is refused");
+    Login("test.person", "abc12345"); Ok(S("gRole") == "" && S("gLoginMsg").Contains("waiting"), "a pending person cannot log in until approved");
+    E("Patch(tblUsers, LookUp(tblUsers, Username = \"test.person\"), {Role: \"Engineer\"})"); Touch();
+    Login("test.person", "abc12345"); Ok(S("gRole") == "Engineer", "after approval (Role = Engineer) the person logs in");
+    Logout(); Login("gaurav.shelke", "abc123");
+
+    Console.WriteLine("== 1b. Data Health: the app read every row the workbook counts");
+    Ok(N("nXlParts") == 418 && N("nAppParts") == 418 && N("nXlMoves") == 775 && N("nAppMoves") == 775, $"Excel ROWS() = app rows: parts 418/418, movements {N("nXlMoves")}/{N("nAppMoves")}");
+    Ok(Math.Abs(N("nXlStock") - N("nAppStock")) < 0.001 && S("nfHealthText") == "All rows read", $"Excel stock total {N("nXlStock")} = app total {N("nAppStock")} -> '{S("nfHealthText")}'");
 
     Console.WriteLine("== 2. live stock = sum of Movements (same rule as the LiveStock SUMIFS)");
     var exp = new Dictionary<string, double>();
@@ -127,7 +180,7 @@ public static class Sim {
     Do("sfGoRd");
     var SHT = S("First(Filter(nfReq, Kind = \"SHORTAGE\")).RequestNo");
     Ok(SHT == "SHT-" + DateTime.Today.Year + "-00002", "shortfall request SHT-YYYY-00002 created (got " + SHT + ")");
-    Ok(S($"LookUp(nfReq, RequestNo = \"{SHT}\").ParentRequest") == REQ && S($"LookUp(nfReq, RequestNo = \"{SHT}\").RaisedByEmail") == "gaurav.shelke@jcb.com", "ParentRequest = original, requester kept");
+    Ok(S($"LookUp(nfReq, RequestNo = \"{SHT}\").ParentRequest") == REQ && S($"LookUp(nfReq, RequestNo = \"{SHT}\").RaisedByEmail") == S("gMeEmail"), "ParentRequest = original, requester kept");
     Ok(N($"First(Filter(nfLines, RequestNo = \"{SHT}\")).QtyRequested") == 10, "its single line asks for 10");
     Ok(N($"CountRows(Table(ParseJSON(LookUp(nfReq, RequestNo = \"{REQ}\").History)))") == 4, "original History appended (4 events: submitted, reserved, released, split)");
 
@@ -192,6 +245,8 @@ public static class Sim {
     Ok(S(P("imgPieTest".Length > 0 ? "revPieMgr" : "", "Image")).StartsWith("data:image/svg+xml;utf8,"), "revenue pie renders an SVG data URI");
 
     Console.WriteLine($"\nworkflow simulation: {Pass} passed, {Fail} failed");
+    // Excel recalculates the Settings Data Health formulas after every write; do the same for the previews
+    E("Patch(tblSettings, LookUp(tblSettings, Key = \"ExcelMovementRows\"), {Value: Text(CountRows(tblMoves))}); Patch(tblSettings, LookUp(tblSettings, Key = \"ExcelStockTotal\"), {Value: Text(Sum(nfMoves, SQty))})"); Touch();
     // leave a realistic state behind for the screen previews
     Txt("txtBom", S("nfSampleBom")); Do("goBom");
     E($"Set(gReqNo, \"{REQ}\"); Set(gCostReq, \"{REQ}\"); Set(gPrintKind, \"cost\"); Set(gPrintCkt, 100); Set(gInvReq, \"{REQ}\")");

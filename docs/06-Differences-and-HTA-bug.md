@@ -14,7 +14,7 @@ because you said the HTA "is perfect and aligns with Excel".
 | Line statuses | Pending/Reserved/Released/Short/Closed | `AVAILABLE, PARTIAL, SHORTAGE, NEW PART, RELEASED` (HTA) with the shortfall quantity always shown on the line |
 | Procurement stages | "use what's in the rows" | `PR RAISED → APPROVED → PO RAISED → GRN IN PROGRESS → DELIVERED (CLOSED)`, plus `REJECTED` (exactly the list in the workbook's data validation) |
 | Shortfall request number | (not stated) | `SHT-YYYY-NNNNN`, Kind `SHORTAGE`, as the HTA |
-| Passwords | ignore | Ignored. Sign-in is the Microsoft 365 account. The Password columns stay in Excel for the HTA |
+| Passwords | ignore | **v2: used.** Username + password login against Users (scrambled `p1$…`; HTA `s1$` hashes can't be checked in Power Apps, so everyone sets a new password once). See 09 §1 |
 
 ## 2. A bug in the HTA v8 that the Power Apps version fixes
 

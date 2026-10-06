@@ -13,5 +13,6 @@ python3 tools/verify/export_data.py excel/EDS-Lab-Data-PowerApps.xlsx tools/out/
 python3 tools/verify/prep_bind.py tools/out/app.json tools/out/bind.json >/dev/null
 echo "== Power Fx bind";        dotnet tools/verify/fxsim/bin/Release/net8.0/fxsim.dll bind tools/out/data.json tools/out/bind.json | tail -1
 echo "== workflow simulation";  dotnet tools/verify/fxsim/bin/Release/net8.0/fxsim.dll render tools/out/data.json tools/out/bind.json tools/out/render > tools/out/sim.log; grep -E "FAIL|workflow simulation" tools/out/sim.log
+echo "== every button";         dotnet tools/verify/fxsim/bin/Release/net8.0/fxsim.dll smoke tools/out/data.json tools/out/bind.json | tail -1
 echo "== pack .msapp";          python3 tools/make_msapp.py | tail -2
 echo "== screenshots";          python3 tools/verify/draw_html.py tools/out/render tools/out/html && node tools/verify/shoot.js tools/out/html tools/out/png full

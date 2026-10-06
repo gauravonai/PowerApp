@@ -27,12 +27,15 @@ def prep(f, email, name):
     f = f.replace("Navigate(", "MockNav(").replace("Notify(", "MockNotify(")
     f = f.replace("OneDriveForBusiness.CreateFile(", "MockCreateFile(")
     f = f.replace("OneDriveForBusiness.GetFileContentByPath(", "MockGetFile(")
+    f = f.replace("OneDriveForBusiness.GetFileMetadataByPath(", "MockMeta(")
+    f = f.replace("Exit(true)", "true")
     f = re.sub(r"\bReset\(\s*\w+\s*\)", "true", f)
     for m in re.finditer(r"\bRefresh\(\s*(\w+)\s*\)", f):
         if m.group(1) not in TABLES:
             raise SystemExit("Refresh of unknown table " + m.group(1))
     f = re.sub(r"\bRefresh\(\s*\w+\s*\)", "true", f)
     f = f.replace("Print()", "true").replace("Select(Parent)", "true")
+    f = re.sub(r"\bSetFocus\(\s*\w+\s*\)", "true", f)
     f = re.sub(r"\bParent\.", "ParentX.", f)
     f = re.sub(r"\bSelf\.", "SelfX.", f)
     return f
@@ -57,6 +60,7 @@ def main(app_json, out_json, email="gaurav.shelke@jcb.com", name="Gaurav Shelke"
         "startscreen": app["startscreen"],
         "screens": app["screens"],
         "enums": {k: sorted(v) for k, v in enums.items()},
+        "tests": app.get("tests", {}),
         "controls": [dict(c, props={k: prep(v, email, name) for k, v in c["props"].items()}) for c in app["controls"]],
     }
     json.dump(out, open(out_json, "w"), ensure_ascii=False)

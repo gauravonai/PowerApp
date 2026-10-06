@@ -24,105 +24,203 @@ Screens:
             X: =0
             Y: =0
           Children:
+            - bgInv:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =768
+                  Image: =imgBg
+                  ImagePosition: =ImagePosition.Fill
+                  Width: =1366
+                  X: =0
+                  Y: =0
+            - bgShInv:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =RGBA(8, 6, 10, 0.55)
+                  Fill: =RGBA(8, 6, 10, 0.55)
+                  Height: =768
+                  Width: =1366
+                  X: =0
+                  Y: =0
             - hdrBgInv:
                 Control: Rectangle
                 Properties:
-                  BorderColor: =cBg
-                  Fill: =cBg
+                  BorderColor: =cGlass
+                  Fill: =cGlass
                   Height: =56
                   Width: =1366
                   X: =0
                   Y: =0
             - hdrLnInv:
-                Control: Rectangle
+                Control: Image
                 Properties:
-                  BorderColor: =cLine
-                  Fill: =cLine
-                  Height: =1
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =2
+                  Image: =imgLine
+                  ImagePosition: =ImagePosition.Stretch
                   Width: =1366
                   X: =0
                   Y: =55
-            - hdrMkInv:
-                Control: Rectangle
+            - hdrLogoInv:
+                Control: Image
                 Properties:
-                  BorderColor: =cJcb
-                  Fill: =cJcb
-                  Height: =36
-                  Width: =36
-                  X: =16
-                  Y: =10
-            - hdrMkTInv:
-                Control: Label
-                Properties:
-                  Align: =Align.Center
-                  Color: =cOnJcb
-                  Font: =fUI
-                  FontWeight: =FontWeight.Bold
-                  Height: =36
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =12
-                  Text: ="EDS"
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =36
-                  X: =16
-                  Y: =10
-            - hdrT1Inv:
-                Control: Label
-                Properties:
-                  Align: =Align.Left
-                  Color: =cInk3
-                  Font: =fMono
-                  FontWeight: =FontWeight.Normal
-                  Height: =16
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =9
-                  Text: ="JCB INDIA · PUNE"
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =320
-                  X: =62
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =40
+                  Image: =imgLogo
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =40
+                  X: =14
                   Y: =8
-            - hdrT2Inv:
+            - hdrT1Inv:
                 Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cInk
                   Font: =fUI
-                  FontWeight: =FontWeight.Normal
+                  FontWeight: =FontWeight.Bold
                   Height: =26
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =16
-                  Text: ="Material Management"
+                  Text: ="EDS Lab Material Portal"
                   VerticalAlign: =VerticalAlign.Middle
-                  Width: =320
+                  Width: =330
                   X: =62
-                  Y: =23
-            - hdrDivInv:
-                Control: Rectangle
+                  Y: =6
+            - hdrT2Inv:
+                Control: Label
                 Properties:
-                  BorderColor: =cLine
-                  Fill: =cLine
-                  Height: =32
-                  Width: =1
-                  X: =690
-                  Y: =12
+                  Align: =Align.Left
+                  Color: =cJcb
+                  Font: =fUI
+                  FontWeight: =FontWeight.Semibold
+                  Height: =18
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: ="JCB India  ·  " & tLabName
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =330
+                  X: =62
+                  Y: =31
+            - hdrSyncInv:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =cClear
+                  BorderThickness: =0
+                  Color: =If(nfHealthOk || !(gRole in ["Lab Admin", "Lab Lead"]), cOk, cWarn)
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =cClear
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  HoverBorderColor: =cClear
+                  HoverColor: =cJcb
+                  HoverFill: =cJcbWash
+                  OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PressedBorderColor: =cClear
+                  PressedColor: =cJcb
+                  PressedFill: =cJcbWash
+                  RadiusBottomLeft: =10
+                  RadiusBottomRight: =10
+                  RadiusTopLeft: =10
+                  RadiusTopRight: =10
+                  Size: =9
+                  Text: =If(nfHealthOk || !(gRole in ["Lab Admin", "Lab Lead"]), "●  Live  ·  Synced ", "●  Check Data Health  ·  Synced ") & Text(gLastSync, "hh:mm")
+                  Tooltip: ="Refresh all data now. Stock also refreshes by itself every 2 minutes."
+                  Width: =200
+                  X: =630
+                  Y: =13
+            - hdrTmrInv:
+                Control: Timer
+                Properties:
+                  AutoPause: =true
+                  AutoStart: =true
+                  Duration: =120000
+                  Height: =10
+                  OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+                  Repeat: =true
+                  Visible: =false
+                  Width: =10
+                  X: =0
+                  Y: =0
+            - hdrAsLInv:
+                Control: Label
+                Properties:
+                  Align: =Align.Right
+                  Color: =cInk3
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: ="View as"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Visible: =CountRows(gRoleOptions) > 1
+                  Width: =56
+                  X: =840
+                  Y: =13
+            - hdrAsInv:
+                Control: Classic/DropDown
+                Properties:
+                  BorderColor: =cInputLine
+                  BorderThickness: =1
+                  ChevronBackground: =cInput
+                  ChevronFill: =cOrange
+                  ChevronHoverBackground: =cJcb
+                  ChevronHoverFill: =cOnJcb
+                  Color: =cInputInk
+                  Default: =If(gRole = "Lab Lead", "Lab Admin", gRole)
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk2
+                  DisabledFill: =RGBA(255,255,255,0.10)
+                  Fill: =cInput
+                  FocusedBorderColor: =cOrange
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  Height: =30
+                  HoverBorderColor: =cJcb
+                  HoverColor: =cInputInk
+                  HoverFill: =cInputHover
+                  Items: =gRoleOptions
+                  OnChange: =Set(gRole, If(Self.Selected.Value = "Lab Admin" && gIsLead, "Lab Lead", Self.Selected.Value)); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade)
+                  PaddingLeft: =10
+                  PressedBorderColor: =cJcb
+                  PressedColor: =cInputInk
+                  PressedFill: =cInput
+                  SelectionColor: =cOnJcb
+                  SelectionFill: =cJcb
+                  Size: =10
+                  Tooltip: ="Switch role without logging out (only the roles you hold)"
+                  Visible: =CountRows(gRoleOptions) > 1
+                  Width: =128
+                  X: =902
+                  Y: =13
             - hdrAvInv:
-                Control: Rectangle
+                Control: Image
                 Properties:
-                  BorderColor: =cJcb
-                  Fill: =cJcb
-                  Height: =32
-                  Width: =32
-                  X: =706
-                  Y: =12
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =36
+                  Image: =imgAvatar
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =36
+                  X: =1042
+                  Y: =10
             - hdrAvTInv:
                 Control: Label
                 Properties:
@@ -130,17 +228,17 @@ Screens:
                   Color: =cOnJcb
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =32
+                  Height: =36
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =11
-                  Text: =nfMeInitials
+                  Text: =gMeInitials
                   VerticalAlign: =VerticalAlign.Middle
-                  Width: =32
-                  X: =706
-                  Y: =12
+                  Width: =36
+                  X: =1042
+                  Y: =10
             - hdrNmInv:
                 Control: Label
                 Properties:
@@ -153,127 +251,84 @@ Screens:
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
-                  Size: =12
-                  Text: =nfMeName
+                  Size: =11
+                  Text: =gMeName
                   VerticalAlign: =VerticalAlign.Middle
-                  Width: =200
-                  X: =746
-                  Y: =10
+                  Width: =160
+                  X: =1084
+                  Y: =8
             - hdrRlInv:
                 Control: Label
                 Properties:
                   Align: =Align.Left
                   Color: =cJcb
-                  Font: =fMono
-                  FontWeight: =FontWeight.Normal
-                  Height: =16
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =9
-                  Text: =Upper(gRole)
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =200
-                  X: =746
-                  Y: =29
-            - hdrSrcInv:
-                Control: Label
-                Properties:
-                  Align: =Align.Left
-                  Color: =cInk3
-                  Font: =fMono
-                  FontWeight: =FontWeight.Normal
-                  Height: =32
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =9
-                  Text: ="●  Excel Online · " & CountRows(nfParts) & " parts · " & CountRows(nfMoves) & " moves"
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =170
-                  Wrap: =true
-                  X: =950
-                  Y: =12
-            - hdrAsInv:
-                Control: Classic/DropDown
-                Properties:
-                  BorderColor: =cLine2
-                  BorderThickness: =1
-                  ChevronBackground: =cSunk
-                  ChevronFill: =cInk2
-                  ChevronHoverBackground: =cPanel2
-                  ChevronHoverFill: =cJcb
-                  Color: =cInk
-                  Default: =If(gRole = "Lab Lead", "Lab Admin", gRole)
-                  Fill: =cSunk
                   Font: =fUI
-                  Height: =30
-                  HoverColor: =cInk
-                  HoverFill: =cPanel2
-                  Items: =["Lab Admin", "Engineer", "Manager"]
-                  OnChange: =Set(gRole, If(Self.Selected.Value = "Lab Admin", nfRoleCanon, Self.Selected.Value)); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.None)
-                  PaddingLeft: =10
-                  PressedColor: =cInk
-                  PressedFill: =cPanel2
-                  SelectionColor: =cOnJcb
-                  SelectionFill: =cJcb
-                  Size: =10
-                  Tooltip: ="Preview the portal as another role (admins only)"
-                  Visible: =nfRoleCanon in ["Lab Admin", "Lab Lead"]
-                  Width: =112
-                  X: =1126
-                  Y: =13
-            - hdrRfInv:
+                  FontWeight: =FontWeight.Semibold
+                  Height: =18
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =gRole & " view"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =160
+                  X: =1084
+                  Y: =28
+            - hdrOutInv:
                 Control: Classic/Button
                 Properties:
+                  Align: =Align.Center
                   BorderColor: =cLine2
                   BorderThickness: =1
                   Color: =cInk
                   DisabledBorderColor: =cLine
                   DisabledColor: =cInk3
-                  DisabledFill: =cPanel
-                  Fill: =cPanel2
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =RGBA(255,255,255,0.08)
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
                   Font: =fUI
-                  FontWeight: =FontWeight.Semibold
-                  Height: =30
-                  HoverBorderColor: =cLine2
-                  HoverColor: =cInk
-                  HoverFill: =cLine
-                  OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Notify("Re-read from Excel.", NotificationType.Information)
-                  PaddingLeft: =6
-                  PaddingRight: =6
-                  PressedBorderColor: =cLine2
-                  PressedColor: =cInk
-                  PressedFill: =cLine
-                  RadiusBottomLeft: =2
-                  RadiusBottomRight: =2
-                  RadiusTopLeft: =2
-                  RadiusTopRight: =2
+                  FontWeight: =FontWeight.Bold
+                  Height: =32
+                  HoverBorderColor: =cJcb
+                  HoverColor: =cJcb
+                  HoverFill: =cJcbWash
+                  OnSelect: |-
+                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PressedBorderColor: =cJcb
+                  PressedColor: =cJcb
+                  PressedFill: =cJcbWash
+                  RadiusBottomLeft: =10
+                  RadiusBottomRight: =10
+                  RadiusTopLeft: =10
+                  RadiusTopRight: =10
                   Size: =10
-                  Text: ="Refresh now"
-                  Width: =106
-                  X: =1246
-                  Y: =13
+                  Text: ="Log Out"
+                  Tooltip: ="Back to the login page to choose a role (or let someone else sign in)"
+                  Width: =100
+                  X: =1252
+                  Y: =12
             - navBgInv:
                 Control: Rectangle
                 Properties:
-                  BorderColor: =cBg
-                  Fill: =cBg
-                  Height: =712
+                  BorderColor: =cGlass
+                  Fill: =cGlass
+                  Height: =711
                   Width: =224
                   X: =0
-                  Y: =56
+                  Y: =57
             - navLnInv:
                 Control: Rectangle
                 Properties:
                   BorderColor: =cLine
                   Fill: =cLine
-                  Height: =712
+                  Height: =711
                   Width: =1
                   X: =223
-                  Y: =56
+                  Y: =57
             - navGalInv:
                 Control: Gallery
                 Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
@@ -281,126 +336,151 @@ Screens:
                   BorderColor: =cLine
                   BorderThickness: =0
                   Fill: =RGBA(0,0,0,0)
-                  Height: =690
+                  Height: =696
                   Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
                   OnSelect: |-
                     =If(!ThisItem.Hdr, Switch(ThisItem.Key,
-                      "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.None),
-                      "stock", Navigate(scrStock, ScreenTransition.None),
-                      "bom", Navigate(scrBom, ScreenTransition.None),
-                      "newreq", Navigate(scrNewReq, ScreenTransition.None),
-                      "myreq", Navigate(scrMyReq, ScreenTransition.None),
-                      "newpart", Navigate(scrNewPart, ScreenTransition.None),
-                      "queue", Navigate(scrQueue, ScreenTransition.None),
-                      "newpartq", Navigate(scrNewPartQ, ScreenTransition.None),
-                      "inventory", Navigate(scrInventory, ScreenTransition.None),
-                      "inward", Navigate(scrInward, ScreenTransition.None),
-                      "ledger", Navigate(scrLedger, ScreenTransition.None),
-                      "demand", Navigate(scrDemand, ScreenTransition.None),
-                      "invoice", Navigate(scrInvoice, ScreenTransition.None),
-                      "invlist", Navigate(scrInvList, ScreenTransition.None),
-                      "cost", Navigate(scrCost, ScreenTransition.None),
-                      "proc", Navigate(scrProc, ScreenTransition.None),
-                      "purch", Navigate(scrPurch, ScreenTransition.None),
-                      "lic", Navigate(scrLic, ScreenTransition.None),
-                      "team", Navigate(scrTeam, ScreenTransition.None)))
+                      "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
+                      "stock", Navigate(scrStock, ScreenTransition.Fade),
+                      "bom", Navigate(scrBom, ScreenTransition.Fade),
+                      "newreq", Navigate(scrNewReq, ScreenTransition.Fade),
+                      "myreq", Navigate(scrMyReq, ScreenTransition.Fade),
+                      "newpart", Navigate(scrNewPart, ScreenTransition.Fade),
+                      "queue", Navigate(scrQueue, ScreenTransition.Fade),
+                      "newpartq", Navigate(scrNewPartQ, ScreenTransition.Fade),
+                      "inventory", Navigate(scrInventory, ScreenTransition.Fade),
+                      "inward", Navigate(scrInward, ScreenTransition.Fade),
+                      "ledger", Navigate(scrLedger, ScreenTransition.Fade),
+                      "demand", Navigate(scrDemand, ScreenTransition.Fade),
+                      "invoice", Navigate(scrInvoice, ScreenTransition.Fade),
+                      "invlist", Navigate(scrInvList, ScreenTransition.Fade),
+                      "cost", Navigate(scrCost, ScreenTransition.Fade),
+                      "proc", Navigate(scrProc, ScreenTransition.Fade),
+                      "purch", Navigate(scrPurch, ScreenTransition.Fade),
+                      "lic", Navigate(scrLic, ScreenTransition.Fade),
+                      "team", Navigate(scrTeam, ScreenTransition.Fade),
+                      "about", Navigate(scrAbout, ScreenTransition.Fade)))
                   ShowScrollbar: =false
                   TemplatePadding: =0
-                  TemplateSize: =38
-                  Width: =223
+                  TemplateSize: =40
+                  Width: =224
                   X: =0
-                  Y: =70
+                  Y: =64
                 Children:
-                  - navSelBgInv:
-                      Control: Rectangle
-                      Properties:
-                        BorderColor: =cPanel
-                        Fill: =cPanel
-                        Height: =38
-                        Visible: =!ThisItem.Hdr && ThisItem.Key = "inventory"
-                        Width: =224
-                        X: =0
-                        Y: =0
-                  - navSelBarInv:
-                      Control: Rectangle
-                      Properties:
-                        BorderColor: =cJcb
-                        Fill: =cJcb
-                        Height: =38
-                        Visible: =!ThisItem.Hdr && ThisItem.Key = "inventory"
-                        Width: =3
-                        X: =0
-                        Y: =0
                   - navHdrInv:
                       Control: Label
                       Properties:
                         Align: =Align.Left
-                        Color: =cInk3
-                        Font: =fMono
-                        FontWeight: =FontWeight.Normal
-                        Height: =20
-                        OnSelect: =Select(Parent)
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =24
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: =8
+                        Size: =10
                         Text: =ThisItem.Label
                         VerticalAlign: =VerticalAlign.Middle
                         Visible: =ThisItem.Hdr
                         Width: =190
                         X: =18
-                        Y: =16
-                  - navItmInv:
-                      Control: Label
+                        Y: =14
+                  - navBtnInv:
+                      Control: Classic/Button
                       Properties:
                         Align: =Align.Left
-                        Color: =If(ThisItem.Key = "inventory", cInk, cInk2)
+                        BorderColor: =cClear
+                        BorderThickness: =0
+                        Color: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", cOnJcb, cInk2)
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", cJcb, cClear)
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
                         Font: =fUI
-                        FontWeight: =If(ThisItem.Key = "inventory", FontWeight.Bold, FontWeight.Normal)
-                        Height: =38
+                        FontWeight: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", FontWeight.Bold, FontWeight.Semibold)
+                        Height: =34
+                        HoverBorderColor: =cClear
+                        HoverColor: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", cOnJcb, cJcb)
+                        HoverFill: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", cJcb, cJcbWash)
+                        OnSelect: =Select(Parent)
+                        PaddingLeft: =40
+                        PaddingRight: =28
+                        PressedBorderColor: =cClear
+                        PressedColor: =cOnJcb
+                        PressedFill: =cOrange
+                        RadiusBottomLeft: =17
+                        RadiusBottomRight: =17
+                        RadiusTopLeft: =17
+                        RadiusTopRight: =17
+                        Size: =10
+                        Text: =ThisItem.Label
+                        Visible: =!ThisItem.Hdr
+                        Width: =204
+                        X: =10
+                        Y: =3
+                  - navIcoInv:
+                      Control: Classic/Icon
+                      Properties:
+                        Color: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", cOnJcb, cJcb)
+                        Height: =18
+                        HoverColor: =cOrange
+                        Icon: =ThisItem.Ico
                         OnSelect: =Select(Parent)
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: =12
-                        Text: =ThisItem.Label
-                        VerticalAlign: =VerticalAlign.Middle
                         Visible: =!ThisItem.Hdr
-                        Width: =160
-                        X: =21
-                        Y: =0
+                        Width: =18
+                        X: =24
+                        Y: =11
                   - navCntInv:
-                      Control: Label
+                      Control: Classic/Button
                       Properties:
                         Align: =Align.Center
+                        BorderColor: =cClear
+                        BorderThickness: =0
                         Color: =cJcb
-                        Fill: =cJcbWash
-                        Font: =fMono
-                        FontWeight: =FontWeight.Normal
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =If(!ThisItem.Hdr && ThisItem.Key = "inventory", cOnJcb, cJcbWash)
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
                         Height: =18
+                        HoverBorderColor: =cClear
+                        HoverColor: =cOnJcb
+                        HoverFill: =cJcb
                         OnSelect: =Select(Parent)
-                        PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
-                        PaddingTop: =0
+                        PressedBorderColor: =cClear
+                        PressedColor: =cJcb
+                        PressedFill: =cJcbWash
+                        RadiusBottomLeft: =9
+                        RadiusBottomRight: =9
+                        RadiusTopLeft: =9
+                        RadiusTopRight: =9
                         Size: =9
-                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", nfMyOpenCount, "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
-                        VerticalAlign: =VerticalAlign.Middle
-                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", nfMyOpenCount, "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
-                        Width: =32
-                        X: =178
-                        Y: =10
+                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                        Width: =26
+                        X: =190
+                        Y: =11
             - bodyInv:
                 Control: GroupContainer
                 Variant: AutoLayout
                 Properties:
-                  BorderColor: =cBg
+                  BorderColor: =cClear
                   BorderThickness: =0
                   DropShadow: =DropShadow.None
-                  Fill: =cBg
-                  Height: =712
+                  Fill: =cClear
+                  Height: =711
                   LayoutAlignItems: =LayoutAlignItems.Stretch
                   LayoutDirection: =LayoutDirection.Vertical
                   LayoutGap: =16
@@ -416,7 +496,7 @@ Screens:
                   RadiusTopRight: =0
                   Width: =1142
                   X: =224
-                  Y: =56
+                  Y: =57
                 Children:
                   - hdInv:
                       Control: GroupContainer
@@ -447,19 +527,19 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =22
-                              Text: ="COMPONENT INVENTORY"
+                              Text: ="Component Inventory"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =900
+                              Width: =820
                               X: =0
-                              Y: =4
+                              Y: =2
                         - hdSInv:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
+                              Color: =cInk2
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =20
+                              Height: =22
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
@@ -469,44 +549,48 @@ Screens:
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =1000
                               X: =0
-                              Y: =44
+                              Y: =42
                         - hdLInv:
-                            Control: Rectangle
+                            Control: Image
                             Properties:
-                              BorderColor: =cLine
-                              Fill: =cLine
-                              Height: =1
-                              Width: =Parent.Width
+                              BorderColor: =RGBA(0,0,0,0)
+                              Height: =3
+                              Image: =imgLine
+                              ImagePosition: =ImagePosition.Stretch
+                              Width: =260
                               X: =0
-                              Y: =71
+                              Y: =68
                         - addInv:
                             Control: Classic/Button
                             Properties:
+                              Align: =Align.Center
                               BorderColor: =cJcb
                               BorderThickness: =1
                               Color: =cOnJcb
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk3
-                              DisabledFill: =cPanel
+                              DisabledFill: =RGBA(255,255,255,0.05)
                               Fill: =cJcb
+                              FocusedBorderColor: =cJcb
+                              FocusedBorderThickness: =2
                               Font: =fUI
-                              FontWeight: =FontWeight.Semibold
+                              FontWeight: =FontWeight.Bold
                               Height: =30
-                              HoverBorderColor: =cJcb
+                              HoverBorderColor: =cOrange
                               HoverColor: =cOnJcb
-                              HoverFill: =cJcbDark
+                              HoverFill: =cOrange
                               OnSelect: =Set(gPanel, "addpart")
-                              PaddingLeft: =6
-                              PaddingRight: =6
-                              PressedBorderColor: =cJcb
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PressedBorderColor: =cOrange
                               PressedColor: =cOnJcb
-                              PressedFill: =cJcbDark
-                              RadiusBottomLeft: =2
-                              RadiusBottomRight: =2
-                              RadiusTopLeft: =2
-                              RadiusTopRight: =2
+                              PressedFill: =cOrange
+                              RadiusBottomLeft: =10
+                              RadiusBottomRight: =10
+                              RadiusTopLeft: =10
+                              RadiusTopRight: =10
                               Size: =10
-                              Text: ="+ Add part"
+                              Text: ="+ Add Part"
                               Visible: =gRole in ["Lab Admin", "Lab Lead"]
                               Width: =110
                               X: =Parent.Width - 236
@@ -514,31 +598,34 @@ Screens:
                         - retInv:
                             Control: Classic/Button
                             Properties:
+                              Align: =Align.Center
                               BorderColor: =cLine2
                               BorderThickness: =1
                               Color: =cInk
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk3
-                              DisabledFill: =cPanel
-                              Fill: =cPanel2
+                              DisabledFill: =RGBA(255,255,255,0.05)
+                              Fill: =RGBA(255,255,255,0.08)
+                              FocusedBorderColor: =cJcb
+                              FocusedBorderThickness: =2
                               Font: =fUI
-                              FontWeight: =FontWeight.Semibold
+                              FontWeight: =FontWeight.Bold
                               Height: =30
-                              HoverBorderColor: =cLine2
-                              HoverColor: =cInk
-                              HoverFill: =cLine
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cJcb
+                              HoverFill: =cJcbWash
                               OnSelect: =Set(gPanel, "retire")
-                              PaddingLeft: =6
-                              PaddingRight: =6
-                              PressedBorderColor: =cLine2
-                              PressedColor: =cInk
-                              PressedFill: =cLine
-                              RadiusBottomLeft: =2
-                              RadiusBottomRight: =2
-                              RadiusTopLeft: =2
-                              RadiusTopRight: =2
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cJcb
+                              PressedFill: =cJcbWash
+                              RadiusBottomLeft: =10
+                              RadiusBottomRight: =10
+                              RadiusTopLeft: =10
+                              RadiusTopRight: =10
                               Size: =10
-                              Text: ="Retire part"
+                              Text: ="Retire Part"
                               Visible: =gRole in ["Lab Admin", "Lab Lead"]
                               Width: =110
                               X: =Parent.Width - 116
@@ -554,35 +641,35 @@ Screens:
                         FillPortions: =0
                         Height: =300
                         LayoutMinHeight: =300
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
+                        RadiusBottomLeft: =14
+                        RadiusBottomRight: =14
+                        RadiusTopLeft: =14
+                        RadiusTopRight: =14
                         Visible: =gPanel = "addpart" && gRole in ["Lab Admin", "Lab Lead"]
                       Children:
-                        - cdAddInvTb:
-                            Control: Rectangle
-                            Properties:
-                              BorderColor: =cPanel2
-                              Fill: =cPanel2
-                              Height: =46
-                              Width: =Parent.Width
-                              X: =0
-                              Y: =0
                         - cdAddInvTl:
                             Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
                               Height: =1
-                              Width: =Parent.Width
-                              X: =0
+                              Width: =Parent.Width - 32
+                              X: =16
                               Y: =46
+                        - cdAddInvTa:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cOrange
+                              Fill: =cOrange
+                              Height: =18
+                              Width: =4
+                              X: =16
+                              Y: =14
                         - cdAddInvTt:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk
+                              Color: =cOrange
                               Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =46
@@ -591,25 +678,25 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =13
-                              Text: =Upper("Add a new component to the Parts tab")
+                              Text: ="Add a New Component to the Catalogue"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =Parent.Width - 220
-                              X: =16
+                              Width: =Parent.Width - 240
+                              X: =28
                               Y: =0
                         - apPnInvLb:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="PART NUMBER *"
+                              Size: =10
+                              Text: ="Part Number *"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =16
@@ -617,26 +704,31 @@ Screens:
                         - apPnInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =16
@@ -645,16 +737,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="DESCRIPTION *"
+                              Size: =10
+                              Text: ="Description *"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =372
@@ -662,26 +754,31 @@ Screens:
                         - apDsInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =372
@@ -690,16 +787,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="CATEGORY *"
+                              Size: =10
+                              Text: ="Category *"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =728
@@ -707,26 +804,31 @@ Screens:
                         - apCtInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =728
@@ -735,16 +837,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="SUB-CATEGORY"
+                              Size: =10
+                              Text: ="Sub Category"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =16
@@ -752,26 +854,31 @@ Screens:
                         - apScInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =16
@@ -780,15 +887,15 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
+                              Size: =10
                               Text: ="UOM (NO / M / KG) *"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
@@ -797,26 +904,31 @@ Screens:
                         - apUmInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: ="NO"
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =372
@@ -825,16 +937,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="LOCATION"
+                              Size: =10
+                              Text: ="Location"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =728
@@ -842,26 +954,31 @@ Screens:
                         - apLcInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =728
@@ -870,16 +987,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="SUPPLIER"
+                              Size: =10
+                              Text: ="Supplier"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =16
@@ -887,26 +1004,31 @@ Screens:
                         - apSpInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =16
@@ -915,16 +1037,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="UNIT COST"
+                              Size: =10
+                              Text: ="Unit Cost"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =372
@@ -932,27 +1054,32 @@ Screens:
                         - apUcInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Format: =TextFormat.Number
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =372
@@ -961,16 +1088,16 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
-                              FontWeight: =FontWeight.Normal
+                              Color: =cInk2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Semibold
                               Height: =16
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =9
-                              Text: ="REORDER REF QTY"
+                              Size: =10
+                              Text: ="Reorder Ref Qty"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =340
                               X: =728
@@ -978,27 +1105,32 @@ Screens:
                         - apRqInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Format: =TextFormat.Number
                               Height: =34
                               HintText: =""
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =340
                               X: =728
@@ -1006,61 +1138,67 @@ Screens:
                         - apGoInv:
                             Control: Classic/Button
                             Properties:
+                              Align: =Align.Center
                               BorderColor: =cJcb
                               BorderThickness: =1
                               Color: =cOnJcb
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk3
-                              DisabledFill: =cPanel
+                              DisabledFill: =RGBA(255,255,255,0.05)
                               Fill: =cJcb
+                              FocusedBorderColor: =cJcb
+                              FocusedBorderThickness: =2
                               Font: =fUI
-                              FontWeight: =FontWeight.Semibold
+                              FontWeight: =FontWeight.Bold
                               Height: =34
-                              HoverBorderColor: =cJcb
+                              HoverBorderColor: =cOrange
                               HoverColor: =cOnJcb
-                              HoverFill: =cJcbDark
+                              HoverFill: =cOrange
                               OnSelect: |-
-                                =With({pn: Trim(apPnInv.Text)}, If(IsBlank(pn) || IsBlank(Trim(apDsInv.Text)) || IsBlank(Trim(apCtInv.Text)), Notify("Part number, description and category are required.", NotificationType.Error), !IsBlank(LookUp(tblParts, Upper(Trim(Text(PartNo))) = Upper(pn))), Notify(pn & " is already in the Parts tab.", NotificationType.Error), Collect(tblParts, {PartNo: pn, Description: Trim(apDsInv.Text), Category: Trim(apCtInv.Text), SubCategory: Trim(apScInv.Text), UOM: Coalesce(Trim(apUmInv.Text), "NO"), Location: Trim(apLcInv.Text), Supplier: Trim(apSpInv.Text), UnitCost: Coalesce(Value(apUcInv.Text), 0), ReorderRefQty: Coalesce(Value(apRqInv.Text), 0), Active: "Yes", Notes: "Added in Power Apps by " & nfMeName}); Notify(pn & " added. Stock starts at zero - record a receipt in Material Inward.", NotificationType.Success); Set(gPanel, ""); Reset(apPnInv); Reset(apDsInv)))
-                              PaddingLeft: =6
-                              PaddingRight: =6
-                              PressedBorderColor: =cJcb
+                                =IfError(With({pn: Trim(apPnInv.Text)}, If(IsBlank(pn) || IsBlank(Trim(apDsInv.Text)) || IsBlank(Trim(apCtInv.Text)), Notify("Part number, description and category are required.", NotificationType.Error), !IsBlank(LookUp(tblParts, Upper(Trim(Text(PartNo))) = Upper(pn))), Notify(pn & " is already in the catalogue.", NotificationType.Error), Collect(tblParts, {PartNo: pn, Description: Trim(apDsInv.Text), Category: Trim(apCtInv.Text), SubCategory: Trim(apScInv.Text), UOM: Coalesce(Trim(apUmInv.Text), "NO"), Location: Trim(apLcInv.Text), Supplier: Trim(apSpInv.Text), UnitCost: Coalesce(Value(apUcInv.Text), 0), ReorderRefQty: Coalesce(Value(apRqInv.Text), 0), Active: "Yes", Notes: "Added in Power Apps by " & gMeName}); Notify(pn & " added. Stock starts at zero - record a receipt in Material Inward.", NotificationType.Success); Set(gPanel, ""); Reset(apPnInv); Reset(apDsInv))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PressedBorderColor: =cOrange
                               PressedColor: =cOnJcb
-                              PressedFill: =cJcbDark
-                              RadiusBottomLeft: =2
-                              RadiusBottomRight: =2
-                              RadiusTopLeft: =2
-                              RadiusTopRight: =2
+                              PressedFill: =cOrange
+                              RadiusBottomLeft: =10
+                              RadiusBottomRight: =10
+                              RadiusTopLeft: =10
+                              RadiusTopRight: =10
                               Size: =11
-                              Text: ="Add part"
+                              Text: ="Add Part"
                               Width: =124
                               X: =Parent.Width - 140
                               Y: =250
                         - apNoInv:
                             Control: Classic/Button
                             Properties:
+                              Align: =Align.Center
                               BorderColor: =cLine2
                               BorderThickness: =1
                               Color: =cInk
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk3
-                              DisabledFill: =cPanel
-                              Fill: =cPanel2
+                              DisabledFill: =RGBA(255,255,255,0.05)
+                              Fill: =RGBA(255,255,255,0.08)
+                              FocusedBorderColor: =cJcb
+                              FocusedBorderThickness: =2
                               Font: =fUI
-                              FontWeight: =FontWeight.Semibold
+                              FontWeight: =FontWeight.Bold
                               Height: =34
-                              HoverBorderColor: =cLine2
-                              HoverColor: =cInk
-                              HoverFill: =cLine
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cJcb
+                              HoverFill: =cJcbWash
                               OnSelect: =Set(gPanel, "")
-                              PaddingLeft: =6
-                              PaddingRight: =6
-                              PressedBorderColor: =cLine2
-                              PressedColor: =cInk
-                              PressedFill: =cLine
-                              RadiusBottomLeft: =2
-                              RadiusBottomRight: =2
-                              RadiusTopLeft: =2
-                              RadiusTopRight: =2
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cJcb
+                              PressedFill: =cJcbWash
+                              RadiusBottomLeft: =10
+                              RadiusBottomRight: =10
+                              RadiusTopLeft: =10
+                              RadiusTopRight: =10
                               Size: =11
                               Text: ="Cancel"
                               Width: =110
@@ -1077,35 +1215,35 @@ Screens:
                         FillPortions: =0
                         Height: =120
                         LayoutMinHeight: =120
-                        RadiusBottomLeft: =0
-                        RadiusBottomRight: =0
-                        RadiusTopLeft: =0
-                        RadiusTopRight: =0
+                        RadiusBottomLeft: =14
+                        RadiusBottomRight: =14
+                        RadiusTopLeft: =14
+                        RadiusTopRight: =14
                         Visible: =gPanel = "retire" && gRole in ["Lab Admin", "Lab Lead"]
                       Children:
-                        - cdRetInvTb:
-                            Control: Rectangle
-                            Properties:
-                              BorderColor: =cPanel2
-                              Fill: =cPanel2
-                              Height: =46
-                              Width: =Parent.Width
-                              X: =0
-                              Y: =0
                         - cdRetInvTl:
                             Control: Rectangle
                             Properties:
                               BorderColor: =cLine
                               Fill: =cLine
                               Height: =1
-                              Width: =Parent.Width
-                              X: =0
+                              Width: =Parent.Width - 32
+                              X: =16
                               Y: =46
+                        - cdRetInvTa:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cOrange
+                              Fill: =cOrange
+                              Height: =18
+                              Width: =4
+                              X: =16
+                              Y: =14
                         - cdRetInvTt:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk
+                              Color: =cOrange
                               Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =46
@@ -1114,10 +1252,10 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =13
-                              Text: =Upper("Retire a component")
+                              Text: ="Retire a Component"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =Parent.Width - 220
-                              X: =16
+                              Width: =Parent.Width - 240
+                              X: =28
                               Y: =0
                         - rtTInv:
                             Control: Label
@@ -1132,7 +1270,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =11
-                              Text: ="Retiring sets Active = No in the Parts tab. History in Movements is kept; the part just stops appearing in stock lists. Type the exact part number:"
+                              Text: ="Retiring hides the part from stock lists. Its transaction history is kept; the part just stops appearing in stock lists. Type the exact part number:"
                               VerticalAlign: =VerticalAlign.Top
                               Width: =700
                               Wrap: =true
@@ -1141,26 +1279,31 @@ Screens:
                         - rtPnInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fMono
                               Height: =34
                               HintText: ="Part number"
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =200
                               X: =740
@@ -1168,30 +1311,33 @@ Screens:
                         - rtGoInv:
                             Control: Classic/Button
                             Properties:
+                              Align: =Align.Center
                               BorderColor: =cStop
                               BorderThickness: =1
                               Color: =cStop
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk3
-                              DisabledFill: =cPanel
-                              Fill: =RGBA(0,0,0,0)
+                              DisabledFill: =RGBA(255,255,255,0.05)
+                              Fill: =RGBA(242,114,98,0.10)
+                              FocusedBorderColor: =cJcb
+                              FocusedBorderThickness: =2
                               Font: =fUI
-                              FontWeight: =FontWeight.Semibold
+                              FontWeight: =FontWeight.Bold
                               Height: =34
                               HoverBorderColor: =cStop
-                              HoverColor: =cStop
-                              HoverFill: =RGBA(220,115,97,0.15)
+                              HoverColor: =cInk
+                              HoverFill: =RGBA(242,114,98,0.24)
                               OnSelect: |-
-                                =With({r: LookUp(tblParts, Upper(Trim(Text(PartNo))) = Upper(Trim(rtPnInv.Text)))}, If(IsBlank(r), Notify("No such part.", NotificationType.Error), Patch(tblParts, r, {Active: "No"}); Notify(Trim(rtPnInv.Text) & " retired.", NotificationType.Success); Set(gPanel, "")))
-                              PaddingLeft: =6
-                              PaddingRight: =6
+                                =IfError(With({r: LookUp(tblParts, Upper(Trim(Text(PartNo))) = Upper(Trim(rtPnInv.Text)))}, If(IsBlank(r), Notify("No such part.", NotificationType.Error), Patch(tblParts, r, {Active: "No"}); Notify(Trim(rtPnInv.Text) & " retired.", NotificationType.Success); Set(gPanel, ""))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                              PaddingLeft: =8
+                              PaddingRight: =8
                               PressedBorderColor: =cStop
-                              PressedColor: =cStop
-                              PressedFill: =RGBA(220,115,97,0.15)
-                              RadiusBottomLeft: =2
-                              RadiusBottomRight: =2
-                              RadiusTopLeft: =2
-                              RadiusTopRight: =2
+                              PressedColor: =cInk
+                              PressedFill: =RGBA(242,114,98,0.24)
+                              RadiusBottomLeft: =10
+                              RadiusBottomRight: =10
+                              RadiusTopLeft: =10
+                              RadiusTopRight: =10
                               Size: =11
                               Text: ="Retire"
                               Width: =96
@@ -1216,26 +1362,31 @@ Screens:
                         - qInv:
                             Control: Classic/TextInput
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              Color: =cInk
+                              Color: =cInputInk
                               Default: =""
                               DisabledBorderColor: =cLine
                               DisabledColor: =cInk2
-                              DisabledFill: =cPanel
-                              Fill: =cSunk
-                              FocusedBorderColor: =cJcb
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =36
                               HintText: ="Part number, description or location"
-                              HoverBorderColor: =cInk3
-                              HoverFill: =cSunk
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               PaddingLeft: =10
                               PaddingRight: =6
-                              RadiusBottomLeft: =0
-                              RadiusBottomRight: =0
-                              RadiusTopLeft: =0
-                              RadiusTopRight: =0
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
                               Size: =12
                               Width: =330
                               X: =0
@@ -1243,23 +1394,30 @@ Screens:
                         - cInv:
                             Control: Classic/DropDown
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              ChevronBackground: =cSunk
-                              ChevronFill: =cInk2
-                              ChevronHoverBackground: =cPanel2
-                              ChevronHoverFill: =cJcb
-                              Color: =cInk
-                              Fill: =cSunk
+                              ChevronBackground: =cInput
+                              ChevronFill: =cOrange
+                              ChevronHoverBackground: =cJcb
+                              ChevronHoverFill: =cOnJcb
+                              Color: =cInputInk
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk2
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =36
-                              HoverColor: =cInk
-                              HoverFill: =cPanel2
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
                               Items: |-
-                                =With({T: nfCategories}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "All categories", Index(T, I.Value - 1).Value)))
+                                =With({T: nfCategories}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "All Categories", Index(T, I.Value - 1).Value)))
                               PaddingLeft: =10
-                              PressedColor: =cInk
-                              PressedFill: =cPanel2
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
                               SelectionColor: =cOnJcb
                               SelectionFill: =cJcb
                               Size: =12
@@ -1269,22 +1427,29 @@ Screens:
                         - sInv:
                             Control: Classic/DropDown
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              ChevronBackground: =cSunk
-                              ChevronFill: =cInk2
-                              ChevronHoverBackground: =cPanel2
-                              ChevronHoverFill: =cJcb
-                              Color: =cInk
-                              Fill: =cSunk
+                              ChevronBackground: =cInput
+                              ChevronFill: =cOrange
+                              ChevronHoverBackground: =cJcb
+                              ChevronHoverFill: =cOnJcb
+                              Color: =cInputInk
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk2
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =36
-                              HoverColor: =cInk
-                              HoverFill: =cPanel2
-                              Items: =["Any status", "IN STOCK", "LOW STOCK", "OUT OF STOCK", "FULLY RESERVED"]
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
+                              Items: =["Any Status", "In Stock", "Low Stock", "Out of Stock", "Fully Reserved"]
                               PaddingLeft: =10
-                              PressedColor: =cInk
-                              PressedFill: =cPanel2
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
                               SelectionColor: =cOnJcb
                               SelectionFill: =cJcb
                               Size: =12
@@ -1294,22 +1459,29 @@ Screens:
                         - dqInv:
                             Control: Classic/DropDown
                             Properties:
-                              BorderColor: =cLine2
+                              BorderColor: =cInputLine
                               BorderThickness: =1
-                              ChevronBackground: =cSunk
-                              ChevronFill: =cInk2
-                              ChevronHoverBackground: =cPanel2
-                              ChevronHoverFill: =cJcb
-                              Color: =cInk
-                              Fill: =cSunk
+                              ChevronBackground: =cInput
+                              ChevronFill: =cOrange
+                              ChevronHoverBackground: =cJcb
+                              ChevronHoverFill: =cOnJcb
+                              Color: =cInputInk
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk2
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
                               Font: =fUI
                               Height: =36
-                              HoverColor: =cInk
-                              HoverFill: =cPanel2
-                              Items: =["Any data quality", "OK", "With issues"]
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
+                              Items: =["Any Data Quality", "OK", "With Issues"]
                               PaddingLeft: =10
-                              PressedColor: =cInk
-                              PressedFill: =cPanel2
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
                               SelectionColor: =cOnJcb
                               SelectionFill: =cJcb
                               Size: =12
@@ -1369,8 +1541,8 @@ Screens:
                         - stInvHb:
                             Control: Rectangle
                             Properties:
-                              BorderColor: =cPanel
-                              Fill: =cPanel
+                              BorderColor: =RGBA(255,255,255,0.06)
+                              Fill: =RGBA(255,255,255,0.06)
                               Height: =30
                               Width: =1090
                               X: =0
@@ -1378,8 +1550,8 @@ Screens:
                         - stInvHl:
                             Control: Rectangle
                             Properties:
-                              BorderColor: =cLine
-                              Fill: =cLine
+                              BorderColor: =cLine2
+                              Fill: =cLine2
                               Height: =1
                               Width: =1090
                               X: =0
@@ -1388,163 +1560,163 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="PART"
+                              Size: =10
+                              Text: ="Part"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =174
+                              Width: =160
                               X: =16
                               Y: =0
                         - stInvH1:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="DESCRIPTION"
+                              Size: =10
+                              Text: ="Description"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =254
-                              X: =196
+                              Width: =230
+                              X: =182
                               Y: =0
                         - stInvH2:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="SUB-CATEGORY"
+                              Size: =10
+                              Text: ="Sub Category"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =114
-                              X: =456
+                              Width: =104
+                              X: =418
                               Y: =0
                         - stInvH3:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="STORE LOCATION"
+                              Size: =10
+                              Text: ="Store Location"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =164
-                              X: =576
+                              Width: =154
+                              X: =528
                               Y: =0
                         - stInvH4:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="ON HAND"
+                              Size: =10
+                              Text: ="On Hand"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =104
-                              X: =746
+                              Width: =94
+                              X: =688
                               Y: =0
                         - stInvH5:
                             Control: Label
                             Properties:
                               Align: =Align.Right
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="RESV"
+                              Size: =10
+                              Text: ="Resv"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =50
-                              X: =856
+                              Width: =44
+                              X: =788
                               Y: =0
                         - stInvH6:
                             Control: Label
                             Properties:
                               Align: =Align.Right
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="AVAIL"
+                              Size: =10
+                              Text: ="Avail"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =60
-                              X: =912
+                              Width: =54
+                              X: =838
                               Y: =0
                         - stInvH7:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
+                              Size: =10
                               Text: ="UOM"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =44
-                              X: =978
+                              Width: =40
+                              X: =898
                               Y: =0
                         - stInvH8:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
-                              Font: =fMono
+                              Color: =cJcb
+                              Font: =fUI
                               FontWeight: =FontWeight.Bold
                               Height: =30
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =8
-                              Text: ="STATUS"
+                              Size: =10
+                              Text: ="Status"
                               VerticalAlign: =VerticalAlign.Middle
-                              Width: =54
-                              X: =1028
+                              Width: =124
+                              X: =944
                               Y: =0
                         - stInvGal:
                             Control: Gallery
@@ -1555,7 +1727,7 @@ Screens:
                               Fill: =RGBA(0,0,0,0)
                               Height: =530
                               Items: |-
-                                =With({s: Upper(Trim(qInv.Text)), c: cInv.Selected.Value, st: sInv.Selected.Value}, Filter(nfStock, (IsBlank(s) || s in PN || s in Upper(Description) || s in Upper(Location)) && (c = "All categories" || Category = c) && (st = "Any status" || Status = st) && (dqInv.Selected.Value = "Any data quality" || (dqInv.Selected.Value = "OK") = IsBlank(Quality))))
+                                =With({s: Upper(Trim(qInv.Text)), c: cInv.Selected.Value, st: sInv.Selected.Value}, Filter(nfStock, (IsBlank(s) || s in PN || s in Upper(Description) || s in Upper(Location)) && (c = "All Categories" || Category = c) && (st = "Any Status" || Status = Upper(st)) && (dqInv.Selected.Value = "Any Data Quality" || (dqInv.Selected.Value = "OK") = IsBlank(Quality))))
                               ShowScrollbar: =true
                               TemplatePadding: =0
                               TemplateSize: =42
@@ -1578,7 +1750,7 @@ Screens:
                                     Size: =10
                                     Text: =ThisItem.PartNo
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =172
+                                    Width: =158
                                     X: =16
                                     Y: =0
                               - stInvC1:
@@ -1596,8 +1768,8 @@ Screens:
                                     Size: =11
                                     Text: =ThisItem.Description
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =252
-                                    X: =196
+                                    Width: =228
+                                    X: =182
                                     Y: =0
                               - stInvC2:
                                   Control: Label
@@ -1614,54 +1786,61 @@ Screens:
                                     Size: =10
                                     Text: =ThisItem.SubCategory
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =112
-                                    X: =456
+                                    Width: =102
+                                    X: =418
                                     Y: =0
                               - stInvC3:
                                   Control: Classic/TextInput
                                   Properties:
-                                    BorderColor: =cLine2
+                                    BorderColor: =cInputLine
                                     BorderThickness: =1
-                                    Color: =cInk
+                                    Color: =cInputInk
                                     Default: =ThisItem.Location
                                     DisabledBorderColor: =cLine
                                     DisabledColor: =cInk2
-                                    DisabledFill: =cPanel
-                                    Fill: =cSunk
-                                    FocusedBorderColor: =cJcb
+                                    DisabledFill: =RGBA(255,255,255,0.10)
+                                    Fill: =cInput
+                                    FocusedBorderColor: =cOrange
+                                    FocusedBorderThickness: =2
                                     Font: =fMono
                                     Height: =30
                                     HintText: ="—"
-                                    HoverBorderColor: =cInk3
-                                    HoverFill: =cSunk
+                                    HoverBorderColor: =cJcb
+                                    HoverColor: =cInputInk
+                                    HoverFill: =cInputHover
                                     PaddingLeft: =10
                                     PaddingRight: =6
-                                    RadiusBottomLeft: =0
-                                    RadiusBottomRight: =0
-                                    RadiusTopLeft: =0
-                                    RadiusTopRight: =0
+                                    PressedBorderColor: =cJcb
+                                    PressedColor: =cInputInk
+                                    PressedFill: =cInput
+                                    RadiusBottomLeft: =8
+                                    RadiusBottomRight: =8
+                                    RadiusTopLeft: =8
+                                    RadiusTopRight: =8
                                     Size: =11
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"]
-                                    Width: =130
-                                    X: =576
+                                    Width: =120
+                                    X: =528
                                     Y: =6
                               - stInvC3Sv:
                                   Control: Classic/Icon
                                   Properties:
-                                    AccessibleLabel: ="Save location to the Parts tab"
+                                    AccessibleLabel: ="Save location to the parts catalogue"
                                     Color: =cJcb
                                     Height: =30
+                                    HoverColor: =cJcb
                                     Icon: =Icon.Save
                                     OnSelect: |-
-                                      =Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = ThisItem.PN), {Location: Trim(stInvC3.Text)}); Notify(ThisItem.PartNo & " is now at " & Coalesce(Trim(stInvC3.Text), "—") & ".", NotificationType.Success)
+                                      =IfError(Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = ThisItem.PN), {Location: Trim(stInvC3.Text)}); Notify(ThisItem.PartNo & " is now at " & Coalesce(Trim(stInvC3.Text), "—") & ".", NotificationType.Success), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                                     PaddingBottom: =8
                                     PaddingLeft: =8
                                     PaddingRight: =8
                                     PaddingTop: =8
-                                    Tooltip: ="Save location to the Parts tab"
+                                    PressedColor: =cOrange
+                                    Tooltip: ="Save location to the parts catalogue"
                                     Visible: =gRole in ["Lab Admin", "Lab Lead"]
                                     Width: =30
-                                    X: =708
+                                    X: =650
                                     Y: =6
                               - stInvC3Ro:
                                   Control: Label
@@ -1679,17 +1858,17 @@ Screens:
                                     Text: =Coalesce(ThisItem.Location, "—")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Visible: =!(gRole in ["Lab Admin", "Lab Lead"])
-                                    Width: =162
-                                    X: =576
+                                    Width: =152
+                                    X: =528
                                     Y: =0
                               - stInvC4Mb:
                                   Control: Rectangle
                                   Properties:
-                                    BorderColor: =cLine
-                                    Fill: =cLine
+                                    BorderColor: =cLine2
+                                    Fill: =cLine2
                                     Height: =4
-                                    Width: =44
-                                    X: =746
+                                    Width: =40
+                                    X: =688
                                     Y: =18
                               - stInvC4Mf:
                                   Control: Rectangle
@@ -1699,8 +1878,8 @@ Screens:
                                     Fill: |-
                                       =With({p: If(ThisItem.RefQty > 0, Min(1, Max(0, ThisItem.OnHand / ThisItem.RefQty)), If(ThisItem.OnHand > 0, 1, 0))}, If(p <= 0.2, cStop, p <= 0.4, cWarn, cOk))
                                     Height: =4
-                                    Width: =44 * If(ThisItem.RefQty > 0, Min(1, Max(0, ThisItem.OnHand / ThisItem.RefQty)), If(ThisItem.OnHand > 0, 1, 0))
-                                    X: =746
+                                    Width: =40 * If(ThisItem.RefQty > 0, Min(1, Max(0, ThisItem.OnHand / ThisItem.RefQty)), If(ThisItem.OnHand > 0, 1, 0))
+                                    X: =688
                                     Y: =18
                               - stInvC4:
                                   Control: Label
@@ -1717,8 +1896,8 @@ Screens:
                                     Size: =12
                                     Text: =Text(ThisItem.OnHand, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =58
-                                    X: =792
+                                    Width: =52
+                                    X: =730
                                     Y: =0
                               - stInvC5:
                                   Control: Label
@@ -1735,8 +1914,8 @@ Screens:
                                     Size: =11
                                     Text: =Text(ThisItem.Reserved, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =48
-                                    X: =856
+                                    Width: =42
+                                    X: =788
                                     Y: =0
                               - stInvC6:
                                   Control: Label
@@ -1753,8 +1932,8 @@ Screens:
                                     Size: =11
                                     Text: =Text(ThisItem.Avail, "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =58
-                                    X: =912
+                                    Width: =52
+                                    X: =838
                                     Y: =0
                               - stInvC7:
                                   Control: Label
@@ -1771,8 +1950,8 @@ Screens:
                                     Size: =10
                                     Text: =ThisItem.UOM
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =42
-                                    X: =978
+                                    Width: =38
+                                    X: =898
                                     Y: =0
                               - stInvC8:
                                   Control: Label
@@ -1781,20 +1960,20 @@ Screens:
                                     BorderColor: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).C, cInk3)
                                     BorderThickness: =1
                                     Color: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).C, cInk3)
-                                    Fill: =RGBA(0,0,0,0)
-                                    Font: =fMono
-                                    FontWeight: =FontWeight.Semibold
+                                    Fill: =RGBA(0,0,0,0.25)
+                                    Font: =fUI
+                                    FontWeight: =FontWeight.Bold
                                     Height: =22
                                     PaddingBottom: =0
                                     PaddingLeft: =0
                                     PaddingRight: =0
                                     PaddingTop: =0
-                                    Size: =8
-                                    Text: =Upper(ThisItem.Status)
+                                    Size: =9
+                                    Text: =Coalesce(LookUp(nfPill, K = Upper(ThisItem.Status)).D, ThisItem.Status)
                                     VerticalAlign: =VerticalAlign.Middle
-                                    Width: =52
+                                    Width: =122
                                     Wrap: =false
-                                    X: =1028
+                                    X: =944
                                     Y: =10
                               - stInvSep:
                                   Control: Rectangle
@@ -1818,7 +1997,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =14
-                              Text: ="NOTHING MATCHES"
+                              Text: ="Nothing matches"
                               VerticalAlign: =VerticalAlign.Middle
                               Visible: =CountRows(stInvGal.AllItems) = 0
                               Width: =1090

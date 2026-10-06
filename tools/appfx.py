@@ -6,23 +6,37 @@ Named formulas are recalculated automatically whenever an Excel table changes
 views are never stored anywhere - exactly like the HTA, stock is ALWAYS the sum
 of the Movements rows.
 """
+import art
 
+ICON = {"dash": "Home", "stock": "Search", "bom": "ListScrollWatchlist", "newreq": "AddDocument", "myreq": "Note",
+        "newpart": "Add", "queue": "Check", "newpartq": "DocumentWithContent", "inventory": "Devices",
+        "inward": "ArrowDown", "ledger": "Sort", "demand": "TrendingHashtag", "invoice": "Draw",
+        "invlist": "DocumentWithContent", "cost": "HalfFilledCircle", "proc": "Waypoint", "purch": "ArrowRight",
+        "lic": "Lock", "team": "People", "about": "Information"}
+
+MYWORK = ("My Work", [("stock", "Check Stock"), ("bom", "BOM Compare"), ("newreq", "New Request"),
+                      ("myreq", "My Requests"), ("newpart", "Brand New Purchase Part")])
 NAV = {
-    "Engineer": [("OVERVIEW", [("dash", "Dashboard")]),
-                 ("MATERIAL", [("stock", "Check Stock"), ("bom", "BOM Compare"), ("newreq", "NEW REQUEST"),
-                               ("myreq", "My Requests"), ("newpart", "Brand New Purchase Part")])],
-    "Lab Admin": [("OVERVIEW", [("dash", "Dashboard")]),
-                  ("REQUESTS", [("queue", "Request Queue"), ("newpartq", "New Purchase Parts")]),
-                  ("INVENTORY", [("inventory", "Component Inventory"), ("inward", "Material Inward"),
+    "Engineer": [("Overview", [("dash", "Dashboard")]),
+                 ("Material", [("stock", "Check Stock"), ("bom", "BOM Compare"), ("newreq", "New Request"),
+                               ("myreq", "My Requests"), ("newpart", "Brand New Purchase Part")]),
+                 ("Help", [("about", "About")])],
+    "Lab Admin": [("Overview", [("dash", "Dashboard")]),
+                  ("Requests", [("queue", "Request Queue"), ("newpartq", "New Purchase Parts")]),
+                  ("Inventory", [("inventory", "Component Inventory"), ("inward", "Material Inward"),
                                  ("ledger", "Stock Transactions"), ("demand", "High Demand Parts")]),
-                  ("DELIVERIES", [("invoice", "Create Invoice"), ("invlist", "Invoices"), ("cost", "Cost Sheet")]),
-                  ("PURCHASING", [("proc", "Procurement (PR/PO)"), ("purch", "Ongoing Purchase"),
+                  ("Deliveries", [("invoice", "Create Invoice"), ("invlist", "Invoices"), ("cost", "Cost Sheet")]),
+                  ("Purchasing", [("proc", "Procurement (PR/PO)"), ("purch", "Ongoing Purchase"),
                                   ("lic", "Software Licenses")]),
-                  ("TOOLS", [("stock", "Check Stock"), ("bom", "BOM Compare"), ("team", "Team access")])],
-    "Manager": [("OVERVIEW", [("dash", "Dashboard")]),
-                ("REPORTS", [("queue", "All Requests"), ("invlist", "Invoices"), ("proc", "Procurement (PR/PO)"),
-                             ("purch", "Ongoing Purchase"), ("demand", "High Demand Parts"),
-                             ("lic", "Software Licenses"), ("inventory", "Inventory")])],
+                  MYWORK,
+                  ("Admin", [("team", "Team Access"), ("about", "About")])],
+    "Manager": [("Overview", [("dash", "Dashboard")]),
+                ("Approvals & Reports", [("queue", "All Requests"), ("newpartq", "New Purchase Parts"),
+                                         ("proc", "Procurement (PR/PO)"), ("invlist", "Invoices"),
+                                         ("purch", "Ongoing Purchase"), ("demand", "High Demand Parts"),
+                                         ("lic", "Software Licenses"), ("inventory", "Inventory")]),
+                MYWORK,
+                ("Help", [("about", "About")])],
 }
 
 # key -> screen.  'dash' is role dependent.
@@ -30,19 +44,29 @@ SCREEN_OF = {"stock": "scrStock", "bom": "scrBom", "newreq": "scrNewReq", "myreq
              "newpart": "scrNewPart", "queue": "scrQueue", "newpartq": "scrNewPartQ",
              "inventory": "scrInventory", "inward": "scrInward", "ledger": "scrLedger", "demand": "scrDemand",
              "invoice": "scrInvoice", "invlist": "scrInvList", "cost": "scrCost", "proc": "scrProc",
-             "purch": "scrPurch", "lic": "scrLic", "team": "scrTeam"}
+             "purch": "scrPurch", "lic": "scrLic", "team": "scrTeam", "about": "scrAbout"}
 
-PILL = [("IN STOCK", "cOk"), ("LOW STOCK", "cWarn"), ("OUT OF STOCK", "cStop"), ("FULLY RESERVED", "cSteel"),
-        ("AVAILABLE", "cOk"), ("SHORTAGE", "cStop"), ("NEW PART", "cSteel"), ("PARTIAL", "cWarn"),
-        ("DRAFT", "cInk3"), ("SUBMITTED", "cSteel"), ("ADMIN REVIEW", "cWarn"), ("RESERVED", "cJcb"),
-        ("READY FOR RELEASE", "cOk"), ("PARTIALLY RELEASED", "cWarn"), ("RELEASED", "cOk"),
-        ("COMPLETED", "cInk3"), ("CANCELLED", "cStop"), ("REJECTED", "cStop"), ("PURCHASE REQUIRED", "cStop"),
-        ("PR RAISED", "cSteel"), ("APPROVED", "cJcb"), ("PO RAISED", "cJcb"), ("GRN IN PROGRESS", "cWarn"),
-        ("DELIVERED (CLOSED)", "cOk"), ("EXPIRED", "cStop"), ("EXPIRING SOON", "cWarn"), ("ACTIVE", "cOk"),
-        ("RECEIPT", "cOk"), ("RELEASE", "cStop"), ("RETURN", "cOk"), ("ADJUST+", "cSteel"), ("ADJUST-", "cWarn"),
-        ("SCRAP", "cStop"), ("REQUIRED", "cStop"), ("IN TRANSIT", "cSteel"), ("RECEIVED", "cOk"),
-        ("ISSUED", "cOk"), ("SHORTFALL", "cSteel"), ("OK", "cOk"), ("ISSUES", "cWarn"),
-        ("LAB LEAD", "cJcb"), ("LAB ADMIN", "cJcb"), ("MANAGER", "cSteel"), ("ENGINEER", "cInk2")]
+# raw value (as stored in Excel) -> colour, display text (Title Case, consistent everywhere)
+PILL = [("IN STOCK", "cOk", "In Stock"), ("LOW STOCK", "cWarn", "Low Stock"), ("OUT OF STOCK", "cStop", "Out of Stock"),
+        ("FULLY RESERVED", "cSteel", "Fully Reserved"), ("AVAILABLE", "cOk", "Available"), ("SHORTAGE", "cStop", "Shortage"),
+        ("NEW PART", "cSteel", "New Part"), ("PARTIAL", "cWarn", "Partial"), ("DRAFT", "cInk3", "Draft"),
+        ("SUBMITTED", "cSteel", "Submitted"), ("ADMIN REVIEW", "cWarn", "Admin Review"), ("APPROVED", "cJcb", "Approved"),
+        ("RESERVED", "cJcb", "Reserved"), ("READY FOR RELEASE", "cOk", "Ready for Release"),
+        ("PARTIALLY RELEASED", "cWarn", "Partially Released"), ("RELEASED", "cOk", "Released"),
+        ("COMPLETED", "cInk2", "Completed"), ("CANCELLED", "cStop", "Cancelled"), ("REJECTED", "cStop", "Rejected"),
+        ("PURCHASE REQUIRED", "cStop", "Purchase Required"), ("PR RAISED", "cSteel", "PR Raised"),
+        ("PO RAISED", "cJcb", "PO Raised"), ("GRN IN PROGRESS", "cWarn", "GRN in Progress"),
+        ("DELIVERED (CLOSED)", "cOk", "Delivered (Closed)"), ("EXPIRED", "cStop", "Expired"),
+        ("EXPIRING SOON", "cWarn", "Expiring Soon"), ("ACTIVE", "cOk", "Active"), ("RECEIPT", "cOk", "Receipt"),
+        ("RELEASE", "cStop", "Release"), ("RETURN", "cOk", "Return"), ("ADJUST+", "cSteel", "Adjust+"),
+        ("ADJUST-", "cWarn", "Adjust-"), ("SCRAP", "cStop", "Scrap"), ("REQUIRED", "cStop", "Required"),
+        ("IN TRANSIT", "cSteel", "In Transit"), ("RECEIVED", "cOk", "Received"), ("ISSUED", "cOk", "Issued"),
+        ("SHORTFALL", "cSteel", "Shortfall"), ("OK", "cOk", "OK"), ("ISSUES", "cWarn", "Issues"),
+        ("LAB LEAD", "cJcb", "Lab Lead"), ("LAB ADMIN", "cJcb", "Lab Admin"), ("MANAGER", "cSteel", "Manager"),
+        ("ENGINEER", "cInk2", "Engineer"), ("PO", "cJcb", "PO"), ("FOC", "cSteel", "FOC"),
+        ("NOT SET UP", "cWarn", "Not Set Up"), ("SET", "cOk", "Set"), ("TEMPORARY", "cWarn", "Temporary"),
+        ("NOT SET", "cInk3", "Not Set"), ("PENDING APPROVAL", "cJcb", "Pending Approval"), ("MATERIAL", "cInk2", "Material"), ("SERVICE", "cInk2", "Service"),
+        ("TOOL", "cInk2", "Tool"), ("LICENSE", "cInk2", "License"), ("COMPONENTS", "cInk2", "Components")]
 
 
 def nav_table():
@@ -51,17 +75,18 @@ def nav_table():
         seq = 0
         for grp, items in groups:
             seq += 1
-            rows.append('{Role:"%s", Seq:%d, Hdr:true, Key:"", Label:"%s"}' % (role, seq, grp))
+            rows.append('{Role:"%s", Seq:%d, Hdr:true, Key:"", Label:"%s", Ico:Icon.Home}' % (role, seq, grp))
             for key, label in items:
                 seq += 1
-                rows.append('{Role:"%s", Seq:%d, Hdr:false, Key:"%s", Label:"%s"}' % (role, seq, key, label))
+                rows.append('{Role:"%s", Seq:%d, Hdr:false, Key:"%s", Label:"%s", Ico:Icon.%s}'
+                            % (role, seq, key, label, ICON[key]))
     return "Table(\n    " + ",\n    ".join(rows) + ")"
 
 
 def nav_switch():
-    parts = ['"dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.None)']
+    parts = ['"dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade)']
     for k, s in SCREEN_OF.items():
-        parts.append('"%s", Navigate(%s, ScreenTransition.None)' % (k, s))
+        parts.append('"%s", Navigate(%s, ScreenTransition.Fade)' % (k, s))
     return "Switch(ThisItem.Key,\n  " + ",\n  ".join(parts) + ")"
 
 
@@ -86,50 +111,49 @@ FORMULAS = r"""
 //  the Movements rows, recalculated here every time Excel changes.
 // =====================================================================
 
-// ---------- theme: the HTA palette, one accent (JCB yellow) ----------
-cBg = RGBA(21, 22, 26, 1);
-cPanel = RGBA(29, 31, 36, 1);
-cPanel2 = RGBA(36, 39, 45, 1);
-cSunk = RGBA(17, 18, 22, 1);
-cLine = RGBA(49, 53, 60, 1);
-cLine2 = RGBA(61, 66, 74, 1);
-cInk = RGBA(234, 232, 227, 1);
-cInk2 = RGBA(163, 168, 176, 1);
-cInk3 = RGBA(113, 118, 126, 1);
-cJcb = RGBA(242, 176, 30, 1);
-cJcbDark = RGBA(200, 143, 16, 1);
-cJcbWash = RGBA(46, 38, 20, 1);
-cOnJcb = RGBA(21, 22, 26, 1);
-cSteel = RGBA(108, 156, 198, 1);
-cOk = RGBA(79, 174, 125, 1);
-cWarn = RGBA(217, 155, 60, 1);
-cStop = RGBA(220, 115, 97, 1);
+// ---------- theme v2: dark glass over a sunset workshop, gold + orange accents ----------
+cBg = RGBA(16, 12, 16, 1);
+cPanel = RGBA(22, 17, 22, 0.80);
+cPanel2 = RGBA(40, 30, 32, 0.86);
+cSunk = RGBA(10, 8, 11, 0.55);
+cGlass = RGBA(14, 10, 14, 0.66);
+cLine = RGBA(255, 255, 255, 0.10);
+cLine2 = RGBA(255, 255, 255, 0.20);
+cInk = RGBA(248, 244, 238, 1);
+cInk2 = RGBA(214, 205, 196, 1);
+cInk3 = RGBA(168, 157, 148, 1);
+cJcb = RGBA(253, 185, 19, 1);
+cJcbDark = RGBA(247, 148, 29, 1);
+cOrange = RGBA(247, 148, 29, 1);
+cJcbWash = RGBA(253, 185, 19, 0.16);
+cOnJcb = RGBA(28, 20, 8, 1);
+cSteel = RGBA(128, 178, 222, 1);
+cOk = RGBA(96, 196, 140, 1);
+cWarn = RGBA(244, 170, 66, 1);
+cStop = RGBA(242, 114, 98, 1);
+cInput = RGBA(252, 250, 246, 1);
+cInputHover = RGBA(255, 246, 224, 1);
+cInputInk = RGBA(28, 22, 16, 1);
+cInputHint = RGBA(120, 110, 100, 1);
+cInputLine = RGBA(205, 192, 178, 1);
+cRowHover = RGBA(253, 185, 19, 0.10);
+cClear = RGBA(0, 0, 0, 0);
 fMono = "Consolas, 'Courier New', monospace";
 fUI = "'Segoe UI', 'Open Sans', sans-serif";
-nfChartHex = ["#f2b01e", "#6c9cc6", "#4fae7d", "#dc7361", "#a3a8b0", "#c88f10", "#d99b3c", "#8a7fc0"];
+nfChartHex = ["#fdb913", "#f7941d", "#80b2de", "#60c48c", "#f27262", "#d6cdc4", "#c88f10", "#a98fd8"];
+// vector art (no image files, so it also works with Paste code)
+imgBg = %(IMG_BG)s;
+imgHeader = %(IMG_HEADER)s;
+imgLogo = %(IMG_LOGO)s;
+imgLine = %(IMG_LINE)s;
+imgAvatar = %(IMG_AVATAR)s;
 nfPill = %(PILL)s;
 
 // ---------- navigation (same groups and labels as the HTA) ----------
 nfNav = %(NAV)s;
 
-// ---------- who is signed in (Microsoft 365 login, no passwords) ----------
-nfEmail = Lower(Trim(User().Email));
-nfUserKey = First(Split(nfEmail, "@")).Value;
-nfMeRow = With(
-    {byMail: LookUp(tblUsers, !IsBlank(Email) && Lower(Trim(Text(Email))) = nfEmail)},
-    If(IsBlank(byMail),
-        LookUp(tblUsers, Lower(Trim(Text(Username))) = nfUserKey || Lower(Trim(Text(Username))) = nfEmail),
-        byMail));
-nfMeName = Coalesce(Text(nfMeRow.FullName), User().FullName, nfEmail);
-nfMeInitials = Upper(Concat(FirstN(Split(Trim(nfMeName), " "), 2), Left(Value, 1)));
-// Role text is tolerated the same way the HTA tolerates it; anything unknown = Engineer.
-nfRoleCanon = With(
-    {k: Lower(Substitute(Substitute(Substitute(Substitute(Text(nfMeRow.Role), " ", ""), "-", ""), "_", ""), ".", ""))},
-    If(IsBlank(k), "Engineer",
-        k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead",
-        "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin",
-        "manager" in k || k in ["mgr", "hod", "head"], "Manager",
-        "Engineer"));
+// ---------- who is signed in: see the Login screen (username + password from the Users tab).
+// The signed-in person lives in variables gMe, gMeName, gMeEmail, gRole... set by the Log In button.
 
 // ---------- settings tab ----------
 nfSet = ForAll(Filter(tblSettings, !IsBlank(Key)) As S, {Key: Trim(Text(S.Key)), Val: Text(S.Value)});
@@ -138,6 +162,19 @@ nLowTerm = Coalesce(Value(LookUp(nfSet, Key = "LowStockPct_Terminal").Val), 20);
 nLowDef = Coalesce(Value(LookUp(nfSet, Key = "LowStockPct_Default").Val), 20);
 tLabName = Coalesce(LookUp(nfSet, Key = "LabName").Val, "EDS Lab");
 tSupport = Coalesce(LookUp(nfSet, Key = "SupportContact").Val, "your Lab Admin");
+// Data health: the workbook counts its own rows with Excel formulas (Settings tab), so the app can
+// prove it has read every row. If these differ, the Data row limit is too low or a table is not connected.
+nXlParts = Value(LookUp(nfSet, Key = "ExcelPartRows").Val);
+nXlMoves = Value(LookUp(nfSet, Key = "ExcelMovementRows").Val);
+nXlStock = Value(LookUp(nfSet, Key = "ExcelStockTotal").Val);
+nAppParts = CountRows(tblParts);
+nAppMoves = CountRows(tblMoves);
+nAppStock = Round(Sum(nfMoves, SQty), 3);
+nfHealthOk = !IsBlank(nXlMoves) && nXlParts = nAppParts && nXlMoves = nAppMoves && Abs(nXlStock - nAppStock) < 0.001;
+nfHealthText = If(IsBlank(nXlMoves), "Health rows missing in Settings",
+    nfHealthOk, "All rows read",
+    nAppMoves < nXlMoves, "Only " & nAppMoves & " of " & nXlMoves & " movements read",
+    "Counts differ from Excel");
 
 // ---------- Finance-locked cost constants (Assumptions sheet) ----------
 kMachineCost = 418000;
@@ -220,10 +257,8 @@ nfCategories = Sort(Distinct(Filter(nfParts, !IsBlank(Category)), Category), Val
 nfReqView = AddColumns(nfReq,
     Lines, CountRows(Filter(nfLines As X, X.RequestNo = RequestNo)),
     ShortLines, CountRows(Filter(nfLines As X, X.RequestNo = RequestNo && X.LineStatus in ["SHORTAGE", "NEW PART"])),
-    ShortQty, Sum(Filter(nfLines As X, X.RequestNo = RequestNo), Max(0, QtyRequested - Max(QtyReserved, QtyReleased))),
-    IsMine, RaisedByEmail = nfEmail);
-nfQueueCount = CountRows(Filter(nfReq, Status in ["SUBMITTED", "ADMIN REVIEW"]));
-nfMyOpenCount = CountRows(Filter(nfReq, RaisedByEmail = nfEmail && !(Status in nfDeadStatus)));
+    ShortQty, Sum(Filter(nfLines As X, X.RequestNo = RequestNo), Max(0, QtyRequested - Max(QtyReserved, QtyReleased))));
+nfQueueCount = CountRows(Filter(nfReq, Status in ["SUBMITTED", "ADMIN REVIEW", "APPROVED"]));
 nfYearPfx = Text(Year(Today()));
 nfNextReqSeq = Coalesce(Max(ForAll(Filter(nfReq, StartsWith(RequestNo, "REQ-" & nfYearPfx & "-") ||
     StartsWith(RequestNo, "SHT-" & nfYearPfx & "-")) As R, IfError(Value(Right(R.RequestNo, 5)), 0)), Value), 0) + 1;
@@ -233,7 +268,7 @@ nfNextReqSeq = Coalesce(Max(ForAll(Filter(nfReq, StartsWith(RequestNo, "REQ-" & 
 // hides a real shortfall once the reserved part is released; see docs/06.)
 nfGapLines = Filter(nfLines As GL, GL.QtyRequested - Max(GL.QtyReserved, GL.QtyReleased) > 0 &&
     With({st: LookUp(nfReq As RQ, RQ.RequestNo = GL.RequestNo).Status},
-        !(st in nfDeadStatus) && !(st in ["SUBMITTED", "ADMIN REVIEW"])));
+        !(st in nfDeadStatus) && !(st in ["SUBMITTED", "ADMIN REVIEW", "APPROVED"])));
 nfShortBook = Sort(ForAll(Distinct(nfGapLines, PN) As G,
     With({rows: Filter(nfGapLines, PN = G.Value)},
         {PN: G.Value, PartNo: First(rows).PartNo, Description: First(rows).Description,
@@ -303,7 +338,7 @@ nfRevByBU = ForAll(Sequence(CountRows(nfRevBU1)) As I,
     With({r: Index(nfRevBU1, I.Value)}, {K: r.K, V: r.V, Col: Index(nfChartHex, Mod(I.Value - 1, 8) + 1).Value}));
 nfRevTotal = Sum(nfInv, TotalCost);
 nfProcBars = Table(
-    {K: "DELIVERED", V: CountRows(Filter(nfProc, "DELIVERED" in Stage)), C: cOk},
+    {K: "Delivered", V: CountRows(Filter(nfProc, "DELIVERED" in Stage)), C: cOk},
     {K: "PO", V: CountRows(Filter(nfProc, !("DELIVERED" in Stage) && ("PO" in Stage || "GRN" in Stage))), C: cSteel},
     {K: "PR", V: CountRows(Filter(nfProc, !("DELIVERED" in Stage) && !("PO" in Stage) && !("GRN" in Stage))), C: cJcb});
 nfOngoing = CountRows(Filter(nfReq, !(Status in nfDeadStatus)));
@@ -329,9 +364,11 @@ nfLedger = With({n: CountRows(nfMoves)},
 
 
 def formulas():
-    pill = "Table(\n    " + ",\n    ".join('{K:"%s", C:%s}' % (k, c) for k, c in PILL) + ")"
+    pill = "Table(\n    " + ",\n    ".join('{K:"%s", C:%s, D:"%s"}' % (k, c, d) for k, c, d in PILL) + ")"
     sub = {
         "PILL": pill, "NAV": nav_table(),
+        "IMG_BG": art.photo_uri(), "IMG_HEADER": art.uri(art.HEADER), "IMG_LOGO": art.uri(art.LOGO),
+        "IMG_LINE": art.uri(art.LINE), "IMG_AVATAR": art.uri(art.AVATAR),
         "N_P_UnitCost": N("P.UnitCost"), "N_P_Ref": N("P.ReorderRefQty"),
         "N_M_Qty": N("M.Qty"), "D_M_Date": D("M.Date"), "N_M_Cost": N("M.UnitCost"),
         "D_R_Raised": D("R.DateRaised"), "N_R_Circ": N("R.NoOfCircuits"), "D_R_Need": D("R.RequiredBy"),
@@ -356,7 +393,24 @@ def formulas():
 
 ONSTART = r"""
 // App.OnStart - only session state. All data lives in the named formulas (App.Formulas).
-Set(gRole, nfRoleCanon);
+Set(gRole, "");
+Set(gRoleHome, "Engineer");
+Set(gMe, LookUp(tblUsers, false));
+Set(gPend, LookUp(tblUsers, false));
+Set(gMeName, "");
+Set(gMeEmail, "");
+Set(gMeInitials, "");
+Set(gIsLead, false);
+Set(gIsAdmin, false);
+Set(gIsMgr, false);
+Set(gRoleOptions, Table({Value: "Engineer"}));
+Set(gLoginMode, "login");
+Set(gLoginMsg, "");
+Set(gLoginTries, 0);
+Set(gTempCode, "");
+Set(gLastSync, Now());
+Set(gSyncNote, "");
+Set(gPhotoCheck, "Not tested yet on this device.");
 Set(gBusy, false);
 Set(gReqNo, "");
 Set(gInvReq, "");
@@ -375,8 +429,11 @@ Set(gPrintCkt, 200);
 ClearCollect(colBom, {Sr: 0, PartNo: "", PN: "", Qty: 0, Description: "", UOM: "", Location: "", OnHand: 0,
     Reserved: 0, Avail: 0, UnitCost: 0, Short: 0, Status: "", Found: false});
 Clear(colBom);
-ClearCollect(colNP, ForAll(Sequence(3) As S, {Id: S.Value, RequesterName: nfMeName, Category: "", SubCategory: "",
-    PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}));
+ClearCollect(colNP, {Id: 0, RequesterName: "", Category: "", SubCategory: "", PlantCode: "", PartName: "",
+    MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""});
+Clear(colNP);
+Set(gNpForm, {Id: 0, RequesterName: "", Category: "", SubCategory: "", PlantCode: "", PartName: "",
+    MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""});
 ClearCollect(colInvLines, {Sr: 0, PartNo: "", Description: "", Qty: 0, UnitCost: 0});
 Clear(colInvLines);
 ClearCollect(colCostLines, {Sr: 0, PartNo: "", Description: "", Qty: 0, UnitCost: 0});
@@ -388,4 +445,69 @@ def onstart():
     return ONSTART.strip("\n")
 
 
-STARTSCREEN = 'If(IsBlank(nfMeRow), scrNoAccess, nfRoleCanon = "Manager", scrMgrDash, scrDash)'
+STARTSCREEN = 'scrWelcome'
+
+
+# ----------------------------------------------------------------------------- login helpers (Python -> Power Fx)
+ALPHA = "".join(chr(c) for c in range(32, 127)).replace('"', '""')
+
+
+def role_canon(x):
+    """One role word as typed in the Users tab -> Engineer / Lab Admin / Lab Lead / Manager / Pending / Disabled."""
+    return ('With({k: Lower(Substitute(Substitute(Substitute(Substitute(%s, " ", ""), "-", ""), "_", ""), ".", ""))}, '
+            'If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", '
+            'k in ["disabled", "rejected", "left", "inactive"], "Disabled", '
+            'k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", '
+            '"admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", '
+            '"manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))' % x)
+
+
+def role_list(role_text):
+    return ('ForAll(Split(Substitute(Substitute(Substitute(%s, ";", ","), "/", ","), "+", ","), ",") As RR, %s)'
+            % (role_text, role_canon("RR.Value")))
+
+
+HASH_K = [(7919, 104723, 15485863, 2750159, 999983), (6007, 130363, 32452843, 1299709, 1000003),
+          (4513, 611953, 49979687, 3571, 7368787), (7727, 86028121, 67867967, 104395301, 2038074743 % 1000003)]
+
+
+def hash_fx(pw, salt, prefix):
+    """Scrambles a password with its username as salt (the Excel cell never holds the password itself).
+    Pure Power Fx: no crypto functions exist in canvas apps. tools/verify checks it against hash_py()."""
+    piece = ('Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, '
+             'z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * %d + %d) + x * y * (J.Value * %d + %d) '
+             '+ y * z * %d + x, 2147483647))), Value), 2147483647), "0000000000")')
+    pieces = " & ".join(piece % k for k in HASH_K)
+    return ('With({s: Lower(%s) & "|" & %s & "|" & Lower(%s) & "|EDSLAB-PA1"}, '
+            'With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), "%s"), 97))}, '
+            'With({n: CountRows(c)}, "%s" & %s)))' % (salt, pw, salt, ALPHA, prefix, pieces))
+
+
+def hash_py(pw, salt, prefix):
+    alpha = "".join(chr(c) for c in range(32, 127))
+    s = salt.lower() + "|" + pw + "|" + salt.lower() + "|EDSLAB-PA1"
+    c = [(alpha.find(ch) + 1) or 97 for ch in s]
+    n, out = len(c), prefix
+    for k1, k2, k3, k4, k5 in HASH_K:
+        tot = 0
+        for j in range(1, n + 1):
+            x, y, z = c[j - 1], c[j % n], c[(j + 1) % n]
+            tot += (x ** 3 * (j * k1 + k2) + x * y * (j * k3 + k4) + y * z * k5 + x) % 2147483647
+        out += "%010d" % (tot % 2147483647)
+    return out
+
+
+def login_ok(u):
+    """Behaviour formula: make record u the signed-in person and open their usual role."""
+    return ('Set(gMe, %(U)s); Set(gMeName, Coalesce(Trim(Text(gMe.FullName)), Trim(Text(gMe.Username)))); '
+            'Set(gMeEmail, Lower(Coalesce(Trim(Text(gMe.Email)), Trim(Text(gMe.Username))))); '
+            'Set(gMeInitials, Upper(Concat(FirstN(Split(gMeName, " "), 2), Left(Value, 1)))); '
+            'With({rl: %(RL)s}, Set(gIsLead, "Lab Lead" in rl); Set(gIsAdmin, gIsLead || "Lab Admin" in rl); '
+            'Set(gIsMgr, "Manager" in rl); Set(gRoleHome, Coalesce(First(rl).Value, "Engineer"))); '
+            'Set(gRoleOptions, ForAll(Filter(Table({V: "Engineer", Ok: true}, {V: "Lab Admin", Ok: gIsAdmin}, '
+            '{V: "Manager", Ok: gIsAdmin || gIsMgr}), Ok) As RO, {Value: RO.V})); '
+            'Set(gRole, gRoleHome); Set(gLoginTries, 0); Set(gLoginMode, "login"); Set(gLoginMsg, ""); '
+            'Set(gNpForm, Patch(gNpForm, {RequesterName: gMeName})); Set(gLastSync, Now()); '
+            'Notify("Welcome, " & gMeName & ".", NotificationType.Success); '
+            'Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade)'
+            % {"U": u, "RL": role_list("Text(gMe.Role)")})

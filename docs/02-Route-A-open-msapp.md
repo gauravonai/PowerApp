@@ -1,6 +1,6 @@
 # Step 2, Route A: open the ready-made app file (about 15 minutes)
 
-`app/EDS-Lab-Portal.msapp` contains all 23 screens, the app formulas and the theme. It was built with
+`app/EDS-Lab-Portal.msapp` contains all 25 screens, the app formulas and the theme. It was built with
 Microsoft's own Power Platform CLI (`pac canvas pack`), which marks the file so Power Apps Studio
 **builds every screen from the source code inside it** when you open it.
 
@@ -42,6 +42,7 @@ You'll see lots of **red errors** at first. That's expected, because the app doe
 
 1. **Settings** (gear, top bar) → **General** → **Data row limit**: set **2000**.
    The file already asks for 2000. Check it, because Movements has 775 rows today and the default is 500.
+   After the first login, **About → Data Health** proves it: every row must show **OK**.
 2. Close Settings.
 
 ## 2.4 Run the start-up formula and look around
@@ -51,11 +52,10 @@ You'll see lots of **red errors** at first. That's expected, because the app doe
    paste `paste/00-App.Formulas.txt` there, then do the same for **OnStart** (`01-…`) and
    **StartScreen** (`02-…`). See Route B step B.3.
 1. Left rail **Tree view** → select **App** → top bar **⋯ → Run OnStart** (or right-click App → Run OnStart).
-2. Press **F5** (Preview). You should land on **Dashboard** as yourself. Your name and role come from the
-   Users tab, matched on your Microsoft 365 email.
-   - Not in Users? You'll see *"You're not set up yet"*. Add yourself in Excel (Users tab) and press **Check again**.
-3. Admins see a **"View as"** box in the header. Use it to preview the Engineer and Manager menus without
-   changing anything in Excel.
+2. Press **F5** (Preview). You land on the **Welcome** screen → **Log In** → type your username
+   (the Username column of the Users tab, e.g. `gaurav.shelke`) and leave the password empty → the app asks
+   you to choose your password (first time only) → Dashboard. Full login rules: [09-v2-whats-new.md](09-v2-whats-new.md) §1.
+3. People with more than one role see a **"View as"** box in the header to switch between them. **Log Out** is top right.
 
 ## 2.5 Save, publish, share
 

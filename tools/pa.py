@@ -65,6 +65,50 @@ def _fmt(v):
     return str(v)
 
 
+ACRONYMS = {"BOM", "PR", "PO", "UOM", "HSN", "GRN", "PDF", "FOC", "IDC", "EDS", "JCB", "OK",
+            "BU", "DC", "FY", "INR", "ID", "GST", "AMC", "KW", "PR/PO"}
+SMALL = {"a", "an", "and", "as", "at", "by", "for", "in", "of", "on", "or", "the", "to", "vs", "per", "from", "with",
+         "into"}
+
+
+def tc(text):
+    """Title Case for titles, buttons, headers and field labels (sentences stay sentence case).
+    Acronyms (BOM, PR/PO, HSN...) stay capitals; small words stay lower unless first."""
+    out = []
+    shout = text.isupper()
+    for i, w in enumerate(text.split(" ")):
+        core = w.strip("()·,.:;!?‹›+*/-—'\"")
+        up = core.upper()
+        code = ("(" in w or ")" in w) and len(core) <= 3 and core.isupper()     # (A), (B×C)
+        if shout and up not in ACRONYMS and core not in ("NO", "M", "KG") and not code:
+            w, core = w.lower(), core.lower()
+        if not core or any(ch.isdigit() for ch in core) or core in ("₹",):
+            out.append(w)
+        elif core.endswith("s") and core[:-1] in ACRONYMS:      # PRs, POs
+            out.append(w)
+        elif code:
+            out.append(w)
+        elif up in ACRONYMS or (core.isupper() and len(core) <= 3 and core.isalpha() and core not in ("ALL", "NEW", "ADD", "SET", "OUT", "LOW", "MY")):
+            out.append(w.replace(core, up))
+        elif "/" in core and all(x.upper() in ACRONYMS for x in core.split("/")):
+            out.append(w.replace(core, up))
+        elif i > 0 and core.lower() in SMALL and not out[-1].endswith(("·", "—", ":")) and \
+                not (core.lower() in ("in", "out", "up") and out[-1].lower() in ("log", "sign", "set")):
+            out.append(w.replace(core, core.lower()))
+        else:
+            lw = core.lower() if core.isupper() else core
+            out.append(w.replace(core, lw[:1].upper() + lw[1:]))
+    return " ".join(out)
+
+
+def tq(formula):
+    """Title-case a Power Fx text literal ("...") and leave real formulas alone."""
+    f = str(formula)
+    if len(f) >= 2 and f[0] == '"' and f[-1] == '"' and '"' not in f[1:-1].replace('""', ''):
+        return '"' + tc(f[1:-1]) + '"'
+    return f
+
+
 def q(s):
     """Python string -> Power Fx text literal."""
     return '"' + str(s).replace('"', '""') + '"'
@@ -137,9 +181,9 @@ def emit_app(props):
 
 # ---------------------------------------------------------------- controls
 def box(name, x, y, w, h, kids=None, fill="cPanel", border="cLine", thick=1, auto=False,
-        direction="Vertical", gap=0, pad=0, scroll=False, visible=None, extra=None):
-    p = {"Fill": fill, "BorderColor": border, "BorderThickness": thick, "DropShadow": "DropShadow.None",
-         "RadiusTopLeft": 0, "RadiusTopRight": 0, "RadiusBottomLeft": 0, "RadiusBottomRight": 0}
+        direction="Vertical", gap=0, pad=0, scroll=False, visible=None, extra=None, radius=0, shadow="None"):
+    p = {"Fill": fill, "BorderColor": border, "BorderThickness": thick, "DropShadow": "DropShadow." + shadow,
+         "RadiusTopLeft": radius, "RadiusTopRight": radius, "RadiusBottomLeft": radius, "RadiusBottomRight": radius}
     if x is not None:
         p.update({"X": x, "Y": y})
     if w is not None:
@@ -173,7 +217,7 @@ def lbl(name, text, x, y, w, h, size=13, color="cInk", bold=False, semibold=Fals
     if visible is not None:
         p["Visible"] = visible
     if onselect:
-        p["OnSelect"] = onselect
+        raise ValueError(name + ": clickable labels show the text cursor - use overlay() or btn()")
     if extra:
         p.update(extra)
     return Ctl(name, LABEL, p)
@@ -188,21 +232,44 @@ def rect(name, x, y, w, h, fill, visible=None, extra=None):
     return Ctl(name, RECT, p)
 
 
-def btn(name, text, x, y, w, h, onselect, kind="primary", visible=None, disabled=None, size=11, extra=None):
-    if kind == "primary":
-        fill, color, border, hover = "cJcb", "cOnJcb", "cJcb", "cJcbDark"
-    elif kind == "danger":
-        fill, color, border, hover = "RGBA(0,0,0,0)", "cStop", "cStop", "RGBA(220,115,97,0.15)"
-    else:
-        fill, color, border, hover = "cPanel2", "cInk", "cLine2", "cLine"
-    p = {"Text": text, "X": x, "Y": y, "Width": w, "Height": h, "OnSelect": onselect,
-         "Fill": fill, "Color": color, "BorderColor": border, "BorderThickness": 1,
-         "HoverFill": hover, "HoverColor": color, "HoverBorderColor": border,
-         "PressedFill": hover, "PressedColor": color, "PressedBorderColor": border,
-         "DisabledFill": "cPanel", "DisabledColor": "cInk3", "DisabledBorderColor": "cLine",
-         "RadiusTopLeft": 2, "RadiusTopRight": 2, "RadiusBottomLeft": 2, "RadiusBottomRight": 2,
-         "Size": size, "FontWeight": "FontWeight.Semibold", "Font": UI,
-         "PaddingLeft": 6, "PaddingRight": 6}
+WRITES = re.compile(r"\b(Patch|Collect|Remove|RemoveIf|UpdateIf)\(\s*tbl")
+
+
+def guard(f):
+    """Every formula that writes to Excel is wrapped, so a failed save never fails silently:
+    the person sees the connector's own message and the busy flag is cleared."""
+    if not WRITES.search(f) or f.startswith("IfError("):
+        return f
+    return ('IfError(%s, Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & '
+            '" Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try '
+            'again.", NotificationType.Error))' % f)
+
+
+BTN_KINDS = {
+    #            fill                       text      border     hover fill               hover text  hover border
+    "primary":   ("cJcb",                     "cOnJcb", "cJcb",    "cOrange",               "cOnJcb",   "cOrange"),
+    "secondary": ("RGBA(255,255,255,0.08)",   "cInk",   "cLine2",  "cJcbWash",              "cJcb",     "cJcb"),
+    "danger":    ("RGBA(242,114,98,0.10)",    "cStop",  "cStop",   "RGBA(242,114,98,0.24)", "cInk",     "cStop"),
+    "ghost":     ("cClear",                   "cInk2",  "cClear",  "cJcbWash",              "cJcb",     "cClear"),
+    "overlay":   ("cClear",                   "cClear", "cClear",  "cRowHover",             "cClear",   "cClear"),
+}
+
+
+def btn(name, text, x, y, w, h, onselect, kind="primary", visible=None, disabled=None, size=11, extra=None,
+        radius=None, align="Center"):
+    """Classic button = the arrow (hand) pointer, rounded, bold. kind: primary / secondary / danger / ghost / overlay
+    ('overlay' is an invisible full-row button that makes a whole table row clickable with the hand pointer)."""
+    fill, color, border, hfill, hcolor, hborder = BTN_KINDS[kind]
+    r = radius if radius is not None else (0 if kind == "overlay" else min(10, int(h / 2) if isinstance(h, int) else 10))
+    p = {"Text": tq(text), "X": x, "Y": y, "Width": w, "Height": h, "OnSelect": guard(onselect),
+         "Fill": fill, "Color": color, "BorderColor": border, "BorderThickness": 0 if kind in ("ghost", "overlay") else 1,
+         "HoverFill": hfill, "HoverColor": hcolor, "HoverBorderColor": hborder,
+         "PressedFill": hfill, "PressedColor": hcolor, "PressedBorderColor": hborder,
+         "DisabledFill": "RGBA(255,255,255,0.05)", "DisabledColor": "cInk3", "DisabledBorderColor": "cLine",
+         "FocusedBorderColor": "cJcb", "FocusedBorderThickness": 0 if kind == "overlay" else 2,
+         "RadiusTopLeft": r, "RadiusTopRight": r, "RadiusBottomLeft": r, "RadiusBottomRight": r,
+         "Size": size, "FontWeight": "FontWeight.Bold", "Font": UI, "Align": "Align." + align,
+         "PaddingLeft": 8, "PaddingRight": 8}
     if visible is not None:
         p["Visible"] = visible
     if disabled is not None:
@@ -212,14 +279,26 @@ def btn(name, text, x, y, w, h, onselect, kind="primary", visible=None, disabled
     return Ctl(name, BUTTON, p)
 
 
+def overlay(name, x, y, w, h, onselect, visible=None, tooltip=None):
+    extra = {"Tooltip": q(tooltip)} if tooltip else None
+    return btn(name, '""', x, y, w, h, onselect, kind="overlay", visible=visible, extra=extra)
+
+
+# Inputs are light with dark text in EVERY state (normal, hover, pressed/typing, disabled).
+# v1 set only Color, so hovering or typing fell back to black text on the dark fill.
+INPUT_COLORS = {"Fill": "cInput", "Color": "cInputInk", "HoverFill": "cInputHover", "HoverColor": "cInputInk",
+                "PressedFill": "cInput", "PressedColor": "cInputInk", "BorderColor": "cInputLine",
+                "HoverBorderColor": "cJcb", "PressedBorderColor": "cJcb", "FocusedBorderColor": "cOrange",
+                "FocusedBorderThickness": 2, "DisabledFill": "RGBA(255,255,255,0.10)", "DisabledColor": "cInk2",
+                "DisabledBorderColor": "cLine", "BorderThickness": 1}
+
+
 def inp(name, x, y, w, h, default='""', hint="", mode=None, number=False, visible=None, extra=None,
         size=12, font=UI, onchange=None, disabled=None):
     p = {"X": x, "Y": y, "Width": w, "Height": h, "Default": default, "HintText": q(hint),
-         "Fill": "cSunk", "Color": "cInk", "BorderColor": "cLine2", "HoverBorderColor": "cInk3",
-         "FocusedBorderColor": "cJcb", "HoverFill": "cSunk", "BorderThickness": 1,
          "Size": size, "Font": font, "PaddingLeft": 10, "PaddingRight": 6,
-         "RadiusTopLeft": 0, "RadiusTopRight": 0, "RadiusBottomLeft": 0, "RadiusBottomRight": 0,
-         "DisabledFill": "cPanel", "DisabledColor": "cInk2", "DisabledBorderColor": "cLine"}
+         "RadiusTopLeft": 8, "RadiusTopRight": 8, "RadiusBottomLeft": 8, "RadiusBottomRight": 8}
+    p.update(INPUT_COLORS)
     if mode == "multi":
         p["Mode"] = "TextMode.MultiLine"
     if number:
@@ -237,12 +316,11 @@ def inp(name, x, y, w, h, default='""', hint="", mode=None, number=False, visibl
 
 def dd(name, x, y, w, h, items, default=None, visible=None, extra=None, onchange=None):
     p = {"X": x, "Y": y, "Width": w, "Height": h, "Items": items,
-         "Fill": "cSunk", "Color": "cInk", "BorderColor": "cLine2", "BorderThickness": 1,
-         "HoverFill": "cPanel2", "HoverColor": "cInk", "PressedFill": "cPanel2", "PressedColor": "cInk",
          "SelectionFill": "cJcb", "SelectionColor": "cOnJcb",
-         "ChevronBackground": "cSunk", "ChevronFill": "cInk2",
-         "ChevronHoverBackground": "cPanel2", "ChevronHoverFill": "cJcb",
+         "ChevronBackground": "cInput", "ChevronFill": "cOrange",
+         "ChevronHoverBackground": "cJcb", "ChevronHoverFill": "cOnJcb",
          "Size": 12, "Font": UI, "PaddingLeft": 10}
+    p.update(INPUT_COLORS)
     if default is not None:
         p["Default"] = default
     if visible is not None:
@@ -256,10 +334,10 @@ def dd(name, x, y, w, h, items, default=None, visible=None, extra=None, onchange
 
 def date(name, x, y, w, h, default="Today()", visible=None, extra=None):
     p = {"X": x, "Y": y, "Width": w, "Height": h, "DefaultDate": default, "Format": q("dd-mmm-yyyy"),
-         "Fill": "cSunk", "Color": "cInk", "BorderColor": "cLine2", "BorderThickness": 1,
-         "IconBackground": "cPanel2", "IconFill": "cJcb",
+         "IconBackground": "cJcb", "IconFill": "cOnJcb", "SelectedDateFill": "cOrange", "HoverDateFill": "cJcbWash",
          "Size": 12, "Font": UI, "PaddingLeft": 10,
          "IsEditable": "false", "StartYear": 2020, "EndYear": 2040}
+    p.update({k: v for k, v in INPUT_COLORS.items() if k != "PressedBorderColor" or True})
     if visible is not None:
         p["Visible"] = visible
     if extra:
@@ -297,7 +375,9 @@ def icon(name, x, y, w, h, ico, color="cInk2", onselect=None, visible=None, tool
     p = {"X": x, "Y": y, "Width": w, "Height": h, "Icon": "Icon." + ico, "Color": color,
          "PaddingTop": pad, "PaddingBottom": pad, "PaddingLeft": pad, "PaddingRight": pad}
     if onselect:
-        p["OnSelect"] = onselect
+        p["OnSelect"] = guard(onselect)
+        p["HoverColor"] = "cJcb"
+        p["PressedColor"] = "cOrange"
     if visible is not None:
         p["Visible"] = visible
     if tooltip:
@@ -307,8 +387,9 @@ def icon(name, x, y, w, h, ico, color="cInk2", onselect=None, visible=None, tool
 
 
 def pill(name, x, y, w, status, h=22, visible=None):
-    """Status pill exactly like the HTA's .pill: outlined, small caps-ish text."""
+    """Status pill: outlined, Title Case text (APPROVED is stored in Excel, Approved is shown)."""
     col = "Coalesce(LookUp(nfPill, K = Upper(%s)).C, cInk3)" % status
-    return lbl(name, "Upper(%s)" % status, x, y, w, h, size=8, color=col, semibold=True, align="Center",
-               font=MONO, visible=visible,
-               extra={"BorderColor": col, "BorderThickness": 1, "Fill": "RGBA(0,0,0,0)", "Wrap": "false"})
+    txt = "Coalesce(LookUp(nfPill, K = Upper(%s)).D, %s)" % (status, status)
+    return lbl(name, txt, x, y, w, h, size=9, color=col, bold=True, align="Center",
+               visible=visible,
+               extra={"BorderColor": col, "BorderThickness": 1, "Fill": "RGBA(0,0,0,0.25)", "Wrap": "false"})

@@ -7,8 +7,25 @@ import sys
 import openpyxl
 
 
+def excel_health(wb):
+    """Stand-in for Excel's own calculation of the three Data Health formulas in Settings (LibreOffice cannot
+    open files in this sandbox). Same rules as the formulas: ROWS(table) = data rows of the table range;
+    SUMPRODUCT of +/-1 per Type (Excel '=' compares text ignoring case) times ABS(Qty)."""
+    def tab(name):
+        for ws in wb.worksheets:
+            if name in ws.tables:
+                return list(ws[ws.tables[name].ref])
+    parts, moves = tab("tblParts"), tab("tblMoves")
+    hdr = [c.value for c in moves[0]]
+    ti, qi = hdr.index("Type"), hdr.index("Qty")
+    sign = {"RECEIPT": 1, "RETURN": 1, "ADJUST+": 1, "ISSUE": -1, "SCRAP": -1, "ADJUST-": -1}
+    tot = sum(sign.get(str(r[ti].value or "").upper(), 0) * abs(float(r[qi].value or 0)) for r in moves[1:])
+    return {"=ROWS(tblParts)": len(parts) - 1, "=ROWS(tblMoves)": len(moves) - 1, "SUMPRODUCT": round(tot, 6)}
+
+
 def main(xlsx, out):
     wb = openpyxl.load_workbook(xlsx)
+    calc = excel_health(wb)
     res = {}
     for ws in wb.worksheets:
         for tn in ws.tables:
@@ -31,6 +48,8 @@ def main(xlsx, out):
                 rec = {}
                 for j, h in enumerate(hdr):
                     v = r[j].value
+                    if isinstance(v, str) and v.startswith("=") and tn == "tblSettings":
+                        v = str(calc["SUMPRODUCT"] if v.startswith("=SUMPRODUCT") else calc.get(v, v))
                     if v is None:
                         continue
                     if types[h] == "n":

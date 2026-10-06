@@ -24,12 +24,17 @@ Expected. The Excel connector never filters on the server; Power Apps downloads 
 to a SharePoint list or Dataverse. Formulas only need the table name changing, because the column names
 stay the same. Ask me when you get there.
 
-## 4. The app opens on "You're not set up yet"
-Your Microsoft 365 email didn't match any row in **Users**. The app matches `Users.Email` first, then
-`Users.Username` = the part of your email before `@`. Add or fix your row in Excel → **Check again**.
+## 4. Login messages
+| Message | Meaning / fix |
+|---|---|
+| *No account with that username* | Not in **Users**. Use **Register** (then the Lab Lead approves), or the Lab Lead adds you in Team Access. |
+| *This account has no password yet. Ask the Lab Lead for a temporary password* | First login from a PC signed in as someone else. Lab Lead → Team Access → **Temp Password** on your row. |
+| *Your access request is waiting for the Lab Lead's approval* | Role is **Pending**. Lab Lead sets a real role in Team Access (or in the Users tab). |
+| *That password is not right* / *Too many wrong attempts* | Retry, or close and reopen the app after 5 tries. Forgotten → Temp Password from the Lab Lead. |
+| *This account is switched off* | Role is **Disabled**. |
 
-## 5. Everyone else sees "not set up" or can't save
-- They must be in **Users** (Tools › Team access, or in Excel).
+## 5. Everyone else can't log in or can't save
+- They must be in **Users** with a role that is not Pending (Team Access, or in Excel).
 - They must have **Edit** access to the Excel file. Keep it in a Teams/SharePoint library everyone in
   the lab can use, not in one person's OneDrive.
 - The app must be **shared** with them (Apps → ⋯ → Share).
@@ -86,3 +91,16 @@ Fixed so far: `CalendarHeaderFill` on Classic/DatePicker (removed 06-Oct-2026). 
 current version` warnings came from pinned control versions; all versions are now left out, so Studio uses
 its current ones. If you see another PA2108, send me the lines. It's one property, removed in one place,
 and every screen is regenerated.
+
+## 16. Stock looks wrong, or BOM Compare shows no on hand
+Log in as Lab Admin → **About → Data Health**. If *Movement rows* shows fewer in the app than in Excel, set
+**Settings → General → Data row limit = 2000** and reopen the app. If it says *Not set up*, add the three
+`Excel…` rows to the Settings tab ([09-v2-whats-new.md](09-v2-whats-new.md) §4).
+
+## 17. Photos don't save
+About → **Photo Storage Check → Test Photo Storage**. It names the exact problem (no OneDrive for Business
+connection, or the folder **EDS Lab Portal Photos** is missing in the OneDrive root).
+
+## 18. PA2108 on the Add picture control (`OnChange`)
+If Studio rejects `OnChange` on the photo box (the one property I could not check against a Microsoft template),
+delete that property in the error and add a button with the same formula (Collect into colShots). Tell me and I'll ship it.

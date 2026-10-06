@@ -12,7 +12,7 @@ and the same number appears on every screen.
 | Name | What it is |
 |---|---|
 | `cBg cPanel cPanel2 cSunk cLine cLine2 cInk cInk2 cInk3 cJcb cJcbDark cJcbWash cOnJcb cSteel cOk cWarn cStop`, `fMono`, `fUI` | The HTA palette and fonts. Change a colour here and every screen follows |
-| `nfEmail, nfMeRow, nfMeName, nfRoleCanon` | Signed-in person (Microsoft 365) → Users row → canonical role (HTA rules: admin/store/incharge = Lab Admin, mgr = Manager, anything else = Engineer) |
+| `gMe, gMeName, gMeEmail, gRole, gIsAdmin…` | Variables set by the **Log In** button (Login screen): the Users row, name, key, roles (Role cell may list several, comma-separated; HTA rules: admin/store/incharge = Lab Admin, mgr = Manager, pending, disabled, anything else = Engineer) |
 | `nfParts` | Active parts (Active ≠ No), cleaned |
 | `nfMoves` | Movements with a signed quantity `SQty` (+ RECEIPT/RETURN/ADJUST+, − ISSUE/SCRAP/ADJUST-) |
 | `nfOnHand`, `nfResv`, **`nfStock`** | On hand = Σ SQty. Reserved = reserved − released on requests that hold stock. **`nfStock`** = every part with OnHand, Reserved, Avail, Status (OUT/LOW/FULLY RESERVED/IN STOCK), StockValue, Quality |
@@ -60,7 +60,7 @@ Licenses' ✓ reads `lcC1…lcC8`, Team access's ✓ reads `tmC1…tmC4`. **Don'
   context. It has the corrected table, column, status and screen names.
 
 ## Performance notes
-- 23 screens, about 2,000 controls (each screen repeats its header and menu so every screen is self-contained
+- 25 screens, about 2,300 controls (each screen repeats its header and menu so every screen is self-contained
   for copy/paste). Power Apps loads screens on demand, so only the open screen costs anything.
 - Lists are galleries, which draw only the visible rows, so 418 parts or 775 movements scroll smoothly.
 - The Excel connector can't filter on the server. Everything works on the first **2000** rows of each

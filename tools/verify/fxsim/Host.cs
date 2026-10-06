@@ -20,6 +20,12 @@ public class MockCreateFile : ReflectionFunction {
   public RecordValue Execute(StringValue a, StringValue b, StringValue c) =>
     FormulaValue.NewRecordFromFields(new NamedValue("Path", FormulaValue.New(a.Value + "/" + b.Value)));
 }
+public class MockMeta : ReflectionFunction {
+  static RecordType RT = RecordType.Empty().Add("Path", FormulaType.String).Add("Name", FormulaType.String);
+  public MockMeta() : base("MockMeta", RT, FormulaType.String) {}
+  public RecordValue Execute(StringValue a) =>
+    FormulaValue.NewRecordFromFields(new NamedValue("Path", FormulaValue.New(a.Value)), new NamedValue("Name", FormulaValue.New("x")));
+}
 public class MockGetFile : ReflectionFunction {
   public MockGetFile() : base("MockGetFile", FormulaType.String, FormulaType.String) {}
   public StringValue Execute(StringValue a) => FormulaValue.New("blob:" + a.Value);
@@ -41,7 +47,7 @@ public class Host {
     config.EnableSetFunction(); config.SymbolTable.EnableMutationFunctions();
     config.EnableJsonFunctions(); config.EnableParseJSONFunction();
     config.AddFunction(new MockNav()); config.AddFunction(new MockNotify());
-    config.AddFunction(new MockCreateFile()); config.AddFunction(new MockGetFile());
+    config.AddFunction(new MockCreateFile()); config.AddFunction(new MockGetFile()); config.AddFunction(new MockMeta());
     Engine = new RecalcEngine(config);
     App = JsonDocument.Parse(File.ReadAllText(bindJson)).RootElement;
 
@@ -76,12 +82,19 @@ public class Host {
 
     // ---- global variables and collections exactly as App.OnStart creates them
     void V(string n, FormulaValue v) => Engine.UpdateVariable(n, v);
-    foreach (var n in new[] { "gRole", "gReqNo", "gInvReq", "gInvEdit", "gCostReq", "gPrintKind", "gBomText", "gEditPr", "gEditPurch", "gPanel", "gVendorPick", "gEditPurchReq" }) V(n, FormulaValue.New(""));
+    foreach (var n in new[] { "gRole", "gReqNo", "gInvReq", "gInvEdit", "gCostReq", "gPrintKind", "gBomText", "gEditPr", "gEditPurch", "gPanel", "gVendorPick", "gEditPurchReq", "gSyncNote", "gPhotoCheck", "gRoleHome", "gMeName", "gMeEmail", "gMeInitials", "gLoginMode", "gLoginMsg", "gTempCode" }) V(n, FormulaValue.New(""));
     V("gBusy", FormulaValue.New(false)); V("gPrinting", FormulaValue.New(false));
     V("gShortSr", FormulaValue.New(-1.0)); V("gPrintCkt", FormulaValue.New(200.0));
     var N = FormulaType.Number; var S = FormulaType.String; var B = FormulaType.Boolean;
+    V("gLastSync", FormulaValue.New(DateTime.Now));
+    foreach (var n in new[] { "gIsLead", "gIsAdmin", "gIsMgr" }) V(n, FormulaValue.New(false));
+    V("gLoginTries", FormulaValue.New(0.0));
+    V("gRoleOptions", FormulaValue.NewTable(Rec(("Value", S)), FormulaValue.NewRecordFromFields(new NamedValue("Value", FormulaValue.New("Engineer")))));
+    V("gMe", Blankish(TableTypes["tblUsers"])); V("gPend", Blankish(TableTypes["tblUsers"]));
     V("colBom", FormulaValue.NewTable(Rec(("Sr", N), ("PartNo", S), ("PN", S), ("Qty", N), ("Description", S), ("UOM", S), ("Location", S), ("OnHand", N), ("Reserved", N), ("Avail", N), ("UnitCost", N), ("Short", N), ("Status", S), ("Found", B))));
     V("colNP", FormulaValue.NewTable(Rec(("Id", N), ("RequesterName", S), ("Category", S), ("SubCategory", S), ("PlantCode", S), ("PartName", S), ("MakeBrand", S), ("ModelNo", S), ("OtherSpecs", S), ("Remarks", S), ("UOM", S), ("HSNCode", S))));
+    var npT = Rec(("Id", N), ("RequesterName", S), ("Category", S), ("SubCategory", S), ("PlantCode", S), ("PartName", S), ("MakeBrand", S), ("ModelNo", S), ("OtherSpecs", S), ("Remarks", S), ("UOM", S), ("HSNCode", S));
+    V("gNpForm", Blankish(npT));
     V("colInvLines", FormulaValue.NewTable(Rec(("Sr", N), ("PartNo", S), ("Description", S), ("Qty", N), ("UnitCost", N))));
     V("colCostLines", FormulaValue.NewTable(Rec(("Sr", N), ("PartNo", S), ("Description", S), ("Qty", N), ("UnitCost", N))));
     V("colShots", FormulaValue.NewTable(Rec(("Name", S), ("Img", S))));
@@ -103,6 +116,7 @@ public class Host {
     if (ctype.EndsWith("DropDown")) return Rec(("Selected", Rec(("Value", S))));
     if (ctype.EndsWith("DatePicker")) return Rec(("SelectedDate", FormulaType.Date));
     if (ctype == "AddMedia") return Rec(("Media", S));
+    if (ctype == "Timer") return Rec(("Value", FormulaType.Number));
     return null;
   }
 

@@ -36,14 +36,14 @@ In the **Tree view**, select **App**. At the top left there's a **property dropd
 
 | Property (pick it in the dropdown) | Paste the whole content of | What it is |
 |---|---|---|
-| **Formulas** | `paste/00-App.Formulas.txt` | Theme colours, who is signed in, live stock, request views, numbering. About 90 *named formulas* |
+| **Formulas** | `paste/00-App.Formulas.txt` | Theme colours and the background picture, live stock, request views, numbering. About 90 *named formulas* |
 | **OnStart** | `paste/01-App.OnStart.txt` | Session variables and empty collections |
-| **StartScreen** | `paste/02-App.StartScreen.txt` | Opens Dashboard, Manager Dashboard or the "not set up" screen |
+| **StartScreen** | `paste/02-App.StartScreen.txt` | Opens the Welcome screen |
 
 Click into the formula bar, select everything already there, delete it, then **Ctrl+V**. Some red
 underlines in *StartScreen* will remain until the screens exist (B.4). That's expected.
 
-## B.4 Create the 23 screens, then paste one file into each
+## B.4 Create the 25 screens, then paste one file into each
 
 For **each row below**:
 1. **+ New screen → Blank**.
@@ -57,36 +57,38 @@ For **each row below**:
 
 | Screen name (rename to) | Paste file | Root control it creates | Size |
 |---|---|---|---|
-| `scrDash` | `10-scrDash.yaml` | rootDsh | 106 KB |
-| `scrMgrDash` | `11-scrMgrDash.yaml` | rootMgr | 88 KB |
-| `scrStock` | `12-scrStock.yaml` | rootStk | 40 KB |
-| `scrBom` | `13-scrBom.yaml` | rootBom | 67 KB |
-| `scrNewReq` | `14-scrNewReq.yaml` | rootNr | 63 KB |
-| `scrMyReq` | `15-scrMyReq.yaml` | rootMy | 38 KB |
-| `scrReqDetail` | `16-scrReqDetail.yaml` | rootRd | 100 KB |
-| `scrQueue` | `17-scrQueue.yaml` | rootQu | 40 KB |
-| `scrNewPart` | `18-scrNewPart.yaml` | rootNp | 46 KB |
-| `scrNewPartQ` | `19-scrNewPartQ.yaml` | rootNq | 43 KB |
-| `scrInventory` | `20-scrInventory.yaml` | rootInv | 74 KB |
-| `scrInward` | `21-scrInward.yaml` | rootIn | 51 KB |
-| `scrLedger` | `22-scrLedger.yaml` | rootLg | 47 KB |
-| `scrDemand` | `23-scrDemand.yaml` | rootDm | 41 KB |
-| `scrInvoice` | `24-scrInvoice.yaml` | rootIv | 113 KB |
-| `scrInvList` | `25-scrInvList.yaml` | rootIl | 57 KB |
-| `scrCost` | `26-scrCost.yaml` | rootCs | 95 KB |
-| `scrPrint` | `27-scrPrint.yaml` | rootPr | 34 KB |
-| `scrProc` | `28-scrProc.yaml` | rootPc | 134 KB |
-| `scrPurch` | `29-scrPurch.yaml` | rootPu | 100 KB |
-| `scrLic` | `30-scrLic.yaml` | rootLc | 80 KB |
-| `scrTeam` | `31-scrTeam.yaml` | rootTm | 46 KB |
-| `scrNoAccess` | `32-scrNoAccess.yaml` | rootNa | 5 KB |
+| `scrWelcome` | `10-scrWelcome.yaml` | rootWl | 9 KB |
+| `scrLogin` | `11-scrLogin.yaml` | rootLi | 50 KB |
+| `scrDash` | `12-scrDash.yaml` | rootDsh | 111 KB |
+| `scrMgrDash` | `13-scrMgrDash.yaml` | rootMgr | 115 KB |
+| `scrStock` | `14-scrStock.yaml` | rootStk | 44 KB |
+| `scrBom` | `15-scrBom.yaml` | rootBom | 72 KB |
+| `scrNewReq` | `16-scrNewReq.yaml` | rootNr | 71 KB |
+| `scrMyReq` | `17-scrMyReq.yaml` | rootMy | 44 KB |
+| `scrReqDetail` | `18-scrReqDetail.yaml` | rootRd | 111 KB |
+| `scrQueue` | `19-scrQueue.yaml` | rootQu | 45 KB |
+| `scrNewPart` | `20-scrNewPart.yaml` | rootNp | 93 KB |
+| `scrNewPartQ` | `21-scrNewPartQ.yaml` | rootNq | 48 KB |
+| `scrInventory` | `22-scrInventory.yaml` | rootInv | 83 KB |
+| `scrInward` | `23-scrInward.yaml` | rootIn | 58 KB |
+| `scrLedger` | `24-scrLedger.yaml` | rootLg | 52 KB |
+| `scrDemand` | `25-scrDemand.yaml` | rootDm | 45 KB |
+| `scrInvoice` | `26-scrInvoice.yaml` | rootIv | 127 KB |
+| `scrInvList` | `27-scrInvList.yaml` | rootIl | 62 KB |
+| `scrCost` | `28-scrCost.yaml` | rootCs | 101 KB |
+| `scrPrint` | `29-scrPrint.yaml` | rootPr | 34 KB |
+| `scrProc` | `30-scrProc.yaml` | rootPc | 148 KB |
+| `scrPurch` | `31-scrPurch.yaml` | rootPu | 109 KB |
+| `scrLic` | `32-scrLic.yaml` | rootLc | 89 KB |
+| `scrTeam` | `33-scrTeam.yaml` | rootTm | 63 KB |
+| `scrAbout` | `34-scrAbout.yaml` | rootAb | 74 KB |
 
 **Tips**
 - **The first paste asks for clipboard permission** in Edge or Chrome. Allow it. If nothing happens, add
   `https://make.powerapps.com` to the browser's allowed sites for clipboard (Microsoft's own advice).
 - Big files take a few seconds. Wait for the controls to appear before you do anything else.
 - **Errors while screens are still missing are normal.** Every screen's left menu can jump to every other
-  screen, so the red marks disappear once all 23 exist. Open the **App checker** only at the end.
+  screen, so the red marks disappear once all 25 exist. Open the **App checker** only at the end.
 - Delete the original empty **Screen1** at the end. Order of screens in the Tree view doesn't matter.
 
 ## B.5 Finish
@@ -101,7 +103,7 @@ For **each row below**:
 Studio checks the YAML before creating anything. If it says the code isn't valid:
 - Make sure you copied the **whole** file (Ctrl+A in Notepad). The first line starts with `- root…:`.
 - If the message names a **control type** (for example `AddMedia`) or a **property** it doesn't know,
-  send me the exact message. I can regenerate all 23 files without that property in minutes. Meanwhile,
+  send me the exact message. I can regenerate all 25 files without that property in minutes. Meanwhile,
   for `AddMedia` only: delete the `- amIv:` block (8 lines) from `24-scrInvoice.yaml` in Notepad, paste,
   then insert **Media → Add picture** on the Create Invoice photos card yourself and rename its *Add
   picture* control to `amIv`.

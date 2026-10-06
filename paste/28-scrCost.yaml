@@ -1,0 +1,2454 @@
+- rootCs:
+    Control: GroupContainer
+    Variant: ManualLayout
+    Properties:
+      BorderColor: =cBg
+      BorderThickness: =0
+      DropShadow: =DropShadow.None
+      Fill: =cBg
+      Height: =768
+      RadiusBottomLeft: =0
+      RadiusBottomRight: =0
+      RadiusTopLeft: =0
+      RadiusTopRight: =0
+      Width: =1366
+      X: =0
+      Y: =0
+    Children:
+      - bgCs:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =768
+            Image: =imgBg
+            ImagePosition: =ImagePosition.Fill
+            Width: =1366
+            X: =0
+            Y: =0
+      - bgShCs:
+          Control: Rectangle
+          Properties:
+            BorderColor: =RGBA(8, 6, 10, 0.55)
+            Fill: =RGBA(8, 6, 10, 0.55)
+            Height: =768
+            Width: =1366
+            X: =0
+            Y: =0
+      - hdrBgCs:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cGlass
+            Fill: =cGlass
+            Height: =56
+            Width: =1366
+            X: =0
+            Y: =0
+      - hdrLnCs:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =2
+            Image: =imgLine
+            ImagePosition: =ImagePosition.Stretch
+            Width: =1366
+            X: =0
+            Y: =55
+      - hdrLogoCs:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =40
+            Image: =imgLogo
+            ImagePosition: =ImagePosition.Fit
+            Width: =40
+            X: =14
+            Y: =8
+      - hdrT1Cs:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =16
+            Text: ="EDS Lab Material Portal"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =330
+            X: =62
+            Y: =6
+      - hdrT2Cs:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Semibold
+            Height: =18
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="JCB India  ·  " & tLabName
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =330
+            X: =62
+            Y: =31
+      - hdrSyncCs:
+          Control: Classic/Button
+          Properties:
+            Align: =Align.Center
+            BorderColor: =cClear
+            BorderThickness: =0
+            Color: =If(nfHealthOk || !(gRole in ["Lab Admin", "Lab Lead"]), cOk, cWarn)
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk3
+            DisabledFill: =RGBA(255,255,255,0.05)
+            Fill: =cClear
+            FocusedBorderColor: =cJcb
+            FocusedBorderThickness: =2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =30
+            HoverBorderColor: =cClear
+            HoverColor: =cJcb
+            HoverFill: =cJcbWash
+            OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+            PaddingLeft: =8
+            PaddingRight: =8
+            PressedBorderColor: =cClear
+            PressedColor: =cJcb
+            PressedFill: =cJcbWash
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Size: =9
+            Text: =If(nfHealthOk || !(gRole in ["Lab Admin", "Lab Lead"]), "●  Live  ·  Synced ", "●  Check Data Health  ·  Synced ") & Text(gLastSync, "hh:mm")
+            Tooltip: ="Refresh all data now. Stock also refreshes by itself every 2 minutes."
+            Width: =200
+            X: =630
+            Y: =13
+      - hdrTmrCs:
+          Control: Timer
+          Properties:
+            AutoPause: =true
+            AutoStart: =true
+            Duration: =120000
+            Height: =10
+            OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+            Repeat: =true
+            Visible: =false
+            Width: =10
+            X: =0
+            Y: =0
+      - hdrAsLCs:
+          Control: Label
+          Properties:
+            Align: =Align.Right
+            Color: =cInk3
+            Font: =fUI
+            FontWeight: =FontWeight.Normal
+            Height: =30
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="View as"
+            VerticalAlign: =VerticalAlign.Middle
+            Visible: =CountRows(gRoleOptions) > 1
+            Width: =56
+            X: =840
+            Y: =13
+      - hdrAsCs:
+          Control: Classic/DropDown
+          Properties:
+            BorderColor: =cInputLine
+            BorderThickness: =1
+            ChevronBackground: =cInput
+            ChevronFill: =cOrange
+            ChevronHoverBackground: =cJcb
+            ChevronHoverFill: =cOnJcb
+            Color: =cInputInk
+            Default: =If(gRole = "Lab Lead", "Lab Admin", gRole)
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk2
+            DisabledFill: =RGBA(255,255,255,0.10)
+            Fill: =cInput
+            FocusedBorderColor: =cOrange
+            FocusedBorderThickness: =2
+            Font: =fUI
+            Height: =30
+            HoverBorderColor: =cJcb
+            HoverColor: =cInputInk
+            HoverFill: =cInputHover
+            Items: =gRoleOptions
+            OnChange: =Set(gRole, If(Self.Selected.Value = "Lab Admin" && gIsLead, "Lab Lead", Self.Selected.Value)); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade)
+            PaddingLeft: =10
+            PressedBorderColor: =cJcb
+            PressedColor: =cInputInk
+            PressedFill: =cInput
+            SelectionColor: =cOnJcb
+            SelectionFill: =cJcb
+            Size: =10
+            Tooltip: ="Switch role without logging out (only the roles you hold)"
+            Visible: =CountRows(gRoleOptions) > 1
+            Width: =128
+            X: =902
+            Y: =13
+      - hdrAvCs:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =36
+            Image: =imgAvatar
+            ImagePosition: =ImagePosition.Fit
+            Width: =36
+            X: =1042
+            Y: =10
+      - hdrAvTCs:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cOnJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =36
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =gMeInitials
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =36
+            X: =1042
+            Y: =10
+      - hdrNmCs:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =20
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =11
+            Text: =gMeName
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =160
+            X: =1084
+            Y: =8
+      - hdrRlCs:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Semibold
+            Height: =18
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: =gRole & " view"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =160
+            X: =1084
+            Y: =28
+      - hdrOutCs:
+          Control: Classic/Button
+          Properties:
+            Align: =Align.Center
+            BorderColor: =cLine2
+            BorderThickness: =1
+            Color: =cInk
+            DisabledBorderColor: =cLine
+            DisabledColor: =cInk3
+            DisabledFill: =RGBA(255,255,255,0.05)
+            Fill: =RGBA(255,255,255,0.08)
+            FocusedBorderColor: =cJcb
+            FocusedBorderThickness: =2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            HoverBorderColor: =cJcb
+            HoverColor: =cJcb
+            HoverFill: =cJcbWash
+            OnSelect: |-
+              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+            PaddingLeft: =8
+            PaddingRight: =8
+            PressedBorderColor: =cJcb
+            PressedColor: =cJcb
+            PressedFill: =cJcbWash
+            RadiusBottomLeft: =10
+            RadiusBottomRight: =10
+            RadiusTopLeft: =10
+            RadiusTopRight: =10
+            Size: =10
+            Text: ="Log Out"
+            Tooltip: ="Back to the login page to choose a role (or let someone else sign in)"
+            Width: =100
+            X: =1252
+            Y: =12
+      - navBgCs:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cGlass
+            Fill: =cGlass
+            Height: =711
+            Width: =224
+            X: =0
+            Y: =57
+      - navLnCs:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cLine
+            Fill: =cLine
+            Height: =711
+            Width: =1
+            X: =223
+            Y: =57
+      - navGalCs:
+          Control: Gallery
+          Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
+          Properties:
+            BorderColor: =cLine
+            BorderThickness: =0
+            Fill: =RGBA(0,0,0,0)
+            Height: =696
+            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+            OnSelect: |-
+              =If(!ThisItem.Hdr, Switch(ThisItem.Key,
+                "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
+                "stock", Navigate(scrStock, ScreenTransition.Fade),
+                "bom", Navigate(scrBom, ScreenTransition.Fade),
+                "newreq", Navigate(scrNewReq, ScreenTransition.Fade),
+                "myreq", Navigate(scrMyReq, ScreenTransition.Fade),
+                "newpart", Navigate(scrNewPart, ScreenTransition.Fade),
+                "queue", Navigate(scrQueue, ScreenTransition.Fade),
+                "newpartq", Navigate(scrNewPartQ, ScreenTransition.Fade),
+                "inventory", Navigate(scrInventory, ScreenTransition.Fade),
+                "inward", Navigate(scrInward, ScreenTransition.Fade),
+                "ledger", Navigate(scrLedger, ScreenTransition.Fade),
+                "demand", Navigate(scrDemand, ScreenTransition.Fade),
+                "invoice", Navigate(scrInvoice, ScreenTransition.Fade),
+                "invlist", Navigate(scrInvList, ScreenTransition.Fade),
+                "cost", Navigate(scrCost, ScreenTransition.Fade),
+                "proc", Navigate(scrProc, ScreenTransition.Fade),
+                "purch", Navigate(scrPurch, ScreenTransition.Fade),
+                "lic", Navigate(scrLic, ScreenTransition.Fade),
+                "team", Navigate(scrTeam, ScreenTransition.Fade),
+                "about", Navigate(scrAbout, ScreenTransition.Fade)))
+            ShowScrollbar: =false
+            TemplatePadding: =0
+            TemplateSize: =40
+            Width: =224
+            X: =0
+            Y: =64
+          Children:
+            - navHdrCs:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cOrange
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =24
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =10
+                  Text: =ThisItem.Label
+                  VerticalAlign: =VerticalAlign.Middle
+                  Visible: =ThisItem.Hdr
+                  Width: =190
+                  X: =18
+                  Y: =14
+            - navBtnCs:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Left
+                  BorderColor: =cClear
+                  BorderThickness: =0
+                  Color: =If(!ThisItem.Hdr && ThisItem.Key = "cost", cOnJcb, cInk2)
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =If(!ThisItem.Hdr && ThisItem.Key = "cost", cJcb, cClear)
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =If(!ThisItem.Hdr && ThisItem.Key = "cost", FontWeight.Bold, FontWeight.Semibold)
+                  Height: =34
+                  HoverBorderColor: =cClear
+                  HoverColor: =If(!ThisItem.Hdr && ThisItem.Key = "cost", cOnJcb, cJcb)
+                  HoverFill: =If(!ThisItem.Hdr && ThisItem.Key = "cost", cJcb, cJcbWash)
+                  OnSelect: =Select(Parent)
+                  PaddingLeft: =40
+                  PaddingRight: =28
+                  PressedBorderColor: =cClear
+                  PressedColor: =cOnJcb
+                  PressedFill: =cOrange
+                  RadiusBottomLeft: =17
+                  RadiusBottomRight: =17
+                  RadiusTopLeft: =17
+                  RadiusTopRight: =17
+                  Size: =10
+                  Text: =ThisItem.Label
+                  Visible: =!ThisItem.Hdr
+                  Width: =204
+                  X: =10
+                  Y: =3
+            - navIcoCs:
+                Control: Classic/Icon
+                Properties:
+                  Color: =If(!ThisItem.Hdr && ThisItem.Key = "cost", cOnJcb, cJcb)
+                  Height: =18
+                  HoverColor: =cOrange
+                  Icon: =ThisItem.Ico
+                  OnSelect: =Select(Parent)
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Visible: =!ThisItem.Hdr
+                  Width: =18
+                  X: =24
+                  Y: =11
+            - navCntCs:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =cClear
+                  BorderThickness: =0
+                  Color: =cJcb
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =If(!ThisItem.Hdr && ThisItem.Key = "cost", cOnJcb, cJcbWash)
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =18
+                  HoverBorderColor: =cClear
+                  HoverColor: =cOnJcb
+                  HoverFill: =cJcb
+                  OnSelect: =Select(Parent)
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PressedBorderColor: =cClear
+                  PressedColor: =cJcb
+                  PressedFill: =cJcbWash
+                  RadiusBottomLeft: =9
+                  RadiusBottomRight: =9
+                  RadiusTopLeft: =9
+                  RadiusTopRight: =9
+                  Size: =9
+                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                  Width: =26
+                  X: =190
+                  Y: =11
+      - bodyCs:
+          Control: GroupContainer
+          Variant: AutoLayout
+          Properties:
+            BorderColor: =cClear
+            BorderThickness: =0
+            DropShadow: =DropShadow.None
+            Fill: =cClear
+            Height: =711
+            LayoutAlignItems: =LayoutAlignItems.Stretch
+            LayoutDirection: =LayoutDirection.Vertical
+            LayoutGap: =16
+            LayoutJustifyContent: =LayoutJustifyContent.Start
+            LayoutOverflowY: =LayoutOverflow.Scroll
+            PaddingBottom: =26
+            PaddingLeft: =26
+            PaddingRight: =26
+            PaddingTop: =26
+            RadiusBottomLeft: =0
+            RadiusBottomRight: =0
+            RadiusTopLeft: =0
+            RadiusTopRight: =0
+            Width: =1142
+            X: =224
+            Y: =57
+          Children:
+            - hdCs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  BorderThickness: =0
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =0
+                  Height: =76
+                  LayoutMinHeight: =76
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - hdTCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =40
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =22
+                        Text: ="Cost Sheet & Assumptions"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =820
+                        X: =0
+                        Y: =2
+                  - hdSCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =22
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: ="Finance owns every assumption below. The only figure the lab enters is the circuit count."
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =1000
+                        X: =0
+                        Y: =42
+                  - hdLCs:
+                      Control: Image
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =3
+                        Image: =imgLine
+                        ImagePosition: =ImagePosition.Stretch
+                        Width: =260
+                        X: =0
+                        Y: =68
+            - cdJCs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =200
+                  LayoutMinHeight: =200
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdJCsTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdJCsTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdJCsTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Job Details"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - frLbCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Fill from a Request"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =300
+                        X: =16
+                        Y: =58
+                  - frCs:
+                      Control: Classic/DropDown
+                      Properties:
+                        BorderColor: =cInputLine
+                        BorderThickness: =1
+                        ChevronBackground: =cInput
+                        ChevronFill: =cOrange
+                        ChevronHoverBackground: =cJcb
+                        ChevronHoverFill: =cOnJcb
+                        Color: =cInputInk
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk2
+                        DisabledFill: =RGBA(255,255,255,0.10)
+                        Fill: =cInput
+                        FocusedBorderColor: =cOrange
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        Height: =34
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cInputInk
+                        HoverFill: =cInputHover
+                        Items: |-
+                          =With({T: ForAll(Sort(nfReq, DateRaised, SortOrder.Descending), RequestNo)}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "— Choose —", Index(T, I.Value - 1).Value)))
+                        OnChange: |-
+                          =If(Self.Selected.Value <> "— Choose —", Set(gCostReq, Self.Selected.Value); ClearCollect(colCostLines, ForAll(Filter(nfLines, RequestNo = gCostReq) As L, {Sr: L.Sr, PartNo: L.PartNo, Description: L.Description, Qty: If(L.QtyReleased > 0, L.QtyReleased, L.QtyRequested), UnitCost: If(L.UnitCost > 0, L.UnitCost, Coalesce(LookUp(nfParts, PN = L.PN).UnitCost, 0))})))
+                        PaddingLeft: =10
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cInputInk
+                        PressedFill: =cInput
+                        SelectionColor: =cOnJcb
+                        SelectionFill: =cJcb
+                        Size: =12
+                        Width: =300
+                        X: =16
+                        Y: =76
+                  - jkCsK0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Request / Job No"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =150
+                        X: =340
+                        Y: =58
+                  - jkCsV0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Coalesce(gCostReq, "—")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =210
+                        X: =490
+                        Y: =58
+                  - jkCsK1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Harness Part No"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =150
+                        X: =340
+                        Y: =88
+                  - jkCsV1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =LookUp(nfReq, RequestNo = gCostReq).HarnessPartNo
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =210
+                        X: =490
+                        Y: =88
+                  - jkCsK2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Machine / Variant"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =150
+                        X: =340
+                        Y: =118
+                  - jkCsV2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =LookUp(nfReq, RequestNo = gCostReq).Machine
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =210
+                        X: =490
+                        Y: =118
+                  - jk2CsK0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Business Unit"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =130
+                        X: =720
+                        Y: =58
+                  - jk2CsV0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =LookUp(nfReq, RequestNo = gCostReq).BusinessUnit
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =230
+                        X: =850
+                        Y: =58
+                  - jk2CsK1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Requested by"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =130
+                        X: =720
+                        Y: =88
+                  - jk2CsV1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =LookUp(nfReq, RequestNo = gCostReq).RaisedByName
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =230
+                        X: =850
+                        Y: =88
+                  - jk2CsK2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Date"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =130
+                        X: =720
+                        Y: =118
+                  - jk2CsV2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =30
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(Today(), "dd-mmm-yyyy")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =230
+                        X: =850
+                        Y: =118
+            - cdICs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =170
+                  LayoutMinHeight: =170
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdICsTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdICsTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdICsTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Input"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - onlyCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =Coalesce(LookUp(nfPill, K = Upper("the only field you may change")).C, cInk3)
+                        BorderThickness: =1
+                        Color: =Coalesce(LookUp(nfPill, K = Upper("the only field you may change")).C, cInk3)
+                        Fill: =RGBA(0,0,0,0.25)
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =22
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =9
+                        Text: =Coalesce(LookUp(nfPill, K = Upper("the only field you may change")).D, "the only field you may change")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =194
+                        Wrap: =false
+                        X: =Parent.Width - 210
+                        Y: =12
+                  - cktLbCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="No. of Circuits *"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =300
+                        X: =16
+                        Y: =58
+                  - cktCs:
+                      Control: Classic/TextInput
+                      Properties:
+                        BorderColor: =cInputLine
+                        BorderThickness: =1
+                        Color: =cJcb
+                        Default: =If(IsBlank(gCostReq), "200", Text(LookUp(nfReq, RequestNo = gCostReq).NoOfCircuits))
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk2
+                        DisabledFill: =RGBA(255,255,255,0.10)
+                        Fill: =cInput
+                        FocusedBorderColor: =cOrange
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Format: =TextFormat.Number
+                        Height: =52
+                        HintText: =""
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cInputInk
+                        HoverFill: =cInputHover
+                        PaddingLeft: =10
+                        PaddingRight: =6
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cInputInk
+                        PressedFill: =cInput
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Size: =22
+                        Width: =260
+                        X: =16
+                        Y: =76
+                  - hrsCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =26
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          ="→ Harness assembly hours: " & Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).hours, "0.00") & " Hours  (" & With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).ckt & " circuits ÷ 7.5)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =700
+                        X: =16
+                        Y: =132
+            - cdMCs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =520
+                  LayoutMinHeight: =520
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdMCsTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdMCsTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdMCsTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Material Cost (BOM) — " & "₹" & Text(Sum(colCostLines, Qty * UnitCost), "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - maCs:
+                      Control: Classic/Button
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =cLine2
+                        BorderThickness: =1
+                        Color: =cInk
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =RGBA(255,255,255,0.08)
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cJcb
+                        HoverFill: =cJcbWash
+                        OnSelect: |-
+                          =Collect(colCostLines, {Sr: Coalesce(Max(colCostLines, Sr), 0) + 1, PartNo: "", Description: "", Qty: 1, UnitCost: 0})
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cJcb
+                        PressedFill: =cJcbWash
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =10
+                        Text: ="+ Add Row"
+                        Width: =96
+                        X: =Parent.Width - 112
+                        Y: =9
+                  - mh0Cs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Sr"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =36
+                        X: =16
+                        Y: =52
+                  - mh1Cs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Part Number (A)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =260
+                        X: =56
+                        Y: =52
+                  - mh2Cs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Qty (B)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =110
+                        X: =636
+                        Y: =52
+                  - mh3Cs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Cost / Unit (C)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =130
+                        X: =756
+                        Y: =52
+                  - mh4Cs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Right
+                        Color: =cJcb
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =18
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Cost (B×C)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =896
+                        Y: =52
+                  - mgCs:
+                      Control: Gallery
+                      Variant: BrowseLayout_Vertical_OneTextVariant_ver5.0
+                      Properties:
+                        BorderColor: =cLine
+                        BorderThickness: =0
+                        Fill: =RGBA(0,0,0,0)
+                        Height: =260
+                        Items: =colCostLines
+                        ShowScrollbar: =true
+                        TemplatePadding: =0
+                        TemplateSize: =38
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =72
+                      Children:
+                        - cSrCs:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Left
+                              Color: =cInk3
+                              Font: =fUI
+                              FontWeight: =FontWeight.Normal
+                              Height: =38
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =11
+                              Text: =ThisItem.Sr
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =36
+                              X: =0
+                              Y: =0
+                        - cPnCs:
+                            Control: Classic/TextInput
+                            Properties:
+                              BorderColor: =cInputLine
+                              BorderThickness: =1
+                              Color: =cInputInk
+                              Default: =ThisItem.PartNo
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk2
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
+                              Font: =fMono
+                              Height: =32
+                              HintText: =""
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
+                              OnChange: |-
+                                =Patch(colCostLines, ThisItem, {PartNo: Self.Text, UnitCost: If(ThisItem.UnitCost = 0, Coalesce(LookUp(nfParts, PN = Upper(Trim(Self.Text))).UnitCost, 0), ThisItem.UnitCost)})
+                              PaddingLeft: =10
+                              PaddingRight: =6
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Size: =11
+                              Width: =260
+                              X: =40
+                              Y: =3
+                        - cQCs:
+                            Control: Classic/TextInput
+                            Properties:
+                              BorderColor: =cInputLine
+                              BorderThickness: =1
+                              Color: =cInputInk
+                              Default: =Text(ThisItem.Qty)
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk2
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
+                              Font: =fUI
+                              Format: =TextFormat.Number
+                              Height: =32
+                              HintText: =""
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
+                              OnChange: |-
+                                =Patch(colCostLines, ThisItem, {Qty: Coalesce(Value(Self.Text), 0)})
+                              PaddingLeft: =10
+                              PaddingRight: =6
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Size: =11
+                              Width: =110
+                              X: =620
+                              Y: =3
+                        - cCCs:
+                            Control: Classic/TextInput
+                            Properties:
+                              BorderColor: =cInputLine
+                              BorderThickness: =1
+                              Color: =cInputInk
+                              Default: =Text(ThisItem.UnitCost)
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk2
+                              DisabledFill: =RGBA(255,255,255,0.10)
+                              Fill: =cInput
+                              FocusedBorderColor: =cOrange
+                              FocusedBorderThickness: =2
+                              Font: =fUI
+                              Format: =TextFormat.Number
+                              Height: =32
+                              HintText: =""
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cInputInk
+                              HoverFill: =cInputHover
+                              OnChange: |-
+                                =Patch(colCostLines, ThisItem, {UnitCost: Coalesce(Value(Self.Text), 0)})
+                              PaddingLeft: =10
+                              PaddingRight: =6
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cInputInk
+                              PressedFill: =cInput
+                              RadiusBottomLeft: =8
+                              RadiusBottomRight: =8
+                              RadiusTopLeft: =8
+                              RadiusTopRight: =8
+                              Size: =11
+                              Width: =130
+                              X: =740
+                              Y: =3
+                        - cTCs:
+                            Control: Label
+                            Properties:
+                              Align: =Align.Right
+                              Color: =cInk
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =38
+                              PaddingBottom: =0
+                              PaddingLeft: =0
+                              PaddingRight: =0
+                              PaddingTop: =0
+                              Size: =12
+                              Text: =Text(ThisItem.Qty * ThisItem.UnitCost, "#,##0.00")
+                              VerticalAlign: =VerticalAlign.Middle
+                              Width: =140
+                              X: =880
+                              Y: =0
+                        - cXCs:
+                            Control: Classic/Icon
+                            Properties:
+                              Color: =cStop
+                              Height: =30
+                              HoverColor: =cJcb
+                              Icon: =Icon.Cancel
+                              OnSelect: =Remove(colCostLines, ThisItem)
+                              PaddingBottom: =8
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PaddingTop: =8
+                              PressedColor: =cOrange
+                              Width: =30
+                              X: =1030
+                              Y: =4
+                        - cSpCs:
+                            Control: Rectangle
+                            Properties:
+                              BorderColor: =cLine
+                              Fill: =cLine
+                              Height: =1
+                              Width: =Parent.TemplateWidth
+                              X: =0
+                              Y: =37
+                  - bpLbCs:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fMono
+                        FontWeight: =FontWeight.Normal
+                        Height: =16
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =9
+                        Text: |-
+                          ="Upload BOM: paste Part Number (A), Qty (B), Cost / Unit (C), one line per part"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =900
+                        X: =16
+                        Y: =342
+                  - bpCs:
+                      Control: Classic/TextInput
+                      Properties:
+                        BorderColor: =cInputLine
+                        BorderThickness: =1
+                        Color: =cInputInk
+                        Default: =""
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk2
+                        DisabledFill: =RGBA(255,255,255,0.10)
+                        Fill: =cInput
+                        FocusedBorderColor: =cOrange
+                        FocusedBorderThickness: =2
+                        Font: =fMono
+                        Height: =140
+                        HintText: |-
+                          ="405/F8525	2	1250"
+                        HoverBorderColor: =cJcb
+                        HoverColor: =cInputInk
+                        HoverFill: =cInputHover
+                        Mode: =TextMode.MultiLine
+                        PaddingLeft: =10
+                        PaddingRight: =6
+                        PressedBorderColor: =cJcb
+                        PressedColor: =cInputInk
+                        PressedFill: =cInput
+                        RadiusBottomLeft: =8
+                        RadiusBottomRight: =8
+                        RadiusTopLeft: =8
+                        RadiusTopRight: =8
+                        Size: =12
+                        Width: =Parent.Width - 230
+                        X: =16
+                        Y: =360
+                  - bpGoCs:
+                      Control: Classic/Button
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =cJcb
+                        BorderThickness: =1
+                        Color: =cOnJcb
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =cJcb
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =36
+                        HoverBorderColor: =cOrange
+                        HoverColor: =cOnJcb
+                        HoverFill: =cOrange
+                        OnSelect: |-
+                          =ClearCollect(colCostLines, With({raw: Filter(ForAll(Split(Substitute(bpCs.Text, Char(13), ""), Char(10)) As L, With({t: TrimEnds(Substitute(Substitute(Substitute(L.Value, Char(9), " "), ",", " "), ";", " "))}, With({c3: Last(Split(t, " ")).Value}, With({t2: TrimEnds(Left(t, Len(t) - Len(c3)))}, With({c2: Last(Split(t2, " ")).Value}, With({pn0: Upper(TrimEnds(Left(t2, Len(t2) - Len(c2))))}, {PN: If(IsBlank(pn0), Upper(c2), pn0), Q: If(IsBlank(pn0), IfError(Value(c3), 0), IfError(Value(c2), 0)), C: If(IsBlank(pn0), 0, IfError(Value(c3), 0))})))))), !IsBlank(PN) && Q > 0)}, ForAll(Sequence(CountRows(raw)) As I, With({b: Index(raw, I.Value), p: LookUp(nfParts, PN = Index(raw, I.Value).PN)}, {Sr: I.Value, PartNo: Coalesce(p.PartNo, b.PN), Description: Coalesce(p.Description, ""), Qty: b.Q, UnitCost: If(b.C > 0, b.C, Coalesce(p.UnitCost, 0))})))); Reset(bpCs)
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PressedBorderColor: =cOrange
+                        PressedColor: =cOnJcb
+                        PressedFill: =cOrange
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =11
+                        Text: ="Load These Lines"
+                        Width: =184
+                        X: =Parent.Width - 200
+                        Y: =360
+            - cdCCs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =300
+                  LayoutMinHeight: =300
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdCCsTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdCCsTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdCCsTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Calculated"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - cvCsK0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Material Cost (BOM)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =58
+                  - cvCsV0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          =Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).mat, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =58
+                  - cvCsK1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Machine Utilisation"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =90
+                  - cvCsV1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          =Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).mach, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =90
+                  - cvCsK2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Manpower"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =122
+                  - cvCsV2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          =Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).man, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =122
+                  - cvCsK3:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Electricity"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =154
+                  - cvCsV3:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          =Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).elec, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =154
+                  - cvCsK4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Harness Assembly Cost (Finance Assumptions)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =186
+                  - cvCsV4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          =Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).asm, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =186
+                  - cvCsK5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Transportation Cost (at Actual)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =218
+                  - cvCsV5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          =Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).trn, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =218
+                  - cvCsK6:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Total Cost"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =360
+                        X: =16
+                        Y: =250
+                  - cvCsV6:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: |-
+                          ="₹" & Text(With({c: Coalesce(IfError(Value(cktCs.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colCostLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colCostLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).tot, "#,##0.00")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =400
+                        X: =376
+                        Y: =250
+            - cdACs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =cLine
+                  BorderThickness: =1
+                  DropShadow: =DropShadow.None
+                  Fill: =cPanel
+                  FillPortions: =0
+                  Height: =340
+                  LayoutMinHeight: =340
+                  RadiusBottomLeft: =14
+                  RadiusBottomRight: =14
+                  RadiusTopLeft: =14
+                  RadiusTopRight: =14
+                Children:
+                  - cdACsTl:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine
+                        Fill: =cLine
+                        Height: =1
+                        Width: =Parent.Width - 32
+                        X: =16
+                        Y: =46
+                  - cdACsTa:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cOrange
+                        Fill: =cOrange
+                        Height: =18
+                        Width: =4
+                        X: =16
+                        Y: =14
+                  - cdACsTt:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cOrange
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =46
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =13
+                        Text: ="Assumptions (Finance-locked, Read Only)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =Parent.Width - 240
+                        X: =28
+                        Y: =0
+                  - avCsK0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Cost of Machine (Stripping Cutting + Pull Force)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =58
+                  - avCsV0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kMachineCost, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =58
+                  - avCsK1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Depreciation PA"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =90
+                  - avCsV1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kDepPA, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =90
+                  - avCsK2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Proto Harness per Hrs"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =122
+                  - avCsV2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kProtoHrs, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =122
+                  - avCsK3:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="NO of HRS / Day"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =154
+                  - avCsV3:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kHrsDay, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =154
+                  - avCsK4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Days / Month"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =186
+                  - avCsV4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kDaysMonth, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =186
+                  - avCsK5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Month PA"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =218
+                  - avCsV5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kMonthsPA, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =218
+                  - avCsK6:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Total Standard Available Hrs PA"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =250
+                  - avCsV6:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kStdHrsPA, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =250
+                  - avCsK7:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="No. of Employees / Technicians"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =380
+                        X: =16
+                        Y: =282
+                  - avCsV7:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kTechs, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =396
+                        Y: =282
+                  - awCsK0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Per Hour Rate (INR)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =58
+                  - awCsV0:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kRateHr, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =58
+                  - awCsK1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="No. of KWh per Hour"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =90
+                  - awCsV1:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kKwhHr, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =90
+                  - awCsK2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Rate / KWH"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =122
+                  - awCsV2:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kRateKwh, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =122
+                  - awCsK3:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Total KWH PA"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =154
+                  - awCsV3:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kKwhPA, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =154
+                  - awCsK4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Electricity Total Cost PA"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =186
+                  - awCsV4:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kElecPA, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =186
+                  - awCsK5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="AMC per Hours (Shown, NOT in Total)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =218
+                  - awCsV5:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kAmcHr, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =218
+                  - awCsK6:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Transportation Cost (Flat)"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =250
+                  - awCsV6:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kTransport, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =250
+                  - awCsK7:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Semibold
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =10
+                        Text: ="Circuits per Hour"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =370
+                        X: =560
+                        Y: =282
+                  - awCsV7:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Left
+                        Color: =cInk
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =32
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =12
+                        Text: =Text(kCktPerHr, "#,##0.##")
+                        VerticalAlign: =VerticalAlign.Middle
+                        Width: =140
+                        X: =930
+                        Y: =282
+            - barCs:
+                Control: GroupContainer
+                Variant: ManualLayout
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  BorderThickness: =0
+                  DropShadow: =DropShadow.None
+                  Fill: =RGBA(0,0,0,0)
+                  FillPortions: =0
+                  Height: =50
+                  LayoutMinHeight: =50
+                  RadiusBottomLeft: =0
+                  RadiusBottomRight: =0
+                  RadiusTopLeft: =0
+                  RadiusTopRight: =0
+                Children:
+                  - prCs:
+                      Control: Classic/Button
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =cJcb
+                        BorderThickness: =1
+                        Color: =cOnJcb
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =cJcb
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =38
+                        HoverBorderColor: =cOrange
+                        HoverColor: =cOnJcb
+                        HoverFill: =cOrange
+                        OnSelect: =Set(gPrintKind, "cost"); Set(gPrintCkt, IfError(Value(cktCs.Text), 0)); Navigate(scrPrint, ScreenTransition.None)
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PressedBorderColor: =cOrange
+                        PressedColor: =cOnJcb
+                        PressedFill: =cOrange
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =11
+                        Text: ="Print Assumptions + Cost Sheet"
+                        Width: =280
+                        X: =Parent.Width - 280
+                        Y: =6
