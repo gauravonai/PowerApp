@@ -93,6 +93,15 @@ def main():
     with zipfile.ZipFile(OUT) as z:
         names = z.namelist()
         packed = json.loads(z.read("packed.json"))
+        # the finished file itself must be free of the two Studio import errors seen before (PA2105, PA2108)
+        sys.path.insert(0, HERE)
+        from fix_src import check
+        bad = ["%s: %s" % (n, "; ".join(check(z.read(n).decode("utf-8")))) for n in names
+               if n.endswith(".yaml") and check(z.read(n).decode("utf-8"))]
+        stale = [n for n in names if n.startswith("Src/") and not os.path.exists(os.path.join(ROOT, "app", n))]
+        if bad or stale:
+            sys.exit("packed file is not clean: %s %s" % (bad, stale))
+        print("import guards: 0 pinned versions, 0 CalendarHeaderFill, no stale screens")
     print("entries:", len(names), "| packed.json LoadFromYaml =", packed["LoadConfiguration"]["LoadFromYaml"])
     print("size: %.0f KB" % (os.path.getsize(OUT) / 1024))
 

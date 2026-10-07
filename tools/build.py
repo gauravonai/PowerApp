@@ -129,6 +129,14 @@ def main():
     with open(os.path.join(OUT, "app.json"), "w") as f:
         json.dump(model, f, ensure_ascii=False)
 
+    # ---------------------------------------------------------- Studio import guards (PA2105 / PA2108)
+    from fix_src import check
+    for d in (SRC, PASTE):
+        for f in os.listdir(d):
+            probs = check(open(os.path.join(d, f), encoding="utf-8").read())
+            if probs:
+                raise SystemExit("%s/%s would fail Studio import: %s" % (d, f, "; ".join(probs)))
+
     nctl = sum(1 for _, _, r in scr for _ in r.walk())
     print("screens: %d, controls: %d, formulas: %d" % (len(scr), nctl, len(allf)))
     print("App.Formulas: %d named formulas, %d chars" % (len(re.findall(r"^\s*\w+\s*=", formulas, re.M)), len(formulas)))

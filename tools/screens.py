@@ -14,6 +14,7 @@ ENG = 'gRole = "Engineer"'
 BUSY = "gBusy"
 
 SCREENS = []          # (screen name, nav key, root container)
+APP_VERSION = "2.0.1 · 07-Oct-2026"   # shown on the Welcome screen, so you can tell which build is imported
 
 
 def DISP(x):
@@ -1952,7 +1953,8 @@ def scr_welcome():
         btn("rg" + K, '"Request Access"', 306, 330, 250, 52, 'Set(gLoginMode, "register"); Set(gLoginMsg, ""); '
             'Navigate(scrLogin, ScreenTransition.Fade)', kind="secondary", size=13, radius=26)],
         fill="cGlass", border="cLine2", radius=24)
-    kids = backdrop(K, "RGBA(8, 6, 10, 0.05)") + topbar(K) + [hero]
+    kids = backdrop(K, "RGBA(8, 6, 10, 0.05)") + topbar(K) + [hero,
+        lbl("ver" + K, '"Version %s"' % APP_VERSION, 1100, 730, 240, 22, size=9, color="cInk3", align="Right")]
     root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)
     SCREENS.append(("scrWelcome", "", root))
 

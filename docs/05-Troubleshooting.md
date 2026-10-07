@@ -85,12 +85,16 @@ column (select the label in the gallery template → Width) or send me the scree
 then brings the toolbar back. If your browser blocks the dialog, press Ctrl+P while on the print screen.
 For the cleanest PDF choose *Margins: None* and *Background graphics: On* in the print dialog.
 
-## 15. Import errors like "PA2108 Unknown property 'X' for control type 'Y'"
-Studio reads the screens and rejects a property that the *current* version of that control no longer has.
-Fixed so far: `CalendarHeaderFill` on Classic/DatePicker (removed 06-Oct-2026). The `PA2105 … older than the
-current version` warnings came from pinned control versions; all versions are now left out, so Studio uses
-its current ones. If you see another PA2108, send me the lines. It's one property, removed in one place,
-and every screen is regenerated.
+## 15. Import errors like "PA2108 Unknown property" or "PA2105 GroupContainer@1.4.0 … older than the current version"
+Both came from the **first (v1) .msapp**. Every build since has neither, and the build now **refuses** to produce
+a file that has either one (checked on the sources, the paste files and the finished .msapp).
+
+- **Check which file you imported:** the v2 Welcome screen shows *Version 2.0.1 · 07-Oct-2026* bottom right.
+  If you see `scrNoAccess` in the warnings, it is the old v1 file. Use `EDS-Lab-Portal-v2.0.1.msapp`.
+- **Repairing any old file or folder yourself** (machine with Python):
+  `python3 tools/fix_src.py OldApp.msapp` writes `OldApp-fixed.msapp`; `python3 tools/fix_src.py app/Src` fixes a folder.
+  It removes `CalendarHeaderFill` lines and the `@1.4.0`-style version from every control, so Studio uses its
+  current version. That is better than writing `@1.5.0`, which would warn again at Microsoft's next update.
 
 ## 16. Stock looks wrong, or BOM Compare shows no on hand
 Log in as Lab Admin → **About → Data Health**. If *Movement rows* shows fewer in the app than in Excel, set
