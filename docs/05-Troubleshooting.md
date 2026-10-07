@@ -89,11 +89,14 @@ For the cleanest PDF choose *Margins: None* and *Background graphics: On* in the
 Both came from the **first (v1) .msapp**. Every build since has neither, and the build now **refuses** to produce
 a file that has either one (checked on the sources, the paste files and the finished .msapp).
 
-- **Check which file you imported:** the v2 Welcome screen shows *Version 2.0.1 · 07-Oct-2026* bottom right.
-  If you see `scrNoAccess` in the warnings, it is the old v1 file. Use `EDS-Lab-Portal-v2.0.1.msapp`.
+- **Check which file you imported:** the Welcome screen shows *Version 2.0.2 · 07-Oct-2026* bottom right.
+  If you see `scrNoAccess` in the warnings, it is the old v1 file. Use `EDS-Lab-Portal-v2.0.2.msapp`.
+- **v2.0.1 → 2.0.2:** Studio's current *Classic/DatePicker* rejects `HoverColor`, `HoverFill`, `HoverBorderColor`,
+  `HoverDateFill`, `PressedColor`, `PressedFill`, `PressedBorderColor` and `SelectedDateFill` (PA2108, 128 lines in 7 screens).
+  Removed from every date picker; the build now refuses them. Text boxes and dropdowns keep theirs (Studio accepts them).
 - **Repairing any old file or folder yourself** (machine with Python):
   `python3 tools/fix_src.py OldApp.msapp` writes `OldApp-fixed.msapp`; `python3 tools/fix_src.py app/Src` fixes a folder.
-  It removes `CalendarHeaderFill` lines and the `@1.4.0`-style version from every control, so Studio uses its
+  It removes `CalendarHeaderFill` lines, the 8 colours above from date pickers, and the `@1.4.0`-style version from every control, so Studio uses its
   current version. That is better than writing `@1.5.0`, which would warn again at Microsoft's next update.
 
 ## 16. Stock looks wrong, or BOM Compare shows no on hand

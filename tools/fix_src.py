@@ -1,7 +1,10 @@
 """Combined fix for Power Apps Studio import errors in pa.yaml sources (safe to run more than once).
 
   1. PA2108  Unknown property 'CalendarHeaderFill' (Classic/DatePicker)  -> the line is removed.
-  2. PA2105  'GroupContainer@1.4.0' is older than the current version     -> the version is removed
+  2. PA2108  Unknown property 'HoverColor' / 'HoverFill' / 'HoverBorderColor' / 'HoverDateFill' / 'PressedColor' /
+     'PressedFill' / 'PressedBorderColor' / 'SelectedDateFill' for control type 'Classic/DatePicker'
+     -> removed, but only inside date pickers (text boxes and dropdowns accept them).
+  3. PA2105  'GroupContainer@1.4.0' is older than the current version     -> the version is removed
      from every control type ("GroupContainer@1.4.0" -> "GroupContainer"), so Studio always uses its
      current version. Pinning "@1.5.0" instead would raise the same warning again at Microsoft's next update.
 
@@ -18,9 +21,42 @@ VERSION = re.compile(r"^(\s*Control:\s*[A-Za-z0-9/]+)@[0-9][0-9.]*\s*$", re.M)
 BADPROP = re.compile(r"^\s*CalendarHeaderFill:.*\n", re.M)
 
 
+DATEPICKER_BAD = ("HoverBorderColor", "HoverColor", "HoverDateFill", "HoverFill", "PressedBorderColor",
+                  "PressedColor", "PressedFill", "SelectedDateFill")
+CONTROL = re.compile(r"^(\s*)Control:\s*([A-Za-z0-9/]+)")
+PROP = re.compile(r"^(\s*)([A-Za-z]+):")
+
+
+def datepicker_lines(lines):
+    """Indexes of the rejected property lines (and their |- continuation lines) inside Classic/DatePicker controls."""
+    out, ctl, ind, skip_ind = set(), None, -1, None
+    for i, l in enumerate(lines):
+        m = CONTROL.match(l)
+        if m:
+            ctl, ind = m.group(2), len(m.group(1))
+            skip_ind = None
+            continue
+        if skip_ind is not None:
+            if l.strip() == "" or len(l) - len(l.lstrip()) > skip_ind:
+                out.add(i)
+                continue
+            skip_ind = None
+        p = PROP.match(l)
+        if ctl and ctl.endswith("DatePicker") and p and len(p.group(1)) > ind and p.group(2) in DATEPICKER_BAD:
+            out.add(i)
+            skip_ind = len(p.group(1))
+        elif p and len(p.group(1)) < ind:
+            ctl = None
+    return out
+
+
 def fix_text(t):
     t2 = BADPROP.sub("", t)
     t2 = VERSION.sub(r"\1", t2)
+    lines = t2.split("\n")
+    drop = datepicker_lines(lines)
+    if drop:
+        t2 = "\n".join(l for i, l in enumerate(lines) if i not in drop)
     return t2, (t != t2)
 
 
@@ -58,6 +94,8 @@ def check(text):
         out.append("pinned control version: " + VERSION.search(text).group(0).strip())
     if "CalendarHeaderFill" in text:
         out.append("CalendarHeaderFill property")
+    if datepicker_lines(text.split("\n")):
+        out.append("Hover/Pressed/SelectedDateFill colour on a Classic/DatePicker")
     return out
 
 

@@ -332,12 +332,17 @@ def dd(name, x, y, w, h, items, default=None, visible=None, extra=None, onchange
     return Ctl(name, DROPDOWN, p)
 
 
+# Studio's current Classic/DatePicker rejects (PA2108) every Hover*/Pressed* colour and the calendar
+# HoverDateFill / SelectedDateFill, although older control templates listed them. Only these are set.
+DATE_COLORS = {k: v for k, v in INPUT_COLORS.items() if not k.startswith(("Hover", "Pressed"))}
+
+
 def date(name, x, y, w, h, default="Today()", visible=None, extra=None):
     p = {"X": x, "Y": y, "Width": w, "Height": h, "DefaultDate": default, "Format": q("dd-mmm-yyyy"),
-         "IconBackground": "cJcb", "IconFill": "cOnJcb", "SelectedDateFill": "cOrange", "HoverDateFill": "cJcbWash",
+         "IconBackground": "cJcb", "IconFill": "cOnJcb",
          "Size": 12, "Font": UI, "PaddingLeft": 10,
          "IsEditable": "false", "StartYear": 2020, "EndYear": 2040}
-    p.update({k: v for k, v in INPUT_COLORS.items() if k != "PressedBorderColor" or True})
+    p.update(DATE_COLORS)
     if visible is not None:
         p["Visible"] = visible
     if extra:

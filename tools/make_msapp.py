@@ -101,7 +101,7 @@ def main():
         stale = [n for n in names if n.startswith("Src/") and not os.path.exists(os.path.join(ROOT, "app", n))]
         if bad or stale:
             sys.exit("packed file is not clean: %s %s" % (bad, stale))
-        print("import guards: 0 pinned versions, 0 CalendarHeaderFill, no stale screens")
+        print("import guards: 0 pinned versions, 0 CalendarHeaderFill, 0 rejected DatePicker colours, no stale screens")
     print("entries:", len(names), "| packed.json LoadFromYaml =", packed["LoadConfiguration"]["LoadFromYaml"])
     print("size: %.0f KB" % (os.path.getsize(OUT) / 1024))
 
