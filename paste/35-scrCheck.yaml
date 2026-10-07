@@ -1,0 +1,1149 @@
+- rootCk:
+    Control: GroupContainer
+    Variant: ManualLayout
+    Properties:
+      BorderColor: =cBg
+      BorderThickness: =0
+      DropShadow: =DropShadow.None
+      Fill: =cBg
+      Height: =768
+      RadiusBottomLeft: =0
+      RadiusBottomRight: =0
+      RadiusTopLeft: =0
+      RadiusTopRight: =0
+      Width: =1366
+      X: =0
+      Y: =0
+    Children:
+      - bgCk:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =768
+            Image: =imgBg
+            ImagePosition: =ImagePosition.Fill
+            Width: =1366
+            X: =0
+            Y: =0
+      - bgShCk:
+          Control: Rectangle
+          Properties:
+            BorderColor: =RGBA(8, 6, 10, 0.55)
+            Fill: =RGBA(8, 6, 10, 0.55)
+            Height: =768
+            Width: =1366
+            X: =0
+            Y: =0
+      - pnCk:
+          Control: GroupContainer
+          Variant: ManualLayout
+          Properties:
+            BorderColor: =cLine2
+            BorderThickness: =1
+            DropShadow: =DropShadow.None
+            Fill: =cGlass
+            Height: =690
+            RadiusBottomLeft: =24
+            RadiusBottomRight: =24
+            RadiusTopLeft: =24
+            RadiusTopRight: =24
+            Width: =1070
+            X: =158
+            Y: =50
+          Children:
+            - tCk:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cOrange
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =40
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =24
+                  Text: ="System Check"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =600
+                  X: =40
+                  Y: =22
+            - sCk:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =40
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Every link from the data file to the screens. All rows must show OK. If one does not, take a screenshot of this page and send it."
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =980
+                  Wrap: =true
+                  X: =40
+                  Y: =62
+            - n0Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Users list"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =118
+            - v0Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(tblUsers)) & " people", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =118
+            - s0Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v0Ck.Text) || StartsWith(v0Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v0Ck.Text) || StartsWith(v0Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v0Ck.Text), "NOT WORKING", StartsWith(v0Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =122
+            - l0Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =149
+            - n1Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Parts list"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =151
+            - v1Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(tblParts)) & " rows", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =151
+            - s1Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v1Ck.Text) || StartsWith(v1Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v1Ck.Text) || StartsWith(v1Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v1Ck.Text), "NOT WORKING", StartsWith(v1Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =155
+            - l1Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =182
+            - n2Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Stock movements"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =184
+            - v2Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(tblMoves)) & " rows", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =184
+            - s2Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v2Ck.Text) || StartsWith(v2Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v2Ck.Text) || StartsWith(v2Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v2Ck.Text), "NOT WORKING", StartsWith(v2Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =188
+            - l2Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =215
+            - n3Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Requests / request lines"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =217
+            - v3Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(tblRequests)) & " / " & Text(CountRows(tblReqLines)) & " rows", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =217
+            - s3Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v3Ck.Text) || StartsWith(v3Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v3Ck.Text) || StartsWith(v3Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v3Ck.Text), "NOT WORKING", StartsWith(v3Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =221
+            - l3Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =248
+            - n4Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Settings"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =250
+            - v4Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(tblSettings)) & " rows", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =250
+            - s4Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v4Ck.Text) || StartsWith(v4Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v4Ck.Text) || StartsWith(v4Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v4Ck.Text), "NOT WORKING", StartsWith(v4Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =254
+            - l4Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =281
+            - n5Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Formula engine (Power Fx 1.0)"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =283
+            - v5Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError("OK " & First(Distinct(Table({x: 1}), x)).Value, "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =283
+            - s5Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v5Ck.Text) || StartsWith(v5Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v5Ck.Text) || StartsWith(v5Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v5Ck.Text), "NOT WORKING", StartsWith(v5Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =287
+            - l5Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =314
+            - n6Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Parts read by the app"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =316
+            - v6Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(nfParts)) & " active parts", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =316
+            - s6Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v6Ck.Text) || StartsWith(v6Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v6Ck.Text) || StartsWith(v6Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v6Ck.Text), "NOT WORKING", StartsWith(v6Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =320
+            - l6Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =347
+            - n7Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Movements read by the app"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =349
+            - v7Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(nfMoves)) & " movements", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =349
+            - s7Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v7Ck.Text) || StartsWith(v7Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v7Ck.Text) || StartsWith(v7Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v7Ck.Text), "NOT WORKING", StartsWith(v7Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =353
+            - l7Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =380
+            - n8Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="On-hand calculation"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =382
+            - v8Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(nfOnHand)) & " parts with movements", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =382
+            - s8Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v8Ck.Text) || StartsWith(v8Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v8Ck.Text) || StartsWith(v8Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v8Ck.Text), "NOT WORKING", StartsWith(v8Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =386
+            - l8Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =413
+            - n9Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Live stock (Check Stock, BOM)"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =415
+            - v9Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(nfStock)) & " parts · " & Text(CountRows(Filter(nfStock, OnHand > 0))) & " in stock", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =415
+            - s9Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v9Ck.Text) || StartsWith(v9Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v9Ck.Text) || StartsWith(v9Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v9Ck.Text), "NOT WORKING", StartsWith(v9Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =419
+            - l9Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =446
+            - n10Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    ="Example: biggest stock"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =448
+            - v10Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(With({p: First(Sort(nfStock, OnHand, SortOrder.Descending))}, p.PartNo & " · on hand " & Text(p.OnHand)), "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =448
+            - s10Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v10Ck.Text) || StartsWith(v10Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v10Ck.Text) || StartsWith(v10Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v10Ck.Text), "NOT WORKING", StartsWith(v10Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =452
+            - l10Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =479
+            - n11Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Out of stock / low stock"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =481
+            - v11Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(Filter(nfStock, Status = "OUT OF STOCK"))) & " / " & Text(CountRows(Filter(nfStock, Status = "LOW STOCK"))), "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =481
+            - s11Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v11Ck.Text) || StartsWith(v11Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v11Ck.Text) || StartsWith(v11Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v11Ck.Text), "NOT WORKING", StartsWith(v11Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =485
+            - l11Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =512
+            - n12Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Requests view"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =514
+            - v12Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(CountRows(nfReqView)) & " requests", "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =514
+            - s12Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v12Ck.Text) || StartsWith(v12Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v12Ck.Text) || StartsWith(v12Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v12Ck.Text), "NOT WORKING", StartsWith(v12Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =518
+            - l12Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =545
+            - n13Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Row count check"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =547
+            - v13Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(nfHealthText, "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =547
+            - s13Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v13Ck.Text) || StartsWith(v13Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v13Ck.Text) || StartsWith(v13Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v13Ck.Text), "NOT WORKING", StartsWith(v13Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =551
+            - l13Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =578
+            - n14Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: ="Last refresh"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =300
+                  X: =40
+                  Y: =580
+            - v14Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =30
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =11
+                  Text: |-
+                    =IfError(Text(gLastSync, "dd-mmm-yyyy hh:mm:ss"), "Error: " & FirstError.Message)
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =520
+                  X: =350
+                  Y: =580
+            - s14Ck:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =If(IsBlank(v14Ck.Text) || StartsWith(v14Ck.Text, "Error"), cStop, cOk)
+                  BorderThickness: =1
+                  Color: =If(IsBlank(v14Ck.Text) || StartsWith(v14Ck.Text, "Error"), cStop, cOk)
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: =If(IsBlank(v14Ck.Text), "NOT WORKING", StartsWith(v14Ck.Text, "Error"), "ERROR", "OK")
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =130
+                  X: =900
+                  Y: =584
+            - l14Ck:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cLine
+                  Fill: =cLine
+                  Height: =1
+                  Width: =990
+                  X: =40
+                  Y: =611
+            - rfCk:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =cJcb
+                  BorderThickness: =1
+                  Color: =cOnJcb
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =cJcb
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =40
+                  HoverBorderColor: =cOrange
+                  HoverColor: =cOnJcb
+                  HoverFill: =cOrange
+                  OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Refreshed at " & Text(Now(), "hh:mm:ss") & ".", NotificationType.Information)
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PressedBorderColor: =cOrange
+                  PressedColor: =cOnJcb
+                  PressedFill: =cOrange
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =11
+                  Text: ="Refresh All Data"
+                  Width: =200
+                  X: =40
+                  Y: =628
+            - bkCk:
+                Control: Classic/Button
+                Properties:
+                  Align: =Align.Center
+                  BorderColor: =cLine2
+                  BorderThickness: =1
+                  Color: =cInk
+                  DisabledBorderColor: =cLine
+                  DisabledColor: =cInk3
+                  DisabledFill: =RGBA(255,255,255,0.05)
+                  Fill: =RGBA(255,255,255,0.08)
+                  FocusedBorderColor: =cJcb
+                  FocusedBorderThickness: =2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =40
+                  HoverBorderColor: =cJcb
+                  HoverColor: =cJcb
+                  HoverFill: =cJcbWash
+                  OnSelect: =Back()
+                  PaddingLeft: =8
+                  PaddingRight: =8
+                  PressedBorderColor: =cJcb
+                  PressedColor: =cJcb
+                  PressedFill: =cJcbWash
+                  RadiusBottomLeft: =20
+                  RadiusBottomRight: =20
+                  RadiusTopLeft: =20
+                  RadiusTopRight: =20
+                  Size: =11
+                  Text: ="‹  Back"
+                  Width: =140
+                  X: =256
+                  Y: =628

@@ -126,6 +126,12 @@ public static class Render {
       }
       h.Engine.UpdateVariable(name, FormulaValue.NewRecordFromFields(gt, new NamedValue("AllItems", FormulaValue.NewTable(allT.ToRecord(), recs)), new NamedValue("Selected", FormulaValue.NewBlank(gt.GetFieldType("Selected")))));
     }
+    // labels read by other labels (System Check status column): give them their evaluated text
+    foreach (var (name, c) in h.Ctl)
+      if (c.GetProperty("type").GetString() == "Label" && c.GetProperty("gallery").ValueKind != JsonValueKind.String && h.CtlTypes.ContainsKey(name)) {
+        var e = P(c, "Text"); if (e == null) continue;
+        h.SetCtl(name, "Text", FormulaValue.New(Str(Ev(e, Param(1000, 500, null)))));
+      }
     foreach (var (scr, root) in roots) {
       Out = new();
       Draw(root, 0, 0, 1366, 768, null, 0, 0);

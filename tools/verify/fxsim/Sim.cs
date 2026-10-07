@@ -93,6 +93,16 @@ public static class Sim {
     Login("test.person", "abc12345"); Ok(S("gRole") == "Engineer", "after approval (Role = Engineer) the person logs in");
     Logout(); Login("gaurav.shelke", "abc123");
 
+    Console.WriteLine("== 0. hand-built Live Data Test formulas (docs/10), straight from the tables");
+    var hand = tests.GetProperty("hand");
+    Ok(S(hand.GetProperty("PARTS").GetString()) == "Parts: 418" && S(hand.GetProperty("MOVES").GetString()) == "Movements: 775", "Parts: 418 · Movements: 775");
+    var onExp = N("LookUp(nfStock, PartNo = \"7213/0024\").OnHand");
+    Ok(S(hand.GetProperty("ONHAND").GetString().Replace("txtPart.Text", "\"7213/0024\"")) == "On hand: " + onExp, $"On hand of 7213/0024 = {onExp}, same as the app");
+    var bomRows = (TableValue)E(hand.GetProperty("BOM").GetString().Replace("txtBom.Text", "nfSampleBom"));
+    var bomOk = bomRows.Rows.All(r => { var pn = ((StringValue)r.Value.GetField("Part")).Value; var oh = Convert.ToDouble(r.Value.GetField("OnHand").ToObject() ?? 0.0);
+      return Math.Abs(oh - N($"Coalesce(LookUp(nfStock, PN = \"{pn}\").OnHand, 0)")) < 1e-9; });
+    Ok(bomRows.Rows.Count() == 5 && bomOk, "BOM test: 5 lines, every on hand equals the app's live stock");
+
     Console.WriteLine("== 1b. Data Health: the app read every row the workbook counts");
     Ok(N("nXlParts") == 418 && N("nAppParts") == 418 && N("nXlMoves") == 775 && N("nAppMoves") == 775, $"Excel ROWS() = app rows: parts 418/418, movements {N("nXlMoves")}/{N("nAppMoves")}");
     Ok(Math.Abs(N("nXlStock") - N("nAppStock")) < 0.001 && S("nfHealthText") == "All rows read", $"Excel stock total {N("nXlStock")} = app total {N("nAppStock")} -> '{S("nfHealthText")}'");

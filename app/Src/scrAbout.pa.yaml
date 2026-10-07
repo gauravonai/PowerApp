@@ -1366,6 +1366,40 @@ Screens:
                               Wrap: =true
                               X: =16
                               Y: =270
+                        - hckAb:
+                            Control: Classic/Button
+                            Properties:
+                              Align: =Align.Center
+                              BorderColor: =cLine2
+                              BorderThickness: =1
+                              Color: =cInk
+                              DisabledBorderColor: =cLine
+                              DisabledColor: =cInk3
+                              DisabledFill: =RGBA(255,255,255,0.05)
+                              Fill: =RGBA(255,255,255,0.08)
+                              FocusedBorderColor: =cJcb
+                              FocusedBorderThickness: =2
+                              Font: =fUI
+                              FontWeight: =FontWeight.Bold
+                              Height: =38
+                              HoverBorderColor: =cJcb
+                              HoverColor: =cJcb
+                              HoverFill: =cJcbWash
+                              OnSelect: =Navigate(scrCheck, ScreenTransition.Fade)
+                              PaddingLeft: =8
+                              PaddingRight: =8
+                              PressedBorderColor: =cJcb
+                              PressedColor: =cJcb
+                              PressedFill: =cJcbWash
+                              RadiusBottomLeft: =10
+                              RadiusBottomRight: =10
+                              RadiusTopLeft: =10
+                              RadiusTopRight: =10
+                              Size: =11
+                              Text: ="Open System Check"
+                              Width: =180
+                              X: =Parent.Width - 392
+                              Y: =274
                         - hrfAb:
                             Control: Classic/Button
                             Properties:

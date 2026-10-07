@@ -36,6 +36,7 @@ def prep(f, email, name):
     f = re.sub(r"\bRefresh\(\s*\w+\s*\)", "true", f)
     f = f.replace("Print()", "true").replace("Select(Parent)", "true")
     f = re.sub(r"\bSetFocus\(\s*\w+\s*\)", "true", f)
+    f = f.replace("Back()", "true")
     f = re.sub(r"\bParent\.", "ParentX.", f)
     f = re.sub(r"\bSelf\.", "SelfX.", f)
     return f

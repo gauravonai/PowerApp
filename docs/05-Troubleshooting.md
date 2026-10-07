@@ -111,3 +111,8 @@ connection, or the folder **EDS Lab Portal Photos** is missing in the OneDrive r
 ## 18. PA2108 on the Add picture control (`OnChange`)
 If Studio rejects `OnChange` on the photo box (the one property I could not check against a Microsoft template),
 delete that property in the error and add a button with the same formula (Collect into colShots). Tell me and I'll ship it.
+
+## 19. The app opens but lists are empty, search finds nothing, BOM finds nothing
+Login page → **System Check**. The first red row names the broken link. Most likely cause in v2.0.2: **Power Fx 1.0
+was off** (fixed in v2.0.3; Settings → Updates → Power Fx 1.0 → On). Full easy guide with a hand-built test:
+[10-Live-Data-Test.md](10-Live-Data-Test.md).

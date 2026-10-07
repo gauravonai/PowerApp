@@ -43,6 +43,10 @@ def clean(name, data):
                   "AppDescription": "JCB EDS Lab Material Portal - stock, requests, release, invoices, PR/PO.",
                   "DefaultConnectedDataSourceMaxGetRowsCount": 2000, "ControlCount": {},
                   "ParserErrorCount": 0, "BindingErrorCount": 0, "Author": ""})
+        # Power Fx 1.0 ON: the semantics every formula was type-checked and simulated with (tools/verify uses
+        # Features.PowerFxV1). With it OFF (as in the base sample) Studio reads Distinct/Split/ForAll results
+        # differently, the live-stock named formulas fail and every list stays empty (v2.0.2 field report).
+        p["AppPreviewFlagsMap"] = dict(p.get("AppPreviewFlagsMap", {}), powerfxv1=True)
         return json.dumps(p, indent=2).encode()
     if name == "msapp/Controls/1.json":
         c = json.loads(data)

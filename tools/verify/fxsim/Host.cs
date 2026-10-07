@@ -117,6 +117,7 @@ public class Host {
     if (ctype.EndsWith("DatePicker")) return Rec(("SelectedDate", FormulaType.Date));
     if (ctype == "AddMedia") return Rec(("Media", S));
     if (ctype == "Timer") return Rec(("Value", FormulaType.Number));
+    if (ctype == "Label") return Rec(("Text", S));
     return null;
   }
 

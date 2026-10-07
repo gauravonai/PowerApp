@@ -14,7 +14,7 @@ ENG = 'gRole = "Engineer"'
 BUSY = "gBusy"
 
 SCREENS = []          # (screen name, nav key, root container)
-APP_VERSION = "2.0.2 · 07-Oct-2026"   # shown on the Welcome screen, so you can tell which build is imported
+APP_VERSION = "2.0.3 · 07-Oct-2026"   # shown on the Welcome screen, so you can tell which build is imported
 
 
 def DISP(x):
@@ -2070,10 +2070,61 @@ def scr_login():
             40, 'If(%s, 404, 352)' % REG, 620, 22, size=10, color="cInk3", align="Center")]
     panel = box("pn" + K, 333, 150, 700, 'If(%s, 450, 400)' % REG, kids, fill="cGlass", border="cLine2", radius=24)
     kids = backdrop(K, "RGBA(8, 6, 10, 0.25)") + topbar(K, [
+        btn("ck" + K, '"System Check"', 1020, 30, 150, 38, "Navigate(scrCheck, ScreenTransition.Fade)", kind="ghost",
+            radius=19),
         btn("bk" + K, '"‹  Back"', 1180, 30, 140, 38, 'Set(gLoginMsg, ""); Navigate(scrWelcome, ScreenTransition.Fade)',
             kind="secondary", radius=19)]) + [panel]
     root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)
     SCREENS.append(("scrLogin", "", root))
+
+
+CHECKS = [
+    ("Users list", "Text(CountRows(tblUsers)) & \" people\""),
+    ("Parts list", "Text(CountRows(tblParts)) & \" rows\""),
+    ("Stock movements", "Text(CountRows(tblMoves)) & \" rows\""),
+    ("Requests / request lines", "Text(CountRows(tblRequests)) & \" / \" & Text(CountRows(tblReqLines)) & \" rows\""),
+    ("Settings", "Text(CountRows(tblSettings)) & \" rows\""),
+    ("Formula engine (Power Fx 1.0)", "\"OK \" & First(Distinct(Table({x: 1}), x)).Value"),
+    ("Parts read by the app", "Text(CountRows(nfParts)) & \" active parts\""),
+    ("Movements read by the app", "Text(CountRows(nfMoves)) & \" movements\""),
+    ("On-hand calculation", "Text(CountRows(nfOnHand)) & \" parts with movements\""),
+    ("Live stock (Check Stock, BOM)", "Text(CountRows(nfStock)) & \" parts · \" & Text(CountRows(Filter(nfStock, OnHand > 0))) & \" in stock\""),
+    ("Example: biggest stock", "With({p: First(Sort(nfStock, OnHand, SortOrder.Descending))}, p.PartNo & \" · on hand \" & Text(p.OnHand))"),
+    ("Out of stock / low stock", "Text(CountRows(Filter(nfStock, Status = \"OUT OF STOCK\"))) & \" / \" & Text(CountRows(Filter(nfStock, Status = \"LOW STOCK\")))"),
+    ("Requests view", "Text(CountRows(nfReqView)) & \" requests\""),
+    ("Row count check", "nfHealthText"),
+    ("Last refresh", "Text(gLastSync, \"dd-mmm-yyyy hh:mm:ss\")"),
+]
+
+
+def scr_check():
+    """System Check: every link from the data file to the screens, each in its own formula so a broken link
+    cannot hide the others. Reachable before login (Login screen) and from About."""
+    K = "Ck"
+    rows = []
+    for i, (name, f) in enumerate(CHECKS):
+        y = 118 + i * 33
+        v = "v%d%s" % (i, K)
+        rows += [lbl("n%d%s" % (i, K), q(name), 40, y, 300, 30, size=11, bold=True, color="cInk"),
+                 lbl(v, 'IfError(%s, "Error: " & FirstError.Message)' % f, 350, y, 520, 30, size=11, color="cInk2"),
+                 lbl("s%d%s" % (i, K), 'If(IsBlank(%s.Text), "NOT WORKING", StartsWith(%s.Text, "Error"), "ERROR", "OK")'
+                     % (v, v), 900, y + 4, 130, 22, size=9, bold=True, align="Center",
+                     color='If(IsBlank(%s.Text) || StartsWith(%s.Text, "Error"), cStop, cOk)' % (v, v),
+                     extra={"BorderColor": 'If(IsBlank(%s.Text) || StartsWith(%s.Text, "Error"), cStop, cOk)' % (v, v),
+                            "BorderThickness": 1}),
+                 rect("l%d%s" % (i, K), 40, y + 31, 990, 1, "cLine")]
+    panel = box("pn" + K, 158, 50, 1070, 690, [
+        lbl("t" + K, '"System Check"', 40, 22, 600, 40, size=24, bold=True, color="cOrange"),
+        lbl("s" + K, '"Every link from the data file to the screens. All rows must show OK. If one does not, take a '
+                     'screenshot of this page and send it."', 40, 62, 980, 40, size=11, color="cInk2", wrap=True,
+            valign="Top")] + rows + [
+        btn("rf" + K, '"Refresh All Data"', 40, 628, 200, 40, REFRESH_ALL + '; Notify("Refreshed at " & '
+            'Text(Now(), "hh:mm:ss") & ".", NotificationType.Information)', radius=20),
+        btn("bk" + K, '"‹  Back"', 256, 628, 140, 40, "Back()", kind="secondary", radius=20)],
+        fill="cGlass", border="cLine2", radius=24)
+    kids = backdrop(K, "RGBA(8, 6, 10, 0.55)") + [panel]
+    root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)
+    SCREENS.append(("scrCheck", "", root))
 
 
 def scr_about():
@@ -2116,6 +2167,8 @@ def scr_about():
             Col("If Not OK", None, 'If(ThisItem.Ok, "—", ThisItem.Fix)', "muted")], y=100, h=158, row_h=40) + [
         lbl("hsy" + K, '"Last read from Excel at " & Text(gLastSync, "hh:mm:ss") & ". The app re-reads stock every 2 minutes '
                        'and before every BOM compare."', 16, 270, 700, 40, size=11, color="cInk3", wrap=True),
+        btn("hck" + K, '"Open System Check"', "Parent.Width - 392", 274, 180, 38, "Navigate(scrCheck, ScreenTransition.Fade)",
+            kind="secondary"),
         btn("hrf" + K, '"Re-read Excel Now"', "Parent.Width - 196", 274, 180, 38, REFRESH_ALL + '; Notify(nfHealthText & ".", '
             'If(nfHealthOk, NotificationType.Success, NotificationType.Warning))')])
     P = "LookUp(nfStock, PN = Upper(Trim(pq%s.Text)))" % K
@@ -2163,6 +2216,6 @@ def build_all():
     SCREENS.clear()
     for f in (scr_welcome, scr_login, scr_dash, scr_mgr, scr_stock, scr_bom, scr_newreq, scr_myreq, scr_reqdetail, scr_queue, scr_newpart,
               scr_newpartq, scr_inventory, scr_inward, scr_ledger, scr_demand, scr_invoice, scr_invlist, scr_cost,
-              scr_print, scr_proc, scr_purch, scr_lic, scr_team, scr_about):
+              scr_print, scr_proc, scr_purch, scr_lic, scr_team, scr_about, scr_check):
         f()
     return SCREENS

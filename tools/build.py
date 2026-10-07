@@ -23,6 +23,7 @@ sys.path.insert(0, HERE)
 import pa  # noqa: E402
 import appfx  # noqa: E402
 import screens  # noqa: E402
+import handtest  # noqa: E402
 
 SRC = os.path.join(ROOT, "app", "Src")
 PASTE = os.path.join(ROOT, "paste")
@@ -117,7 +118,8 @@ def main():
                        "hash_fx": appfx.hash_fx('"PW"', '"SALT"', "p1$"),
                        "hash_vectors": [[pw, salt, appfx.hash_py(pw, salt, "p1$")] for pw, salt in
                                         [("abc123", "gaurav.shelke"), ("Pune@2026", "akshay.aadarsh"),
-                                         ('quote"and space 9', "x"), ("ünï 1a", "Mixed.Case")]]}}
+                                         ('quote"and space 9', "x"), ("ünï 1a", "Mixed.Case")]],
+                       "hand": {k: getattr(handtest, k) for k in ("PARTS", "MOVES", "ONHAND", "BOM")}}}
 
     def flat(c, sname, gal, parent):
         model["controls"].append({"name": c.name, "type": c.ctype, "screen": sname, "gallery": gal, "parent": parent,

@@ -8,14 +8,18 @@ Generator: `tools/*.py` → `app/Src/*.pa.yaml`, `paste/*`, `app/EDS-Lab-Portal.
    `PressedColor`, `PressedFill`, `PressedBorderColor`, `SelectedDateFill` (PA2108). TextInput/DropDown DO accept Hover*/Pressed*.
 3. Microsoft template manifests (`tools/verify/control_props.json`) can be older than Studio: a property listed there can
    still be rejected. When Studio reports a PA2108, remove it in `pa.py`, in `control_props.json`, and add it to `tools/fix_src.py`.
-4. `tools/fix_src.py` repairs any old .msapp/folder; `check()` is the build guard (build.py + make_msapp.py).
+4. **Power Fx 1.0 must be ON** in the packed app (`AppPreviewFlagsMap.powerfxv1 = true`, set in make_msapp.py).
+   The base sample had it off; v2.0.2 opened fine but every list was empty (Distinct/Split semantics differ from the
+   V1 engine all formulas are tested with). Studio shows no import error for this: only System Check reveals it.
+5. `tools/fix_src.py` repairs any old .msapp/folder; `check()` is the build guard (build.py + make_msapp.py).
 
 ## Every release
 - Bump `APP_VERSION` in `tools/screens.py` (shown on Welcome) and send the msapp as `EDS-Lab-Portal-v<version>.msapp`
   (same file name as an older build caused the user to import the wrong one).
 - Run `tools/verify/run_all.sh`: schema, serializer, property names, parse, bind = 0 errors; simulation all pass;
   smoke test 0 runtime errors; pack prints the import guards line.
-- Confirmed working in the user's Studio: **v2.0.2** (07-Oct-2026).
+- v2.0.2 imports in the user's Studio but showed no data (Power Fx 1.0 off). v2.0.3 = fix + System Check screen
+  (Login → System Check) + docs/10 hand-built live test. Ask for the System Check screenshot first when data looks wrong.
 
 ## Product decisions (agreed with the user)
 - Login = username + password from Users (scrambled `p1$`, temp codes `t1$`); first password only if the PC's M365 user
