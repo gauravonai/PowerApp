@@ -1,15 +1,15 @@
 {
-  "_note": "Data source names exactly as they appear in Studio's Data panel. Key = name in the generator, value = name in the user's app. Set a value equal to its key to use the plain name. Build with PLAIN_DS=1 to ignore this file (the verification harness does that first).",
+  "_note": "Data source names exactly as they appear in Studio's Data panel. Key = name in the generator, value = name in the user's app. Power Apps names a data source after the TABLE name inside the workbook (file name/path never matter) and adds _1 only when that name is already connected in the same app. A fresh import gets plain names, so keep these plain unless the user's Data panel shows otherwise. PLAIN_DS=1 ignores this file.",
   "tblCalib": "tblCalib",
-  "tblInvoice": "tblInvoice_1",
-  "tblLicenses": "tblLicenses_1",
-  "tblMoves": "tblMoves_1",
-  "tblNewPart": "tblNewPart_1",
-  "tblParts": "tblParts_1",
-  "tblProc": "tblProc_1",
-  "tblPurch": "tblPurch_1",
-  "tblReqLines": "tblReqLines_1",
-  "tblRequests": "tblRequests_1",
+  "tblInvoice": "tblInvoice",
+  "tblLicenses": "tblLicenses",
+  "tblMoves": "tblMoves",
+  "tblNewPart": "tblNewPart",
+  "tblParts": "tblParts",
+  "tblProc": "tblProc",
+  "tblPurch": "tblPurch",
+  "tblReqLines": "tblReqLines",
+  "tblRequests": "tblRequests",
   "tblSettings": "tblSettings",
-  "tblUsers": "tblUsers_1"
+  "tblUsers": "tblUsers"
 }

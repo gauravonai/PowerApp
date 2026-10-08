@@ -7,10 +7,9 @@ The tables must come from the **Excel Online (Business)** connector:
 Left rail **Data** (cylinder icon) → **+ Add data** → type **Excel Online (Business)** → **OneDrive for Business** →
 pick `EDS-Lab-Data-PowerApps.xlsx` → tick **all 12** tables → **Connect**.
 
-**v2.0.4 is built for the names now in your Data panel:** `tblCalib`, `tblSettings` (plain) and
-`tblInvoice_1, tblLicenses_1, tblMoves_1, tblNewPart_1, tblParts_1, tblProc_1, tblPurch_1, tblReqLines_1, tblRequests_1, tblUsers_1`.
-Keep these connections exactly as they are; don't remove or re-add them. (If they ever change, tell me the names; one map
-file, `tools/datasources.json`, rebuilds the app for any names.)
+In the Data panel the names must be **exactly** these, all plain (this is what a fresh import always gives):
+`tblParts, tblMoves, tblUsers, tblSettings, tblRequests, tblReqLines, tblPurch, tblProc, tblInvoice, tblNewPart, tblLicenses, tblCalib`.
+Power Apps takes the name from the **table inside the workbook**, so renaming or moving the Excel file changes nothing.
 
 **If names end in `_1`** (`tblParts_1`…): a table with that name was already connected, so Power Apps added a suffix and
 the app can't find its tables (every list stays empty). Fix: Data panel → **⋯ → Remove** on *every* table until the panel
@@ -23,7 +22,7 @@ Also check two settings (gear icon **Settings**):
    most likely reason every list stayed empty.
 
 ## Part A: System Check (2 minutes)
-1. Import **EDS-Lab-Portal-v2.0.4.msapp** (Welcome screen bottom right shows *Version 2.0.4*). Connect the tables as above.
+1. Import **EDS-Lab-Portal-v2.0.5.msapp** (Welcome screen bottom right shows *Version 2.0.5*). Connect the tables as above.
 2. Press **F5** (play) → **Log In** → top right **System Check**.
 3. Every row must say **OK** (picture: `docs/preview/scrCheck.png`). Expected with the workbook I gave you:
    Parts list 418 rows · Stock movements 775 rows · Live stock 418 parts · Out / low stock 10 / 37.
@@ -38,29 +37,29 @@ This test reads the Excel tables **directly**, without any of my app formulas. I
 1. Tree view → **+ New screen** → **Blank**. Name it `scrTest`.
 2. **Insert → Label** (control 1). In the formula bar choose property **Text** and paste:
 ```
-"Parts: " & CountRows(tblParts_1)
+"Parts: " & CountRows(tblParts)
 ```
    You should see **Parts: 418**.
 3. **Insert → Label** (control 2) → Text:
 ```
-"Movements: " & CountRows(tblMoves_1)
+"Movements: " & CountRows(tblMoves)
 ```
    You should see **Movements: 775**. If you see **500**, the Data row limit is still 500 (Part 0).
 4. **Insert → Text input** (control 3). Rename it **txtPart** (double-click its name in the Tree view).
    Property **Default**: `"7213/0024"`
 5. **Insert → Label** (control 4) → Text, formula **F4**:
 ```
-"On hand: " & Sum(Filter(tblMoves_1, Upper(Trim(Text(PartNo))) = Upper(Trim(txtPart.Text))), Switch(Upper(Trim(Text(Type))), "RECEIPT", 1, "RETURN", 1, "ADJUST+", 1, "ISSUE", -1, "SCRAP", -1, "ADJUST-", -1, 0) * Abs(Value(Text(Qty))))
+"On hand: " & Sum(Filter(tblMoves, Upper(Trim(Text(PartNo))) = Upper(Trim(txtPart.Text))), Switch(Upper(Trim(Text(Type))), "RECEIPT", 1, "RETURN", 1, "ADJUST+", 1, "ISSUE", -1, "SCRAP", -1, "ADJUST-", -1, 0) * Abs(Value(Text(Qty))))
 ```
    You should see **On hand: 40**. Type another part number in control 3 and it changes instantly.
 6. **Insert → Button** (control 5) → Text `"Refresh"` → OnSelect:
 ```
-Refresh(tblParts_1); Refresh(tblMoves_1)
+Refresh(tblParts); Refresh(tblMoves)
 ```
 7. **Insert → Text input** (control 6). Rename it **txtBom**. Property **Mode**: `TextMode.MultiLine`. Default: `""`.
 8. **Insert → Gallery → Blank vertical** (control 7) → Items, formula **F7**:
 ```
-ForAll(Filter(Split(txtBom.Text, Char(10)), !IsBlank(Trim(Value))) As L, With({pn: Upper(Trim(First(Split(Trim(Substitute(Substitute(L.Value, Char(9), " "), Char(13), "")), " ")).Value))}, {Part: pn, OnHand: Sum(Filter(tblMoves_1, Upper(Trim(Text(PartNo))) = pn), Switch(Upper(Trim(Text(Type))), "RECEIPT", 1, "RETURN", 1, "ADJUST+", 1, "ISSUE", -1, "SCRAP", -1, "ADJUST-", -1, 0) * Abs(Value(Text(Qty))))}))
+ForAll(Filter(Split(txtBom.Text, Char(10)), !IsBlank(Trim(Value))) As L, With({pn: Upper(Trim(First(Split(Trim(Substitute(Substitute(L.Value, Char(9), " "), Char(13), "")), " ")).Value))}, {Part: pn, OnHand: Sum(Filter(tblMoves, Upper(Trim(Text(PartNo))) = pn), Switch(Upper(Trim(Text(Type))), "RECEIPT", 1, "RETURN", 1, "ADJUST+", 1, "ISSUE", -1, "SCRAP", -1, "ADJUST-", -1, 0) * Abs(Value(Text(Qty))))}))
 ```
    Then click inside the gallery's first row → **Insert → Label** → Text:
 ```
