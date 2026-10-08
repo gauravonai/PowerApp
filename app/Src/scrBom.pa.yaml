@@ -6,6 +6,7 @@ Screens:
   scrBom:
     Properties:
       Fill: =cBg
+      OnVisible: =If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); Navigate(scrLogin, ScreenTransition.None))
     Children:
       - rootBom:
           Control: GroupContainer
@@ -295,7 +296,7 @@ Screens:
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
                   OnSelect: |-
-                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gMeMail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cJcb
@@ -337,7 +338,7 @@ Screens:
                   BorderThickness: =0
                   Fill: =RGBA(0,0,0,0)
                   Height: =696
-                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
                   OnSelect: |-
                     =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                       "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
@@ -467,8 +468,8 @@ Screens:
                         RadiusTopLeft: =9
                         RadiusTopRight: =9
                         Size: =9
-                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
-                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
                         Width: =26
                         X: =190
                         Y: =11
@@ -665,7 +666,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
                               OnSelect: |-
-                                =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now()); With({rows: With({raw: Filter(ForAll(Split(Substitute(txtBom.Text, Char(13), ""), Char(10)) As L, With({t: TrimEnds(Substitute(Substitute(Substitute(L.Value, Char(9), " "), ",", " "), ";", " "))}, With({qt: Last(Split(t, " ")).Value}, {PN: Upper(TrimEnds(Left(t, Len(t) - Len(qt)))), Q: IfError(Value(qt), 0)}))), !IsBlank(PN) && Q > 0)}, ForAll(Distinct(raw, PN) As D, {PN: D.Value, Q: Sum(Filter(raw, PN = D.Value), Q)}))}, ClearCollect(colBom, ForAll(Sequence(CountRows(rows)) As I, With({B: Index(rows, I.Value)}, With({p: LookUp(nfStock, PN = B.PN)}, {Sr: I.Value, PartNo: Coalesce(p.PartNo, B.PN), PN: B.PN, Qty: B.Q, Description: Coalesce(p.Description, "— not in the lab catalogue —"), UOM: Coalesce(p.UOM, ""), Location: Coalesce(p.Location, "—"), OnHand: Coalesce(p.OnHand, 0), Reserved: Coalesce(p.Reserved, 0), Avail: Coalesce(p.Avail, 0), UnitCost: Coalesce(p.UnitCost, 0), Short: If(IsBlank(p), B.Q, Max(0, Round(B.Q - p.Avail, 3))), Status: If(IsBlank(p), "NEW PART", B.Q <= p.Avail, "AVAILABLE", p.Avail <= 0, "OUT OF STOCK", "SHORTAGE"), Found: !IsBlank(p)}))))); If(CountRows(colBom) = 0, Notify("Paste at least one line with a part number and a quantity.", NotificationType.Warning), Notify("Compared " & CountRows(colBom) & " lines with live stock as of " & Text(gLastSync, "hh:mm:ss") & ".", NotificationType.Success))
+                                =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now()); With({rows: With({raw: Filter(ForAll(ForAll(Filter(ForAll(Split(Substitute(txtBom.Text, Char(13), ""), Char(10)) As L, {Tok: Filter(Split(TrimEnds(Substitute(Substitute(Substitute(Substitute(L.Value, Char(9), " "), Char(160), " "), ",", " "), ";", " ")), " "), !IsBlank(Value))}), CountRows(Tok) > 0) As R, {T: LastN(R.Tok, CountRows(R.Tok) - If(CountRows(R.Tok) >= 3 && Len(First(R.Tok).Value) <= 3 && !IsBlank(IfError(Value(First(R.Tok).Value), Blank())), 1, 0))}) As R, With({nums: Filter(LastN(R.T, CountRows(R.T) - 1), !IsBlank(IfError(Value(Value), Blank())))}, {PN: Upper(First(R.T).Value), Q: If(CountRows(nums) = 0, 0, Value(Last(nums).Value))})), !IsBlank(PN) && Q > 0)}, ForAll(Distinct(raw, PN) As D, {PN: D.Value, Q: Sum(Filter(raw, PN = D.Value), Q)}))}, ClearCollect(colBom, ForAll(Sequence(CountRows(rows)) As I, With({B: Index(rows, I.Value)}, With({p: LookUp(nfStock, PN = B.PN)}, {Sr: I.Value, PartNo: Coalesce(p.PartNo, B.PN), PN: B.PN, Qty: B.Q, Description: Coalesce(p.Description, "— not in the lab catalogue —"), UOM: Coalesce(p.UOM, ""), Location: Coalesce(p.Location, "—"), OnHand: Coalesce(p.OnHand, 0), Reserved: Coalesce(p.Reserved, 0), Avail: Coalesce(p.Avail, 0), UnitCost: Coalesce(p.UnitCost, 0), Short: If(IsBlank(p), B.Q, Max(0, Round(B.Q - p.Avail, 3))), Status: If(IsBlank(p), "NEW PART", B.Q <= p.Avail, "AVAILABLE", p.Avail <= 0, "OUT OF STOCK", "SHORTAGE"), Found: !IsBlank(p)}))))); Set(gBomRead, CountRows(Filter(ForAll(Split(Substitute(txtBom.Text, Char(13), ""), Char(10)) As L, {Tok: Filter(Split(TrimEnds(Substitute(Substitute(Substitute(Substitute(L.Value, Char(9), " "), Char(160), " "), ",", " "), ";", " ")), " "), !IsBlank(Value))}), CountRows(Tok) > 0))); Set(gBomInfo, gBomRead & " line(s) read · " & CountRows(colBom) & " part(s) compared · " & CountRows(Filter(colBom, Found)) & " found in stock list · " & CountRows(Filter(colBom, !Found)) & " new part(s)" & If(gBomRead > CountRows(colBom), " · " & (gBomRead - CountRows(colBom)) & " line(s) skipped (no quantity, or same part twice)", "")); If(CountRows(colBom) = 0, Notify("No line had a part number and a quantity. Paste the part number first and the quantity last on each line.", NotificationType.Warning), Notify("Compared " & CountRows(colBom) & " part(s) with live stock as of " & Text(gLastSync, "hh:mm:ss") & ".", NotificationType.Success))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange
@@ -733,7 +734,7 @@ Screens:
                               HoverBorderColor: =cJcb
                               HoverColor: =cJcb
                               HoverFill: =cJcbWash
-                              OnSelect: =Set(gBomText, ""); Reset(txtBom); Clear(colBom)
+                              OnSelect: =Set(gBomText, ""); Set(gBomInfo, ""); Reset(txtBom); Clear(colBom)
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cJcb
@@ -752,20 +753,21 @@ Screens:
                             Control: Label
                             Properties:
                               Align: =Align.Left
-                              Color: =cInk3
+                              Color: =If(IsBlank(gBomInfo), cInk3, cJcb)
                               Font: =fUI
                               FontWeight: =FontWeight.Normal
-                              Height: =36
+                              Height: =48
                               PaddingBottom: =0
                               PaddingLeft: =0
                               PaddingRight: =0
                               PaddingTop: =0
-                              Size: =11
-                              Text: ="Tab, comma or multiple spaces all work as the separator."
+                              Size: =10
+                              Text: =If(IsBlank(gBomInfo), "Part number first, quantity last. A description or unit in between is fine.", gBomInfo)
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =500
+                              Wrap: =true
                               X: =576
-                              Y: =196
+                              Y: =190
                   - tiBom:
                       Control: GroupContainer
                       Variant: AutoLayout

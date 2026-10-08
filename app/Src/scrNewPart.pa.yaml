@@ -6,6 +6,7 @@ Screens:
   scrNewPart:
     Properties:
       Fill: =cBg
+      OnVisible: =If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); Navigate(scrLogin, ScreenTransition.None))
     Children:
       - rootNp:
           Control: GroupContainer
@@ -295,7 +296,7 @@ Screens:
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
                   OnSelect: |-
-                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gMeMail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cJcb
@@ -337,7 +338,7 @@ Screens:
                   BorderThickness: =0
                   Fill: =RGBA(0,0,0,0)
                   Height: =696
-                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
                   OnSelect: |-
                     =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                       "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
@@ -467,8 +468,8 @@ Screens:
                         RadiusTopLeft: =9
                         RadiusTopRight: =9
                         Size: =9
-                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
-                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
                         Width: =26
                         X: =190
                         Y: =11
@@ -1202,7 +1203,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
                               OnSelect: |-
-                                =With({r: {RequesterName: Trim(npfRequesterNameNp.Text), Category: Trim(npfCategoryNp.Text), SubCategory: Trim(npfSubCategoryNp.Text), PlantCode: Trim(npfPlantCodeNp.Text), PartName: Trim(npfPartNameNp.Text), MakeBrand: Trim(npfMakeBrandNp.Text), ModelNo: Trim(npfModelNoNp.Text), OtherSpecs: Trim(npfOtherSpecsNp.Text), Remarks: Trim(npfRemarksNp.Text), UOM: npfUOMNp.Selected.Value, HSNCode: Trim(npfHSNCodeNp.Text)}}, With({miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(v)), n, ", ")}, If(!IsBlank(miss), Notify("Please fill in " & miss & ". These are mandatory.", NotificationType.Error), Len(r.HSNCode) <> 8 || CountRows(Filter(Split(r.HSNCode, ""), !(Value in "0123456789"))) > 0, Notify("8-Digit HSN must be exactly 8 digits, for example 85366990.", NotificationType.Error), Collect(colNP, {Id: If(gNpForm.Id > 0, gNpForm.Id, Coalesce(Max(colNP, Id), 0) + 1), RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode}); Notify(r.PartName & " is on the list (" & CountRows(colNP) & " so far). Add the next part or submit the list.", NotificationType.Success); Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Reset(npfRequesterNameNp); Reset(npfPlantCodeNp); Reset(npfCategoryNp); Reset(npfPartNameNp); Reset(npfSubCategoryNp); Reset(npfMakeBrandNp); Reset(npfModelNoNp); Reset(npfUOMNp); Reset(npfHSNCodeNp); Reset(npfOtherSpecsNp); Reset(npfRemarksNp))))
+                                =With({r: {RequesterName: Trim(npfRequesterNameNp.Text), Category: Trim(npfCategoryNp.Text), SubCategory: Trim(npfSubCategoryNp.Text), PlantCode: Trim(npfPlantCodeNp.Text), PartName: Trim(npfPartNameNp.Text), MakeBrand: Trim(npfMakeBrandNp.Text), ModelNo: Trim(npfModelNoNp.Text), OtherSpecs: Trim(npfOtherSpecsNp.Text), Remarks: Trim(npfRemarksNp.Text), UOM: npfUOMNp.Selected.Value, HSNCode: Trim(npfHSNCodeNp.Text)}}, With({miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(v)), n, ", ")}, If(!IsBlank(miss), Notify("Please fill in " & miss & ". These are mandatory.", NotificationType.Error), Len(r.HSNCode) <> 8 || CountRows(Filter(Split(r.HSNCode, ""), !(Value in "0123456789"))) > 0, Notify("8-Digit HSN must be exactly 8 digits, for example 85366990.", NotificationType.Error), With({old: LookUp(colNP, gNpForm.Id > 0 && Id = gNpForm.Id), nr: {RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode}}, If(IsBlank(old), Collect(colNP, Patch({Id: Coalesce(Max(colNP, Id), 0) + 1}, nr)); Notify(r.PartName & " is on the list (" & CountRows(colNP) & " so far). Add the next part or submit the list.", NotificationType.Success), Patch(colNP, old, nr); Notify("Row " & old.Id & " updated.", NotificationType.Success))); Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Reset(npfRequesterNameNp); Reset(npfPlantCodeNp); Reset(npfCategoryNp); Reset(npfPartNameNp); Reset(npfSubCategoryNp); Reset(npfMakeBrandNp); Reset(npfModelNoNp); Reset(npfUOMNp); Reset(npfHSNCodeNp); Reset(npfOtherSpecsNp); Reset(npfRemarksNp))))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange
@@ -1707,7 +1708,7 @@ Screens:
                                     Height: =30
                                     HoverColor: =cJcb
                                     Icon: =Icon.Edit
-                                    OnSelect: =Set(gNpForm, ThisItem); Remove(colNP, ThisItem); Reset(npfRequesterNameNp); Reset(npfPlantCodeNp); Reset(npfCategoryNp); Reset(npfPartNameNp); Reset(npfSubCategoryNp); Reset(npfMakeBrandNp); Reset(npfModelNoNp); Reset(npfUOMNp); Reset(npfHSNCodeNp); Reset(npfOtherSpecsNp); Reset(npfRemarksNp); Notify("Row " & ThisItem.Id & " is back in the form above for editing.", NotificationType.Information)
+                                    OnSelect: =Set(gNpForm, ThisItem); Reset(npfRequesterNameNp); Reset(npfPlantCodeNp); Reset(npfCategoryNp); Reset(npfPartNameNp); Reset(npfSubCategoryNp); Reset(npfMakeBrandNp); Reset(npfModelNoNp); Reset(npfUOMNp); Reset(npfHSNCodeNp); Reset(npfOtherSpecsNp); Reset(npfRemarksNp); Notify("Row " & ThisItem.Id & " is in the form above. Change it, then press Update Part in List.", NotificationType.Information)
                                     PaddingBottom: =6
                                     PaddingLeft: =6
                                     PaddingRight: =6
@@ -1725,7 +1726,8 @@ Screens:
                                     Height: =30
                                     HoverColor: =cJcb
                                     Icon: =Icon.Cancel
-                                    OnSelect: =Remove(colNP, ThisItem)
+                                    OnSelect: |-
+                                      =If(gNpForm.Id = ThisItem.Id, Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Reset(npfRequesterNameNp); Reset(npfPlantCodeNp); Reset(npfCategoryNp); Reset(npfPartNameNp); Reset(npfSubCategoryNp); Reset(npfMakeBrandNp); Reset(npfModelNoNp); Reset(npfUOMNp); Reset(npfHSNCodeNp); Reset(npfOtherSpecsNp); Reset(npfRemarksNp)); Remove(colNP, ThisItem)
                                     PaddingBottom: =6
                                     PaddingLeft: =6
                                     PaddingRight: =6
@@ -1838,7 +1840,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
                               OnSelect: |-
-                                =IfError(With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, With({bad: Filter(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {Row: I.Value, Miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(Trim(v))), n, ", ")})), !IsBlank(Miss))}, If(CountRows(live) = 0, Notify("Add at least one part to the list before submitting.", NotificationType.Error), CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", NotificationType.Error), Set(gBusy, true); With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, {SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: DateAdd(Today(), 12, TimeUnit.Hours)}))); Notify(no & " submitted with " & CountRows(live) & " part(s). The store will raise the purchase request.", NotificationType.Success); Clear(colNP); Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Set(gBusy, false))))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, With({bad: Filter(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {Row: I.Value, Miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(Trim(v))), n, ", ")})), !IsBlank(Miss))}, If(CountRows(live) = 0, Notify("Add at least one part to the list before submitting.", NotificationType.Error), CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", NotificationType.Error), Set(gBusy, true); Refresh(tblNewPart); With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, IfError(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, {SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: DateAdd(Today(), 12, TimeUnit.Hours)}))), Set(gBusy, false); Notify("Not submitted: " & FirstError.Message & ". Your list is still here; try again.", NotificationType.Error), Set(gMyNpr, gMyNpr & "|" & no & "|"); Notify(no & " submitted with " & CountRows(live) & " part(s). The store will raise the purchase request.", NotificationType.Success); Clear(colNP); Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Set(gBusy, false)))))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange
@@ -2039,7 +2041,7 @@ Screens:
                               BorderThickness: =0
                               Fill: =RGBA(0,0,0,0)
                               Height: =210
-                              Items: =Sort(Filter(nfNewPart, Lower(RequesterName) = Lower(gMeName)), DateRaised, SortOrder.Descending)
+                              Items: =Sort(Filter(nfNewPart, Lower(Trim(RequesterName)) = Lower(Trim(gMeName)) || ("|" & RequestNo & "|") in gMyNpr), DateRaised, SortOrder.Descending)
                               ShowScrollbar: =true
                               TemplatePadding: =0
                               TemplateSize: =42

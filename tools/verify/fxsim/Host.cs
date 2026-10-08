@@ -82,13 +82,13 @@ public class Host {
 
     // ---- global variables and collections exactly as App.OnStart creates them
     void V(string n, FormulaValue v) => Engine.UpdateVariable(n, v);
-    foreach (var n in new[] { "gRole", "gReqNo", "gInvReq", "gInvEdit", "gCostReq", "gPrintKind", "gBomText", "gEditPr", "gEditPurch", "gPanel", "gVendorPick", "gEditPurchReq", "gSyncNote", "gPhotoCheck", "gRoleHome", "gMeName", "gMeEmail", "gMeInitials", "gLoginMode", "gLoginMsg", "gTempCode" }) V(n, FormulaValue.New(""));
+    foreach (var n in new[] { "gRole", "gReqNo", "gInvReq", "gInvEdit", "gCostReq", "gPrintKind", "gBomText", "gEditPr", "gEditPurch", "gPanel", "gVendorPick", "gEditPurchReq", "gSyncNote", "gPhotoCheck", "gRoleHome", "gMeName", "gMeEmail", "gMeInitials", "gLoginMode", "gLoginMsg", "gTempCode", "gBomInfo", "gMeMail", "gMyNpr" }) V(n, FormulaValue.New(""));
     V("gBusy", FormulaValue.New(false)); V("gPrinting", FormulaValue.New(false));
     V("gShortSr", FormulaValue.New(-1.0)); V("gPrintCkt", FormulaValue.New(200.0));
     var N = FormulaType.Number; var S = FormulaType.String; var B = FormulaType.Boolean;
     V("gLastSync", FormulaValue.New(DateTime.Now));
     foreach (var n in new[] { "gIsLead", "gIsAdmin", "gIsMgr" }) V(n, FormulaValue.New(false));
-    V("gLoginTries", FormulaValue.New(0.0));
+    V("gLoginTries", FormulaValue.New(0.0)); V("gBomRead", FormulaValue.New(0.0)); V("gShowPw", FormulaValue.New(false));
     V("gRoleOptions", FormulaValue.NewTable(Rec(("Value", S)), FormulaValue.NewRecordFromFields(new NamedValue("Value", FormulaValue.New("Engineer")))));
     var usersT = TableTypes[TableTypes.Keys.First(k => k == "tblUsers" || k.StartsWith("tblUsers_"))];
     V("gMe", Blankish(usersT)); V("gPend", Blankish(usersT));

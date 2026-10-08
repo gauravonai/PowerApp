@@ -6,6 +6,7 @@ Screens:
   scrInvoice:
     Properties:
       Fill: =cBg
+      OnVisible: =If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); Navigate(scrLogin, ScreenTransition.None))
     Children:
       - rootIv:
           Control: GroupContainer
@@ -295,7 +296,7 @@ Screens:
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
                   OnSelect: |-
-                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gMeMail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cJcb
@@ -337,7 +338,7 @@ Screens:
                   BorderThickness: =0
                   Fill: =RGBA(0,0,0,0)
                   Height: =696
-                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
                   OnSelect: |-
                     =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                       "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
@@ -467,8 +468,8 @@ Screens:
                         RadiusTopLeft: =9
                         RadiusTopRight: =9
                         Size: =9
-                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
-                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                        Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                        Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
                         Width: =26
                         X: =190
                         Y: =11
@@ -754,7 +755,8 @@ Screens:
                               HoverFill: =cInputHover
                               Items: |-
                                 =With({T: ForAll(Sort(Filter(nfReq, Status in ["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]), DateRaised, SortOrder.Descending), RequestNo)}, ForAll(Sequence(CountRows(T) + 1) As I, If(I.Value = 1, "— Choose —", Index(T, I.Value - 1).Value)))
-                              OnChange: =If(Self.Selected.Value <> "— Choose —", Set(gInvEdit, ""); Set(gInvReq, Self.Selected.Value))
+                              OnChange: |-
+                                =If(Self.Selected.Value <> "— Choose —", Set(gInvEdit, ""); Set(gInvReq, Self.Selected.Value); ClearCollect(colInvLines, ForAll(Filter(nfLines, RequestNo = gInvReq) As L, {Sr: L.Sr, PartNo: L.PartNo, Description: L.Description, Qty: If(L.QtyReleased > 0, L.QtyReleased, L.QtyRequested), UnitCost: If(L.UnitCost > 0, L.UnitCost, Coalesce(LookUp(nfParts, PN = L.PN).UnitCost, 0))})))
                               PaddingLeft: =10
                               PressedBorderColor: =cJcb
                               PressedColor: =cInputInk
@@ -2327,7 +2329,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).hours, "0.00") & " h  (" & With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).ckt & " circuits ÷ 7.5)"
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).hours, "0.00") & " h  (" & With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).ckt & " circuits ÷ 7.5)"
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2364,7 +2366,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).mach, "#,##0.00")
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).mach, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2401,7 +2403,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).man, "#,##0.00")
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).man, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2438,7 +2440,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).elec, "#,##0.00")
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).elec, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2475,7 +2477,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).asm, "#,##0.00")
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).asm, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2512,7 +2514,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).mat, "#,##0.00")
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).mat, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2549,7 +2551,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).trn, "#,##0.00")
+                                =Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).trn, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2586,7 +2588,7 @@ Screens:
                               PaddingTop: =0
                               Size: =12
                               Text: |-
-                                ="₹" & Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).tot, "#,##0.00")
+                                ="₹" & Text(With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport})).tot, "#,##0.00")
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =440
                               X: =276
@@ -2838,7 +2840,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
                               OnSelect: |-
-                                =IfError(With({no: Trim(noIv.Text), c: With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(Sum(colInvLines, Qty * UnitCost), 0), trn: kTransport, tot: Coalesce(Sum(colInvLines, Qty * UnitCost), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport}))}, If(IsBlank(no), Notify("Invoice number is required.", NotificationType.Error), IsBlank(Trim(ToNameIv.Text)), Notify("To is required.", NotificationType.Error), Set(gBusy, true); With({up: ForAll(colShots As S, IfError(OneDriveForBusiness.CreateFile("/EDS Lab Portal Photos", S.Name, S.Img).Path, "ERR " & FirstError.Message))}, With({paths: Concat(Filter(up, !StartsWith(Value, "ERR ")), Value, ";"), perr: First(Filter(up, StartsWith(Value, "ERR "))).Value}, With({rec: {InvoiceNo: no, InvoiceDate: DateAdd(InvoiceDateIv.SelectedDate, 12, TimeUnit.Hours), ToName: ToNameIv.Text, CCName: CCNameIv.Text, FromName: FromNameIv.Text, FromExt: FromExtIv.Text, FromMobile: FromMobileIv.Text, HarnessPartNos: HarnessPartNosIv.Text, JobDescription: JobDescriptionIv.Text, BusinessUnit: BusinessUnitIv.Text, BUContact: BUContactIv.Text, CostCentre: CostCentreIv.Text, ApplicationDesc: ApplicationDescIv.Text, DetailsOfRequest: DetailsOfRequestIv.Text, NoOfCircuits: c.ckt, DCContact: DCContactIv.Text, DCMobile: DCMobileIv.Text, JobReceived: DateAdd(JobReceivedIv.SelectedDate, 12, TimeUnit.Hours), StartDate: DateAdd(StartDateIv.SelectedDate, 12, TimeUnit.Hours), CompletionDate: DateAdd(CompletionDateIv.SelectedDate, 12, TimeUnit.Hours), MaterialCost: Round(c.mat, 2), AssemblyCost: Round(c.asm, 2), TransportCost: c.trn, TotalCost: Round(c.tot, 2), RefRequest: RefRequestIv.Text, ImagePath: Concat(Filter(Table({v: Coalesce(LookUp(nfInv, InvoiceNo = gInvEdit).ImagePath, "")}, {v: paths}), !IsBlank(v)), v, ";"), Status: Upper(stIv.Selected.Value), Notes: NotesIv.Text}}, If(IsBlank(LookUp(tblInvoice, Text(InvoiceNo) = no)), Collect(tblInvoice, rec), Patch(tblInvoice, LookUp(tblInvoice, Text(InvoiceNo) = no), rec))); Set(gInvEdit, no); Set(gBusy, false); If(IsBlank(perr), Clear(colShots); Notify(no & " saved" & If(IsBlank(paths), ".", " with its photos."), NotificationType.Success), Notify(no & " saved, but a photo did not upload: " & Mid(perr, 5) & ". The photos are still attached here; see About > Photo Storage Check, then save again.", NotificationType.Warning)))))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(Refresh(tblInvoice); With({no: Trim(noIv.Text), c: With({c: Coalesce(IfError(Value(NoOfCircuitsIv.Text), 0), 0)}, With({h: c / kCktPerHr}, {ckt: c, hours: h, mach: (kDepPA / kStdHrsPA) * h, man: kRateHr * h, elec: kKwhHr * h, asm: (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h, mat: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0), trn: kTransport, tot: Coalesce(If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), LookUp(nfInv, InvoiceNo = gInvEdit).MaterialCost, Sum(colInvLines, Qty * UnitCost)), 0) + (kDepPA / kStdHrsPA) * h + kRateHr * h + kKwhHr * h + kTransport}))}, If(IsBlank(no), Notify("Invoice number is required.", NotificationType.Error), no <> gInvEdit && !IsBlank(LookUp(tblInvoice, Text(InvoiceNo) = no)), Notify("Invoice " & no & " already exists. Use " & nfNextInvNo & ", or open " & no & " from Invoices > Edit.", NotificationType.Error), IsBlank(Trim(ToNameIv.Text)), Notify("To is required.", NotificationType.Error), Set(gBusy, true); With({up: ForAll(colShots As S, IfError(OneDriveForBusiness.CreateFile("/EDS Lab Portal Photos", S.Name, S.Img).Path, "ERR " & FirstError.Message))}, With({paths: Concat(Filter(up, !StartsWith(Value, "ERR ")), Value, ";"), perr: First(Filter(up, StartsWith(Value, "ERR "))).Value}, With({rec: {InvoiceNo: no, InvoiceDate: DateAdd(InvoiceDateIv.SelectedDate, 12, TimeUnit.Hours), ToName: ToNameIv.Text, CCName: CCNameIv.Text, FromName: FromNameIv.Text, FromExt: FromExtIv.Text, FromMobile: FromMobileIv.Text, HarnessPartNos: HarnessPartNosIv.Text, JobDescription: JobDescriptionIv.Text, BusinessUnit: BusinessUnitIv.Text, BUContact: BUContactIv.Text, CostCentre: CostCentreIv.Text, ApplicationDesc: ApplicationDescIv.Text, DetailsOfRequest: DetailsOfRequestIv.Text, NoOfCircuits: c.ckt, DCContact: DCContactIv.Text, DCMobile: DCMobileIv.Text, JobReceived: DateAdd(JobReceivedIv.SelectedDate, 12, TimeUnit.Hours), StartDate: DateAdd(StartDateIv.SelectedDate, 12, TimeUnit.Hours), CompletionDate: DateAdd(CompletionDateIv.SelectedDate, 12, TimeUnit.Hours), MaterialCost: Round(c.mat, 2), AssemblyCost: Round(c.asm, 2), TransportCost: c.trn, TotalCost: Round(c.tot, 2), RefRequest: RefRequestIv.Text, ImagePath: Concat(Filter(Table({v: Coalesce(LookUp(nfInv, InvoiceNo = gInvEdit).ImagePath, "")}, {v: paths}), !IsBlank(v)), v, ";"), Status: Upper(stIv.Selected.Value), Notes: NotesIv.Text}}, If(IsBlank(LookUp(tblInvoice, Text(InvoiceNo) = no)), Collect(tblInvoice, rec), Patch(tblInvoice, LookUp(tblInvoice, Text(InvoiceNo) = no), rec))); Set(gInvEdit, no); Set(gBusy, false); If(IsBlank(perr), Clear(colShots); Notify(no & " saved" & If(IsBlank(paths), ".", " with its photos."), NotificationType.Success), Notify(no & " saved, but a photo did not upload: " & Mid(perr, 5) & ". The photos are still attached here; see About > Photo Storage Check, then save again.", NotificationType.Warning)))))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange

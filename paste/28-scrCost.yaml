@@ -286,7 +286,7 @@
             HoverColor: =cJcb
             HoverFill: =cJcbWash
             OnSelect: |-
-              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gMeMail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
             PaddingLeft: =8
             PaddingRight: =8
             PressedBorderColor: =cJcb
@@ -328,7 +328,7 @@
             BorderThickness: =0
             Fill: =RGBA(0,0,0,0)
             Height: =696
-            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
             OnSelect: |-
               =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                 "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
@@ -458,8 +458,8 @@
                   RadiusTopLeft: =9
                   RadiusTopRight: =9
                   Size: =9
-                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
-                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
                   Width: =26
                   X: =190
                   Y: =11
@@ -1448,7 +1448,7 @@
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
                         OnSelect: |-
-                          =ClearCollect(colCostLines, With({raw: Filter(ForAll(Split(Substitute(bpCs.Text, Char(13), ""), Char(10)) As L, With({t: TrimEnds(Substitute(Substitute(Substitute(L.Value, Char(9), " "), ",", " "), ";", " "))}, With({c3: Last(Split(t, " ")).Value}, With({t2: TrimEnds(Left(t, Len(t) - Len(c3)))}, With({c2: Last(Split(t2, " ")).Value}, With({pn0: Upper(TrimEnds(Left(t2, Len(t2) - Len(c2))))}, {PN: If(IsBlank(pn0), Upper(c2), pn0), Q: If(IsBlank(pn0), IfError(Value(c3), 0), IfError(Value(c2), 0)), C: If(IsBlank(pn0), 0, IfError(Value(c3), 0))})))))), !IsBlank(PN) && Q > 0)}, ForAll(Sequence(CountRows(raw)) As I, With({b: Index(raw, I.Value), p: LookUp(nfParts, PN = Index(raw, I.Value).PN)}, {Sr: I.Value, PartNo: Coalesce(p.PartNo, b.PN), Description: Coalesce(p.Description, ""), Qty: b.Q, UnitCost: If(b.C > 0, b.C, Coalesce(p.UnitCost, 0))})))); Reset(bpCs)
+                          =With({rows: With({raw: Filter(ForAll(ForAll(Filter(ForAll(Split(Substitute(bpCs.Text, Char(13), ""), Char(10)) As L, {Tok: Filter(Split(TrimEnds(Substitute(Substitute(Substitute(Substitute(L.Value, Char(9), " "), Char(160), " "), ",", " "), ";", " ")), " "), !IsBlank(Value))}), CountRows(Tok) > 0) As R, {T: LastN(R.Tok, CountRows(R.Tok) - If(CountRows(R.Tok) >= 3 && Len(First(R.Tok).Value) <= 3 && !IsBlank(IfError(Value(First(R.Tok).Value), Blank())), 1, 0))}) As R, With({nums: Filter(LastN(R.T, CountRows(R.T) - 1), !IsBlank(IfError(Value(Value), Blank())))}, {PN: Upper(First(R.T).Value), Q: If(CountRows(nums) = 0, 0, CountRows(nums) = 1, Value(Last(nums).Value), Value(Index(nums, CountRows(nums) - 1).Value)), C: If(CountRows(nums) >= 2, Value(Last(nums).Value), 0)})), !IsBlank(PN) && Q > 0)}, ForAll(Sequence(CountRows(raw)) As I, With({b: Index(raw, I.Value), p: LookUp(nfParts, PN = Index(raw, I.Value).PN)}, {Sr: I.Value, PartNo: Coalesce(p.PartNo, b.PN), Description: Coalesce(p.Description, ""), Qty: b.Q, UnitCost: If(b.C > 0, b.C, Coalesce(p.UnitCost, 0))})))}, If(CountRows(rows) = 0, Notify("No lines read. Paste one part per line: Part Number, Qty, Cost / Unit.", NotificationType.Warning), ClearCollect(colCostLines, rows); Notify(CountRows(rows) & " line(s) loaded.", NotificationType.Success); Reset(bpCs)))
                         PaddingLeft: =8
                         PaddingRight: =8
                         PressedBorderColor: =cOrange

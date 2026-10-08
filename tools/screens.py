@@ -5,16 +5,17 @@ Route B can paste a whole screen with ONE "Paste code".
 """
 from pa import (tc, Ctl, box, lbl, rect, btn, overlay, inp, dd, date, gallery, img, icon, pill, q, MONO, UI, ADDMEDIA, TIMER)
 from ui import (prepend, W, sec, head, card, tiles, Col, table, field, meter, kv, num, inr, inrs, fdate, noon, hist, cost)
-from appfx import nav_switch, hash_fx, role_canon
+from appfx import nav_switch, hash_fx, role_canon, role_list
 
 ADMIN = 'gRole in ["Lab Admin", "Lab Lead"]'
+MINE = '(RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail))'   # "my" key = Users.Username (stable); also the Email, for rows raised before
 MGR = 'gRole = "Manager"'
 APPROVER = 'gRole in ["Lab Admin", "Lab Lead", "Manager"]'
 ENG = 'gRole = "Engineer"'
 BUSY = "gBusy"
 
 SCREENS = []          # (screen name, nav key, root container)
-APP_VERSION = "2.0.5 · 08-Oct-2026"   # shown on the Welcome screen, so you can tell which build is imported
+APP_VERSION = "2.0.6 · 08-Oct-2026"
 
 
 def DISP(x):
@@ -39,7 +40,7 @@ REFRESH_ALL = ("Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refr
 REFRESH_STOCK = ("Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); "
                  "Refresh(tblSettings); Set(gLastSync, Now())")
 DASH = 'Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade)'
-LOGOUT = ('Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); '
+LOGOUT = ('Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gMeMail, ""); Set(gIsLead, false); '
           'Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); '
           'Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); '
           'Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)')
@@ -84,7 +85,7 @@ def shell(key, scr, nav_key, content, extra_root=None):
             extra={"Tooltip": q("Back to the login page to choose a role (or let someone else sign in)")}),
     ]
     act = '!ThisItem.Hdr && ThisItem.Key = "%s"' % nav_key
-    cnt = ('Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), '
+    cnt = ('Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, ' + MINE + ' && !(Status in nfDeadStatus))), '
            '"newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)')
     navrow = [
         lbl("navHdr" + K, "ThisItem.Label", 18, 14, 190, 24, size=10, bold=True, color="cOrange",
@@ -109,7 +110,7 @@ def shell(key, scr, nav_key, content, extra_root=None):
         rect("navBg" + K, 0, 57, 224, 711, "cGlass"),
         rect("navLn" + K, 223, 57, 1, 711, "cLine"),
         gallery("navGal" + K, 0, 64, 224, 696,
-                'Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)', 40, navrow,
+                'Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)', 40, navrow,
                 onselect="If(!ThisItem.Hdr, %s)" % nav_switch(), extra={"ShowScrollbar": "false"}),
     ]
     body = box("body" + K, 224, 57, 1142, 711, content, fill="cClear", border="cClear", thick=0, auto=True,
@@ -135,7 +136,7 @@ def scr_dash():
     pr_open = 'CountRows(Filter(nfProc, Stage in ["PR RAISED", "APPROVED"]))'
     po_open = 'CountRows(Filter(nfProc, Stage in ["PO RAISED", "GRN IN PROGRESS"]))'
     lic = 'CountRows(Filter(nfLic, Status in ["EXPIRED", "EXPIRING SOON"]))'
-    mine = "CountRows(Filter(nfReq, RaisedByEmail = gMeEmail))"
+    mine = "CountRows(Filter(nfReq, %s && !(Status in nfDeadStatus)))" % MINE
     t1 = tiles("tiA" + K, [
         ("a", "Open requests", open_n, 'If(%s > 0, "waiting for the store", "nothing waiting")' % open_n),
         ("g", "Ready to release", rdy, '"stock held, awaiting collection"'),
@@ -152,8 +153,8 @@ def scr_dash():
         ("", "Components", "CountRows(nfStock)", '"in the lab catalogue"'),
         ("w", "Low stock", low, '"check before you plan a build"'),
         ("r", "Out of stock", out, '"will need purchasing"')], visible="!(%s)" % ADMIN)
-    items = ('FirstN(Sort(Filter(nfReqView, If(%s, !(Status in ["COMPLETED", "CANCELLED"]), RaisedByEmail = gMeEmail)), '
-             'DateRaised, SortOrder.Descending), 8)' % ADMIN)
+    items = ('FirstN(Sort(Filter(nfReqView, If(%s, !(Status in ["COMPLETED", "CANCELLED"]), %s)), '
+             'DateRaised, SortOrder.Descending), 8)' % (ADMIN, MINE))
     req = card("cdReq" + K, 'If(%s, "Needs Your Action", "Your Requests")' % ADMIN, 420, table("rq" + K, items, [
         Col("Request", 150, "ThisItem.RequestNo", "mono"),
         Col("Harness", 150, "ThisItem.HarnessPartNo", "mono"),
@@ -164,7 +165,7 @@ def scr_dash():
         Col("", 30, '""'),
         Col("Status", 190, "ThisItem.Status", "pill"),
         Col("Submitted", None, fdate("ThisItem.DateRaised"), "mono")],
-        h=374, row_h=40, onrow='Set(gReqNo, ThisItem.RequestNo); Navigate(scrReqDetail, ScreenTransition.None)',
+        h=374, row_h=40, onrow='Set(gReqNo, ThisItem.RequestNo); Set(gShortSr, -1); Navigate(scrReqDetail, ScreenTransition.None)',
         empty="Nothing here yet",
         empty_sub='When an engineer submits a BOM it lands here.'),
         right=[btn("cdReqGo" + K, '"Open all"', "Parent.Width - 112", 9, 96, 28,
@@ -243,7 +244,8 @@ def scr_mgr():
         lbl("brV" + K, "ThisItem.V", 440, 0, 60, 36, size=13, bold=True, align="Right"),
         rect("brSep" + K, 0, 35, 500, 1, "cLine")]
     proc = card("cdPr" + K, "Ongoing Purchases (PR/PO) Status", 300, [
-        pill("prOpen" + K, "Parent.Width - 120", 12, 104, 'CountRows(nfProc) & " open"'),
+        pill("prOpen" + K, "Parent.Width - 120", 12, 104,
+             'CountRows(Filter(nfProc, !(Stage in ["DELIVERED (CLOSED)", "REJECTED"]))) & " open"'),
         gallery("prBars" + K, 16, 64, 510, 116, "nfProcBars", 36, bar_row),
         lbl("prNote" + K, '"Number of purchase requests at each stage. Released PO value so far: " & ' + inrs(
             "Sum(nfProc, POAmount)") + ' & "."', 16, 196, 500, 40, size=11, color="cInk3", wrap=True, valign="Top")])
@@ -349,7 +351,7 @@ def stock_filters(K, quality=False):
 def stock_items(K, quality=False):
     f = ('With({s: Upper(Trim(q%s.Text)), c: c%s.Selected.Value, st: s%s.Selected.Value}, '
          'Filter(nfStock, (IsBlank(s) || s in PN || s in Upper(Description) || s in Upper(Location)) && '
-         '(c = "All Categories" || Category = c) && (st = "Any Status" || Status = Upper(st))' % (K, K, K))
+         '(IsBlank(c) || c = "All Categories" || Category = c) && (IsBlank(st) || st = "Any Status" || Status = Upper(st))' % (K, K, K))
     if quality:
         f += ' && (dq%s.Selected.Value = "Any Data Quality" || (dq%s.Selected.Value = "OK") = IsBlank(Quality))' % (K, K)
     return f + "))"
@@ -419,14 +421,42 @@ def scr_inventory():
 
 
 # =====================================================================  BOM COMPARE
+def bom_lines(src):
+    """Non-empty lines of a pasted BOM, each split into tokens. Separators: tab, comma, semicolon, normal and
+    non-breaking spaces; Windows (CR LF) and Unix line breaks."""
+    return ('Filter(ForAll(Split(Substitute(%s, Char(13), ""), Char(10)) As L, '
+            '{Tok: Filter(Split(TrimEnds(Substitute(Substitute(Substitute(Substitute(L.Value, Char(9), " "), Char(160), " "), '
+            '",", " "), ";", " ")), " "), !IsBlank(Value))}), CountRows(Tok) > 0)' % src)
+
+
+def is_num(x):
+    return '!IsBlank(IfError(Value(%s), Blank()))' % x
+
+
+def bom_rows(src):
+    """bom_lines without a leading serial-number column: "1  7213/0024  Relay  4" -> 7213/0024 Relay 4.
+    A first value of 1-3 digits followed by at least two more values is a Sr column, never a part number."""
+    return ('ForAll(%s As R, {T: LastN(R.Tok, CountRows(R.Tok) - If(CountRows(R.Tok) >= 3 && Len(First(R.Tok).Value) <= 3 && '
+            '%s, 1, 0))})' % (bom_lines(src), is_num("First(R.Tok).Value")))
+
+
 def bom_parse(src):
-    """Same rule as the HTA parseBom: one line per part, part number first, quantity last,
-    tab / comma / semicolon / spaces between. Header rows have no numeric qty and drop out."""
-    return ('With({raw: Filter(ForAll(Split(Substitute(%s, Char(13), ""), Char(10)) As L, '
-            'With({t: TrimEnds(Substitute(Substitute(Substitute(L.Value, Char(9), " "), ",", " "), ";", " "))}, '
-            'With({qt: Last(Split(t, " ")).Value}, {PN: Upper(TrimEnds(Left(t, Len(t) - Len(qt)))), '
-            'Q: IfError(Value(qt), 0)}))), !IsBlank(PN) && Q > 0)}, '
-            'ForAll(Distinct(raw, PN) As D, {PN: D.Value, Q: Sum(Filter(raw, PN = D.Value), Q)}))' % src)
+    """BOM rule: part number = FIRST value on the line (after an optional Sr), quantity = LAST NUMBER after it.
+    So a description column in between ("7219/0373  CONNECTOR 12 WAY  20"), a unit ("20 NOS") or a header row
+    ("Part No  Qty") all work. Lines without a quantity drop out; the same part on several lines is added up."""
+    return ('With({raw: Filter(ForAll(%s As R, With({nums: Filter(LastN(R.T, CountRows(R.T) - 1), %s)}, '
+            '{PN: Upper(First(R.T).Value), Q: If(CountRows(nums) = 0, 0, Value(Last(nums).Value))})), !IsBlank(PN) && Q > 0)}, '
+            'ForAll(Distinct(raw, PN) As D, {PN: D.Value, Q: Sum(Filter(raw, PN = D.Value), Q)}))'
+            % (bom_rows(src), is_num("Value")))
+
+
+def cost_parse(src):
+    """Cost-sheet rule: part number = first value, then the last two numbers are Qty and Cost / Unit
+    (only one number: it is the Qty and the cost comes from the parts list)."""
+    return ('Filter(ForAll(%s As R, With({nums: Filter(LastN(R.T, CountRows(R.T) - 1), %s)}, '
+            '{PN: Upper(First(R.T).Value), Q: If(CountRows(nums) = 0, 0, CountRows(nums) = 1, Value(Last(nums).Value), '
+            'Value(Index(nums, CountRows(nums) - 1).Value)), C: If(CountRows(nums) >= 2, Value(Last(nums).Value), 0)})), '
+            '!IsBlank(PN) && Q > 0)' % (bom_rows(src), is_num("Value")))
 
 
 def scr_bom():
@@ -441,17 +471,24 @@ def scr_bom():
                'Short: If(IsBlank(p), B.Q, Max(0, Round(B.Q - p.Avail, 3))), '
                'Status: If(IsBlank(p), "NEW PART", B.Q <= p.Avail, "AVAILABLE", p.Avail <= 0, "OUT OF STOCK", "SHORTAGE"), '
                'Found: !IsBlank(p)}))))); '
-               'If(CountRows(colBom) = 0, Notify("Paste at least one line with a part number and a quantity.", '
-               'NotificationType.Warning), Notify("Compared " & CountRows(colBom) & " lines with live stock as of " & '
-               'Text(gLastSync, "hh:mm:ss") & ".", NotificationType.Success))' % bom_parse("txt%s.Text" % K))
+               'Set(gBomRead, CountRows(%s)); '
+               'Set(gBomInfo, gBomRead & " line(s) read · " & CountRows(colBom) & " part(s) compared · " & '
+               'CountRows(Filter(colBom, Found)) & " found in stock list · " & CountRows(Filter(colBom, !Found)) & '
+               '" new part(s)" & If(gBomRead > CountRows(colBom), " · " & (gBomRead - CountRows(colBom)) & '
+               '" line(s) skipped (no quantity, or same part twice)", "")); '
+               'If(CountRows(colBom) = 0, Notify("No line had a part number and a quantity. Paste the part number first and the '
+               'quantity last on each line.", NotificationType.Warning), Notify("Compared " & CountRows(colBom) & '
+               '" part(s) with live stock as of " & Text(gLastSync, "hh:mm:ss") & ".", NotificationType.Success))'
+               % (bom_parse("txt%s.Text" % K), bom_lines("txt%s.Text" % K)))
     paste = card("cdP" + K, "1 · Paste your BOM", 250, [
         inp("txt" + K, 16, 62, "Parent.Width - 32", 120, default="gBomText", mode="multi", font=MONO,
             hint="7219/0373  20  (part number, then quantity — select the two columns in Excel, Ctrl+C, click here, Ctrl+V)"),
         btn("go" + K, '"COMPARE AGAINST STOCK"', 16, 196, 220, 36, compare),
         btn("smp" + K, '"LOAD A SAMPLE HARNESS"', 248, 196, 210, 36, sample_set, kind="secondary"),
-        btn("clr" + K, '"CLEAR"', 470, 196, 90, 36, 'Set(gBomText, ""); Reset(txt%s); Clear(colBom)' % K, kind="secondary"),
-        lbl("hint" + K, '"Tab, comma or multiple spaces all work as the separator."', 576, 196, 500, 36, size=11,
-            color="cInk3")])
+        btn("clr" + K, '"CLEAR"', 470, 196, 90, 36, 'Set(gBomText, ""); Set(gBomInfo, ""); Reset(txt%s); Clear(colBom)' % K,
+            kind="secondary"),
+        lbl("hint" + K, 'If(IsBlank(gBomInfo), "Part number first, quantity last. A description or unit in between is fine.", '
+                        'gBomInfo)', 576, 190, 500, 48, size=10, color='If(IsBlank(gBomInfo), cInk3, cJcb)', wrap=True)])
     has = "CountRows(colBom) > 0"
     t = tiles("ti" + K, [
         ("", "Lines", "CountRows(colBom)", '"in this BOM"'),
@@ -514,6 +551,8 @@ def scr_newreq():
           lbl("scnt" + K, 'Len(scope%s.Text) & " / 1800 characters"' % K, 16, 418, 300, 18, size=10, color="cInk3")]
     info = card("cdI" + K, "1 · Project information", 450, f, visible=has)
     submit = (
+        'If(IsBlank(gMeEmail), Notify("Please log in first, so the request is saved under your name.", '
+        'NotificationType.Error); Navigate(scrLogin, ScreenTransition.Fade), '
         'With({miss: Concat(Filter(Table('
         '{n: "Machine / variant", v: mach%(K)s.Text}, {n: "Project code", v: pcode%(K)s.Text}, '
         '{n: "Harness part number", v: harn%(K)s.Text}, {n: "Cost centre", v: cc%(K)s.Text}, '
@@ -522,8 +561,9 @@ def scr_newreq():
         'If(!IsBlank(miss), Notify(miss & " is required before this can be submitted.", NotificationType.Error), '
         'IsBlank(need%(K)s.SelectedDate), Notify("Required by needs a valid date.", NotificationType.Error), '
         'IfError(Value(circ%(K)s.Text), 0) <= 0, Notify("No. of circuits must be a number above zero - the cost sheet runs on it.", NotificationType.Error), '
-        'Set(gBusy, true); '
+        'Set(gBusy, true); Refresh(tblRequests); Refresh(tblReqLines); '
         'With({no: "REQ-" & nfYearPfx & "-" & Text(nfNextReqSeq, "00000")}, '
+        'IfError('
         'Collect(tblRequests, {RequestNo: no, Kind: "", Status: "SUBMITTED", '
         'RaisedByEmail: gMeEmail, RaisedByName: gMeName, DateRaised: %(NOON)s, Machine: Trim(mach%(K)s.Text), '
         'ProjectCode: Trim(pcode%(K)s.Text), HarnessPartNo: Trim(harn%(K)s.Text), BuildStage: stage%(K)s.Selected.Value, '
@@ -531,13 +571,19 @@ def scr_newreq():
         'DCContact: Trim(dcc%(K)s.Text), NoOfCircuits: Value(circ%(K)s.Text), RequiredBy: %(NEED)s, '
         'ScopeOfWork: Trim(scope%(K)s.Text), ParentRequest: "", LastUpdated: Text(Now(), "yyyy-mm-ddThh:mm:ss"), '
         'LastUpdatedBy: gMeName, History: "[" & JSON({t: Text(Now(), "yyyy-mm-ddThh:mm:ss"), by: gMeName, '
-        'a: "Submitted with " & CountRows(colBom) & " lines"}, JSONFormat.Compact) & "]"}); '
+        'a: "Submitted with " & CountRows(colBom) & " lines"}, JSONFormat.Compact) & "]"}), '
+        'Set(gBusy, false); Notify("The request was NOT saved: " & FirstError.Message & " Nothing was changed.", '
+        'NotificationType.Error), '
         'ForAll(colBom As B, Collect(tblReqLines, {RequestNo: no, Sr: B.Sr, PartNo: B.PartNo, Description: B.Description, '
         'QtyRequested: B.Qty, QtyReserved: 0, QtyReleased: 0, UOM: B.UOM, '
         'LineStatus: If(!B.Found, "NEW PART", B.Qty <= B.Avail, "AVAILABLE", B.Avail <= 0, "SHORTAGE", "PARTIAL"), '
-        'UnitCost: B.UnitCost, StoreLocation: If(B.Location = "—", "", B.Location), Remarks: ""})); '
+        'UnitCost: B.UnitCost, StoreLocation: If(B.Location = "—", "", B.Location), Remarks: ""})), '
+        'Set(gBusy, false); Notify(no & " was saved, but its BOM lines were not: " & FirstError.Message & '
+        '" Tell the Lab Admin.", NotificationType.Error), '
+        'If(IsBlank(LookUp(tblRequests, Text(RequestNo) = no)), Set(gBusy, false); '
+        'Notify("The request did not reach the data file. Try again.", NotificationType.Error), '
         'Notify(no & " is with the store. You will see it move through the stages on My Requests.", NotificationType.Success); '
-        'Clear(colBom); Set(gBomText, ""); Set(gBusy, false); Navigate(scrMyReq, ScreenTransition.None))))'
+        'Clear(colBom); Set(gBomText, ""); Set(gBomInfo, ""); Set(gBusy, false); Navigate(scrMyReq, ScreenTransition.None)))))))'
         % {"K": K, "NOON": noon(), "NEED": noon("need%s.SelectedDate" % K)})
     sh = 'CountRows(Filter(colBom, Status <> "AVAILABLE"))'
     bom = card("cdB" + K, '"2 · BOM — " & CountRows(colBom) & " lines" & If(%s > 0, ", " & %s & " need purchasing", "")'
@@ -600,7 +646,7 @@ def req_list_screen(K, scr, nav_key, title, sub, base, show_req=True, oldest_fir
 def scr_myreq():
     req_list_screen("My", "scrMyReq", "myreq", '"MY REQUESTS"', '"Everything you have raised, and where it has got to. '
                     'Click a row for line-by-line progress and the history log."',
-                    "Filter(nfReqView, RaisedByEmail = gMeEmail)", show_req=False)
+                    "Filter(nfReqView, %s)" % MINE, show_req=False)
 
 
 def scr_queue():
@@ -614,7 +660,7 @@ def scr_reqdetail():
     K = "Rd"
     R = "LookUp(nfReq, RequestNo = gReqNo)"
     canact = ADMIN
-    mine = "(%s.RaisedByEmail = gMeEmail)" % R
+    mine = '(%s.RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && %s.RaisedByEmail = gMeMail))' % (R, R)
     st = "%s.Status" % R
     circ_in = inp("circ" + K, 186, 58 + 6 * 30, 110, 26, default="Text(%s.NoOfCircuits)" % R, number=True,
                   visible=canact, size=11)
@@ -695,7 +741,7 @@ def scr_reqdetail():
         'With({take: If(IsBlank(p), 0, Max(0, Min(p.Avail, L.QtyRequested - L.QtyReserved)))}, '
         '{Sr: L.Sr, PN: L.PN, PartNo: L.PartNo, Desc: L.Description, Req: L.QtyRequested, NewResv: L.QtyReserved + take, '
         'Gap: L.QtyRequested - (L.QtyReserved + take), '
-        'St: If(IsBlank(p), "NEW PART", L.QtyReserved + take >= L.QtyRequested, "AVAILABLE", '
+        'St: If(L.LineStatus in ["RELEASED", "SHORTFALL"], L.LineStatus, IsBlank(p), "NEW PART", L.QtyReserved + take >= L.QtyRequested, "AVAILABLE", '
         'L.QtyReserved + take > 0, "PARTIAL", "SHORTAGE")})))}, '
         'ForAll(calc As C, Patch(tblReqLines, LookUp(tblReqLines, Text(RequestNo) = gReqNo && Value(Text(Sr)) = C.Sr), '
         '{QtyReserved: C.NewResv, LineStatus: C.St})); '
@@ -749,7 +795,8 @@ def scr_reqdetail():
         btn("rel" + K, '"RELEASE"', "Parent.Width - 392", 12, 140, 36, release,
             visible='%s && %s in nfHoldStatus' % (canact, st), disabled=BUSY),
         btn("inv" + K, '"Create invoice"', "Parent.Width - 568", 12, 160, 36,
-            'Set(gInvEdit, ""); Set(gInvReq, gReqNo); Navigate(scrInvoice, ScreenTransition.None)', kind="secondary",
+            'Set(gInvEdit, ""); Set(gInvReq, gReqNo); %s; Clear(colShots); Navigate(scrInvoice, ScreenTransition.None)'
+            % INV_LOAD, kind="secondary",
             visible='%s && %s in ["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]' % (canact, st)),
         btn("cmp" + K, '"Mark completed"', "Parent.Width - 196", 12, 180, 36,
             simple("COMPLETED", " closed.", "Success"), visible='%s && %s = "RELEASED"' % (canact, st), disabled=BUSY),
@@ -766,6 +813,7 @@ def scr_reqdetail():
     sline = "LookUp(nfLines, RequestNo = gReqNo && Sr = gShortSr)"
     sgap = "Max(0, %s.QtyRequested - Max(%s.QtyReserved, %s.QtyReleased))" % (sline, sline, sline)
     sf_submit = (
+        'Refresh(tblRequests); Refresh(tblReqLines); '
         'With({no: "SHT-" & nfYearPfx & "-" & Text(nfNextReqSeq, "00000"), r: %(R)s, pn: Upper(Trim(sfPn%(K)s.Text)), '
         'qn: IfError(Value(sfQ%(K)s.Text), 0), note: Trim(sfN%(K)s.Text)}, '
         'If(IsBlank(pn), Notify("Part number is required.", NotificationType.Error), '
@@ -784,13 +832,17 @@ def scr_reqdetail():
         'QtyReserved: 0, QtyReleased: 0, UOM: Coalesce(p.UOM, sl.UOM, "NO"), '
         'LineStatus: If(IsBlank(p), "NEW PART", qn <= p.Avail, "AVAILABLE", p.Avail <= 0, "SHORTAGE", "PARTIAL"), '
         'UnitCost: Coalesce(p.UnitCost, 0), StoreLocation: Coalesce(p.Location, ""), Remarks: note}); '
+        'With({newReq: Max(Max(sl.QtyReserved, sl.QtyReleased), sl.QtyRequested - qn)}, '
+        'With({done: sl.QtyReleased >= newReq && CountRows(Filter(nfLines, RequestNo = gReqNo && Sr <> gShortSr && '
+        'QtyReleased < QtyRequested)) = 0}, '
         'Patch(tblReqLines, LookUp(tblReqLines, Text(RequestNo) = gReqNo && Value(Text(Sr)) = gShortSr), '
-        '{Remarks: "Shortfall of " & qn & " raised separately as " & no}); '
-        'Patch(tblRequests, LookUp(tblRequests, Text(RequestNo) = gReqNo), {LastUpdated: Text(Now(), "yyyy-mm-ddThh:mm:ss"), '
-        'LastUpdatedBy: gMeName, History: %(H)s}); '
+        '{QtyRequested: newReq, LineStatus: If(newReq <= 0, "SHORTFALL", sl.QtyReleased >= newReq, "RELEASED", "AVAILABLE"), '
+        'Remarks: "Asked " & sl.QtyRequested & "; shortfall of " & qn & " raised separately as " & no}); '
+        'Patch(tblRequests, LookUp(tblRequests, Text(RequestNo) = gReqNo), {Status: If(done, "RELEASED", r.Status), '
+        'LastUpdated: Text(Now(), "yyyy-mm-ddThh:mm:ss"), LastUpdatedBy: gMeName, History: %(H)s}))); '
         'Notify(no & " is with the store. " & gReqNo & " can be released without it.", NotificationType.Success); '
         'Set(gShortSr, -1))))'
-        % {"R": R, "K": K, "SL": sline, "NOON": noon(), "NEED": "r.RequiredBy",
+        % {"R": R, "K": K, "SL": sline, "NOON": noon(), "NEED": noon("r.RequiredBy"),
            "H": hist("gReqNo", '"Shortfall of " & pn & " x " & qn & " raised separately as " & no')})
     sf = card("cdSf" + K, "Request the shortfall separately", 230, [
         lbl("sfT" + K, '"This raises a separate request for the part that could not be given, so the rest of " & gReqNo & '
@@ -820,7 +872,7 @@ def scr_reqdetail():
     content = [head(K, 'gReqNo & " · " & %s.HarnessPartNo' % R, '"Request detail — line-by-line progress, actions and history"',
                     right=[btn("bk" + K, '"‹ Back"', "Parent.Width - 112", 8, 100, 30,
                                'If(%s, Navigate(scrQueue, ScreenTransition.None), Navigate(scrMyReq, ScreenTransition.None))'
-                               % ADMIN, kind="secondary", size=10)]),
+                               % APPROVER, kind="secondary", size=10)]),
                info, sf, lines, hc]
     shell(K, "scrReqDetail", "queue", content)
 
@@ -885,12 +937,14 @@ def scr_newpart():
            'If(!IsBlank(miss), Notify("Please fill in " & miss & ". These are mandatory.", NotificationType.Error), '
            'Len(r.HSNCode) <> 8 || CountRows(Filter(Split(r.HSNCode, ""), !(Value in "0123456789"))) > 0, Notify("8-Digit HSN must be exactly 8 digits, for example 85366990.", '
            'NotificationType.Error), '
-           'Collect(colNP, {Id: If(gNpForm.Id > 0, gNpForm.Id, Coalesce(Max(colNP, Id), 0) + 1), '
-           'RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, '
+           'With({old: LookUp(colNP, gNpForm.Id > 0 && Id = gNpForm.Id), '
+           'nr: {RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, '
            'PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, '
-           'Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode}); '
+           'Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode}}, '
+           'If(IsBlank(old), Collect(colNP, Patch({Id: Coalesce(Max(colNP, Id), 0) + 1}, nr)); '
            'Notify(r.PartName & " is on the list (" & CountRows(colNP) & " so far). Add the next part or submit the list.", '
-           'NotificationType.Success); '
+           'NotificationType.Success), '
+           'Patch(colNP, old, nr); Notify("Row " & old.Id & " updated.", NotificationType.Success))); '
            'Set(gNpForm, %(BLANK)s); %(RESETS)s)))'
            % {"REC": rec, "MISS": miss, "BLANK": NP_BLANK, "RESETS": resets})
     kids += [btn("fmAdd" + K, 'If(gNpForm.Id > 0, "Update Part in List", "Add to List")', "Parent.Width - 196", 330, 180, 40,
@@ -909,22 +963,27 @@ def scr_newpart():
         'If(CountRows(live) = 0, Notify("Add at least one part to the list before submitting.", NotificationType.Error), '
         'CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", '
         'NotificationType.Error), '
-        'Set(gBusy, true); '
+        'Set(gBusy, true); Refresh(tblNewPart); '
         'With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, '
-        'ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, '
+        'IfError(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, '
         '{SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, '
         'PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, '
-        'Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: %s}))); '
+        'Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: %s}))), '
+        'Set(gBusy, false); Notify("Not submitted: " & FirstError.Message & ". Your list is still here; try again.", '
+        'NotificationType.Error), '
+        'Set(gMyNpr, gMyNpr & "|" & no & "|"); '
         'Notify(no & " submitted with " & CountRows(live) & " part(s). The store will raise the purchase request.", '
         'NotificationType.Success); '
-        'Clear(colNP); Set(gNpForm, %s); Set(gBusy, false)))))'
+        'Clear(colNP); Set(gNpForm, %s); Set(gBusy, false))))))'
         % (req_checks, noon(), NP_BLANK))
-    edit = ('Set(gNpForm, ThisItem); Remove(colNP, ThisItem); %s; '
-            'Notify("Row " & ThisItem.Id & " is back in the form above for editing.", NotificationType.Information)' % resets)
+    edit = ('Set(gNpForm, ThisItem); %s; '
+            'Notify("Row " & ThisItem.Id & " is in the form above. Change it, then press Update Part in List.", '
+            'NotificationType.Information)' % resets)
 
     def acts(n, x, w, rh):
         return [icon(n, x, 7, 30, 30, "Edit", color="cJcb", onselect=edit, tooltip="Edit this part", pad=6),
-                icon(n + "x", x + 34, 7, 30, 30, "Cancel", color="cStop", onselect="Remove(colNP, ThisItem)",
+                icon(n + "x", x + 34, 7, 30, 30, "Cancel", color="cStop",
+                     onselect="If(gNpForm.Id = ThisItem.Id, Set(gNpForm, %s); %s); Remove(colNP, ThisItem)" % (NP_BLANK, resets),
                      tooltip="Remove this part from the list", pad=6)]
     listc = card("cdL" + K, '"2 · Parts in This Request (" & CountRows(colNP) & ")"', 380, table("nl" + K, "Sort(colNP, Id)", [
         Col("#", 36, "ThisItem.Id", "muted"),
@@ -942,7 +1001,8 @@ def scr_newpart():
         btn("go" + K, '"Submit to Store"', "Parent.Width - 196", 322, 180, 40, submit,
             disabled="CountRows(colNP) = 0 || gBusy")], title_is_formula=True)
     mine = card("cdM" + K, "3 · Your New Part Requests", 300, table(
-        "nm" + K, 'Sort(Filter(nfNewPart, Lower(RequesterName) = Lower(gMeName)), DateRaised, SortOrder.Descending)', [
+        "nm" + K, 'Sort(Filter(nfNewPart, Lower(Trim(RequesterName)) = Lower(Trim(gMeName)) || ("|" & RequestNo & "|") in gMyNpr), '
+        'DateRaised, SortOrder.Descending)', [
             Col("Request", 150, "ThisItem.RequestNo", "mono", sub='"Row " & ThisItem.SrNo'),
             Col("Part / Machine Name", 300, "ThisItem.PartName"),
             Col("Category", 170, "ThisItem.Category"),
@@ -1128,7 +1188,7 @@ def scr_demand():
                                                'quantity beside it, so reorder levels can be set on evidence."'),
                sec("flt" + K, 36, [lbl("pL" + K, '"Period"', 0, 0, 60, 36, size=10, color="cInk2", semibold=True),
                                    dd("p" + K, 60, 0, 200, 36, '["Last 90 Days", "Last 180 Days", "Last 12 Months", "Everything"]',
-                                      default='"Last 12 months"'),
+                                      default='"Last 12 Months"'),
                                    inp("q" + K, 274, 0, 380, 36, hint="Search part or description")]),
                sec("tb" + K, 560, table("dm" + K, items, cols, y=0, h=560, row_h=40, empty="No movement in this period",
                                         empty_sub="Nothing has been issued against that filter. Showing the top 200 at most."),
@@ -1154,6 +1214,9 @@ INVD = [("InvoiceDate", "Invoice date", "Today()"), ("JobReceived", "Job receive
         ("StartDate", "Start date", "r.DateRaised"), ("CompletionDate", "Completion date", "Today()")]
 
 
+INV_LOAD = ('ClearCollect(colInvLines, ForAll(Filter(nfLines, RequestNo = gInvReq) As L, {Sr: L.Sr, PartNo: L.PartNo, Description: L.Description, Qty: If(L.QtyReleased > 0, L.QtyReleased, L.QtyRequested), UnitCost: If(L.UnitCost > 0, L.UnitCost, Coalesce(LookUp(nfParts, PN = L.PN).UnitCost, 0))}))')
+
+
 def scr_invoice():
     K = "Iv"
     R = "LookUp(nfReq, RequestNo = gInvReq)"
@@ -1172,12 +1235,10 @@ def scr_invoice():
     kids += [lbl("fr" + K + "Lb", '"Fill from a Request"', 588, 60, 300, 16, size=10, color="cInk2", semibold=True),
              dd("fr" + K, 588, 78, 300, 34, prepend('"— Choose —"', 'ForAll(Sort(Filter(nfReq, Status in ["RELEASED", "PARTIALLY RELEASED", "COMPLETED"]), '
                                          'DateRaised, SortOrder.Descending), RequestNo)'),
-                onchange='If(Self.Selected.Value <> "— Choose —", Set(gInvEdit, ""); Set(gInvReq, Self.Selected.Value))'),
+                onchange='If(Self.Selected.Value <> "— Choose —", Set(gInvEdit, ""); Set(gInvReq, Self.Selected.Value); %s)'
+                         % INV_LOAD),
              btn("ld" + K, '"Load BOM from request"', 900, 78, 174, 34,
-                 'If(IsBlank(gInvReq), Notify("Pick a request first.", NotificationType.Warning), '
-                 'ClearCollect(colInvLines, ForAll(Filter(nfLines, RequestNo = gInvReq) As L, {Sr: L.Sr, PartNo: L.PartNo, '
-                 'Description: L.Description, Qty: If(L.QtyReleased > 0, L.QtyReleased, L.QtyRequested), '
-                 'UnitCost: If(L.UnitCost > 0, L.UnitCost, Coalesce(LookUp(nfParts, PN = L.PN).UnitCost, 0))})))',
+                 'If(IsBlank(gInvReq), Notify("Pick a request first.", NotificationType.Warning), %s)' % INV_LOAD,
                  kind="secondary", size=10)]
     y, col = 124, 0
     for fld_, label, kind, fr in INVF:
@@ -1225,7 +1286,8 @@ def scr_invoice():
                right=[btn("ma" + K, '"+ Add row"', "Parent.Width - 112", 9, 96, 28,
                           'Collect(colInvLines, {Sr: Coalesce(Max(colInvLines, Sr), 0) + 1, PartNo: "", Description: "", '
                           'Qty: 1, UnitCost: 0})', kind="secondary", size=10)], title_is_formula=True)
-    C = cost("IfError(Value(NoOfCircuits%s.Text), 0)" % K, "Sum(colInvLines, Qty * UnitCost)")
+    C = cost("IfError(Value(NoOfCircuits%s.Text), 0)" % K,
+             "If(CountRows(colInvLines) = 0 && !IsBlank(gInvEdit), %s.MaterialCost, Sum(colInvLines, Qty * UnitCost))" % E)
     calc_rows = [("Harness assembly hours", 'Text(%s.hours, "0.00") & " h  (" & %s.ckt & " circuits ÷ 7.5)"' % (C, C)),
                  ("Machine utilisation", num("%s.mach" % C, 2)), ("Manpower", num("%s.man" % C, 2)),
                  ("Electricity", num("%s.elec" % C, 2)), ("Harness assembly cost", num("%s.asm" % C, 2)),
@@ -1254,7 +1316,10 @@ def scr_invoice():
             icon("thX" + K, 156, 4, 28, 28, "Cancel", color="cStop", onselect="Remove(colShots, ThisItem)")],
             visible="CountRows(colShots) > 1", extra={"WrapCount": 4})])
     save = (
+        'Refresh(tblInvoice); '
         'With({no: Trim(no%(K)s.Text), c: %(C)s}, If(IsBlank(no), Notify("Invoice number is required.", NotificationType.Error), '
+        'no <> gInvEdit && !IsBlank(LookUp(tblInvoice, Text(InvoiceNo) = no)), Notify("Invoice " & no & " already exists. '
+        'Use " & nfNextInvNo & ", or open " & no & " from Invoices > Edit.", NotificationType.Error), '
         'IsBlank(Trim(ToName%(K)s.Text)), Notify("To is required.", NotificationType.Error), '
         'Set(gBusy, true); '
         'With({up: ForAll(colShots As S, IfError(OneDriveForBusiness.CreateFile("/EDS Lab Portal Photos", S.Name, S.Img).Path, '
@@ -1376,15 +1441,10 @@ def scr_cost():
             lbl("cT" + K, num("ThisItem.Qty * ThisItem.UnitCost", 2), 880, 0, 140, 38, size=12, align="Right", bold=True),
             icon("cX" + K, 1030, 4, 30, 30, "Cancel", color="cStop", onselect="Remove(colCostLines, ThisItem)"),
             rect("cSp" + K, 0, 37, "Parent.TemplateWidth", 1, "cLine")]
-    paste_rows = ('With({raw: Filter(ForAll(Split(Substitute(bp%(K)s.Text, Char(13), ""), Char(10)) As L, '
-                  'With({t: TrimEnds(Substitute(Substitute(Substitute(L.Value, Char(9), " "), ",", " "), ";", " "))}, '
-                  'With({c3: Last(Split(t, " ")).Value}, With({t2: TrimEnds(Left(t, Len(t) - Len(c3)))}, '
-                  'With({c2: Last(Split(t2, " ")).Value}, With({pn0: Upper(TrimEnds(Left(t2, Len(t2) - Len(c2))))}, '
-                  '{PN: If(IsBlank(pn0), Upper(c2), pn0), Q: If(IsBlank(pn0), IfError(Value(c3), 0), IfError(Value(c2), 0)), '
-                  'C: If(IsBlank(pn0), 0, IfError(Value(c3), 0))})))))), !IsBlank(PN) && Q > 0)}, '
+    paste_rows = ('With({raw: %s}, '
                   'ForAll(Sequence(CountRows(raw)) As I, With({b: Index(raw, I.Value), p: LookUp(nfParts, PN = Index(raw, I.Value).PN)}, '
                   '{Sr: I.Value, PartNo: Coalesce(p.PartNo, b.PN), Description: Coalesce(p.Description, ""), Qty: b.Q, '
-                  'UnitCost: If(b.C > 0, b.C, Coalesce(p.UnitCost, 0))})))' % {"K": K})
+                  'UnitCost: If(b.C > 0, b.C, Coalesce(p.UnitCost, 0))})))' % cost_parse("bp%s.Text" % K))
     mat = card("cdM" + K, '"Material Cost (BOM) — " & ' + inr("Sum(colCostLines, Qty * UnitCost)"), 520, [
         *[lbl("mh%d%s" % (i, K), q(tc(t)), 16 + x, 52, w, 18, size=10, color="cJcb", bold=True, align=a)
           for i, (t, x, w, a) in enumerate([("Sr", 0, 36, "Left"), ("PART NUMBER (A)", 40, 260, "Left"),
@@ -1395,7 +1455,9 @@ def scr_cost():
             size=9, color="cInk3", font=MONO),
         inp("bp" + K, 16, 360, "Parent.Width - 230", 140, mode="multi", font=MONO, hint="405/F8525	2	1250"),
         btn("bpGo" + K, '"Load these lines"', "Parent.Width - 200", 360, 184, 36,
-            "ClearCollect(colCostLines, %s); Reset(bp%s)" % (paste_rows, K))],
+            'With({rows: %s}, If(CountRows(rows) = 0, Notify("No lines read. Paste one part per line: Part Number, '
+            'Qty, Cost / Unit.", NotificationType.Warning), ClearCollect(colCostLines, rows); Notify(CountRows(rows) & '
+            '" line(s) loaded.", NotificationType.Success); Reset(bp%s)))' % (paste_rows, K))],
         right=[btn("ma" + K, '"+ Add row"', "Parent.Width - 112", 9, 96, 28,
                    'Collect(colCostLines, {Sr: Coalesce(Max(colCostLines, Sr), 0) + 1, PartNo: "", Description: "", Qty: 1, '
                    'UnitCost: 0})', kind="secondary", size=10)], title_is_formula=True)
@@ -1705,10 +1767,14 @@ PURCH_STAGES = '["REQUIRED", "PR RAISED", "PO RAISED", "IN TRANSIT", "RECEIVED"]
 def scr_purch():
     K = "Pu"
     E = "LookUp(nfPurch, PartNo = gEditPurch && RequestNo = gEditPurchReq)"
-    addrow = ('If(IsBlank(LookUp(tblPurch, Upper(Trim(Text(PartNo))) = %(S)s.PN && Text(RequestNo) = %(S)s.Requests)), '
-              'Collect(tblPurch, {PartNo: %(S)s.PartNo, Description: %(S)s.Description, QtyRequired: %(S)s.Qty, QtyConfirmed: 0, '
-              'RequestNo: %(S)s.Requests, RaisedBy: gMeName, PRNumber: "", SupplierNo: "", SupplierName: "", Stage: "REQUIRED", '
-              'DateRaised: %(N)s, Notes: %(S)s.Who & " waiting"}); true, false)')
+    # one purchase row per (part, request): the shortfall book groups several requests on one line
+    addrow = ('CountRows(Filter(ForAll(Distinct(Filter(nfGapLines, PN = %(S)s.PN), RequestNo) As RQ, '
+              'With({g: Sum(Filter(nfGapLines, PN = %(S)s.PN && RequestNo = RQ.Value), QtyRequested - Max(QtyReserved, QtyReleased)), '
+              'who: LookUp(nfReq, RequestNo = RQ.Value).RaisedByName}, '
+              'If(IsBlank(LookUp(tblPurch, Upper(Trim(Text(PartNo))) = %(S)s.PN && Text(RequestNo) = RQ.Value)), '
+              'Collect(tblPurch, {PartNo: %(S)s.PartNo, Description: %(S)s.Description, QtyRequired: g, QtyConfirmed: 0, '
+              'RequestNo: RQ.Value, RaisedBy: gMeName, PRNumber: "", SupplierNo: "", SupplierName: "", Stage: "REQUIRED", '
+              'DateRaised: %(N)s, Notes: who & " waiting"}); true, false))), Value))')
     book = card("cdB" + K, "Shortfall across every open request", 330, table("bk" + K, "nfShortBook", [
         Col("Part", 170, "ThisItem.PartNo", "mono", sub='If(ThisItem.NewPart, "NEW PART", "")'),
         Col("Description", 240, "ThisItem.Description"),
@@ -1719,11 +1785,13 @@ def scr_purch():
         Col("Already raised", 110, 'Coalesce(Concat(Filter(nfPurch, PN = ThisItem.PN && !IsBlank(PRNumber)), PRNumber, ", "), "—")',
             "mono"),
         Col("", None, None, "custom", make=lambda n, x, w, rh: [btn(n, '"Add"', x, 8, 56, 28,
-            'If(%s, Notify("Added to the purchase list.", NotificationType.Success), Notify("That part is already on the '
-            'purchase list.", NotificationType.Warning))' % (addrow % {"S": "ThisItem", "N": noon()}), kind="secondary", size=10,
+            'With({n: %s}, If(n > 0, Notify(n & " purchase line(s) added, one per request.", NotificationType.Success), '
+            'Notify("That part is already on the purchase list for every request.", NotificationType.Warning)))'
+            % (addrow % {"S": "ThisItem", "N": noon()}), kind="secondary", size=10,
             visible=ADMIN)])], h=284, row_h=44, empty="Nothing is short", empty_sub="Every open request can be met from stock."),
         right=[btn("pull" + K, '"Add All Shortfalls to the Purchase List"', "Parent.Width - 300", 9, 284, 28,
-                   'ForAll(nfShortBook As SB, %s); Notify("Shortfall lines added (existing ones skipped).", NotificationType.Success)'
+                   'With({n: Sum(ForAll(nfShortBook As SB, %s), Value)}, Notify(n & " purchase line(s) added, one per part '
+                   'and request (lines already on the list skipped).", NotificationType.Success))'
                    % (addrow % {"S": "SB", "N": noon()}), kind="secondary", size=10, visible=ADMIN)])
 
     def acts(n, x, w, rh):
@@ -1869,18 +1937,25 @@ def scr_team():
     ROLES = '["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Pending", "Disabled"]'
 
     def role(n, x, w, rh):
-        return [dd(n, x, 6, w - 8, 30, ROLES,
-                   default='With({r: Trim(Text(ThisItem.Role))}, Coalesce(LookUp(%s As RO, Lower(RO.Value) = Lower(r)).Value, %s))'
-                           % (ROLES, role_canon("r")), extra={"Size": 11})]
+        # free text: one person can hold several roles ("Engineer, Manager"); a dropdown would drop all but one
+        return [inp(n, x, 6, w - 8, 30, default="Text(ThisItem.Role)", size=11,
+                    hint="Engineer, Manager", extra={"Tooltip": q("Several roles: separate with commas. "
+                                                                  "Engineer, Lab Admin, Lab Lead, Manager, Pending, Disabled")})]
 
     def save(n, x, w, rh):
-        temp = ('With({code: Text(RandBetween(100000, 999999)), u: ThisItem}, Patch(tblUsers, ThisItem, {Password: %s, '
+        temp = ('If(!gIsLead, Notify("Only the Lab Lead can give a temporary password.", NotificationType.Error), '
+                'With({code: Text(RandBetween(100000, 999999)), u: ThisItem}, Patch(tblUsers, ThisItem, {Password: %s, '
                 'PasswordSetOn: ""}); Set(gTempCode, "Temporary password for " & ThisItem.Username & ": " & code); '
                 'Notify(gTempCode & ". Tell them in person. It works once, then they choose their own.", '
-                'NotificationType.Information))' % hash_fx("code", "Lower(Trim(Text(u.Username)))", "t1$"))
+                'NotificationType.Information)))' % hash_fx("code", "Lower(Trim(Text(u.Username)))", "t1$"))
         return [icon(n, x, 6, 30, 30, "Save", color="cJcb", tooltip="Save this person",
-                     onselect='Patch(tblUsers, ThisItem, {FullName: tmC1.Text, Role: tmC2.Selected.Value, BusinessUnit: tmC3.Text, '
-                              'Email: Lower(Trim(tmC4.Text))}); Notify(ThisItem.Username & " saved.", NotificationType.Success)'),
+                     onselect='If(!gIsLead, Notify("Only the Lab Lead can change team access.", NotificationType.Error), '
+                              'IsBlank(Trim(tmC2.Text)), Notify("Role cannot be empty. Use Pending or Disabled to block a '
+                              'login.", NotificationType.Error), '
+                              'Patch(tblUsers, ThisItem, {FullName: Trim(tmC1.Text), Role: Trim(tmC2.Text), '
+                              'BusinessUnit: Trim(tmC3.Text), Email: Lower(Trim(tmC4.Text))}); '
+                              'Notify(ThisItem.Username & " saved as " & Concat(%s, Value, ", ") & ".", '
+                              'NotificationType.Success))' % role_list("Trim(tmC2.Text)")),
                 btn(n + "t", '"Temp Password"', x + 36, 7, 116, 28, temp, kind="secondary", size=9)]
     items = ('With({s: Lower(Trim(q%s.Text))}, Sort(Filter(tblUsers, !IsBlank(Username) && (IsBlank(s) || s in Lower(Text(Username) & " " & '
              'Text(FullName) & " " & Text(Role) & " " & Text(BusinessUnit) & " " & Text(Email)))), Text(Username)))' % K)
@@ -1901,7 +1976,8 @@ def scr_team():
                      req=f_ in ("Username", "FullName"))
     add += field("taRole" + K, "Role", 16, 120, 256, lambda n, x, y, w, h: dd(n, x, y, w, h, ROLES), req=True)
     add += [btn("taGo" + K, '"Add person"', "Parent.Width - 170", 138, 154, 36,
-                'If(IsBlank(Trim(taUsername%(K)s.Text)) || IsBlank(Trim(taFullName%(K)s.Text)), Notify("Username and full name '
+                'If(!gIsLead, Notify("Only the Lab Lead can add people.", NotificationType.Error), '
+                'IsBlank(Trim(taUsername%(K)s.Text)) || IsBlank(Trim(taFullName%(K)s.Text)), Notify("Username and full name '
                 'are required.", NotificationType.Error), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = '
                 'Lower(Trim(taUsername%(K)s.Text)))), Notify("That username already exists.", NotificationType.Error), '
                 'Collect(tblUsers, {Username: Lower(Trim(taUsername%(K)s.Text)), FullName: Trim(taFullName%(K)s.Text), '
@@ -1966,7 +2042,7 @@ def pw_rules(p):
 
 def scr_login():
     K = "Li"
-    from appfx import hash_fx, login_ok, role_canon
+    from appfx import hash_fx, login_ok, role_canon, role_list
     msg = lambda m: 'Set(gLoginMsg, %s)' % m
     LOG, SET, REG = 'gLoginMode = "login"', 'gLoginMode = "setpw"', 'gLoginMode = "register"'
     key = 'Lower(Trim(Text(u.Username)))'
@@ -1976,7 +2052,7 @@ def scr_login():
         'With({u: LookUp(tblUsers, Lower(Trim(Text(Username))) = un || (!IsBlank(Email) && Lower(Trim(Text(Email))) = un))}, '
         'With({st: Trim(Text(u.Password)), rk: %(RK)s}, '
         'If(IsBlank(un), %(M1)s, IsBlank(pw) && StartsWith(st, "p1$"), %(M2)s, '
-        'IsBlank(u), %(M3)s, rk = "Pending", %(M4)s, rk = "Disabled", %(M5)s, '
+        'IsBlank(u), %(M3)s, "Pending" in rk, %(M4)s, "Disabled" in rk, %(M5)s, '
         'gLoginTries >= 5, %(M6)s, '
         'StartsWith(st, "p1$"), If(%(HP)s = st, %(OK)s, Set(gLoginTries, gLoginTries + 1); %(M7)s), '
         'StartsWith(st, "t1$"), If(%(HT)s = st, Set(gPend, u); Set(gLoginMode, "setpw"); %(M8)s, '
@@ -1984,7 +2060,7 @@ def scr_login():
         'Lower(First(Split(User().Email, "@")).Value) = %(KEY)s || (!IsBlank(u.Email) && Lower(User().Email) = '
         'Lower(Trim(Text(u.Email)))), Set(gPend, u); Set(gLoginMode, "setpw"); %(M9)s, '
         '%(M10)s))))'
-        % {"K": K, "RK": role_canon('Trim(First(Split(Text(u.Role), ",")).Value)'), "KEY": key,
+        % {"K": K, "RK": role_list("Text(u.Role)"), "KEY": key,
            "HP": hash_fx("pw", key, "p1$"), "HT": hash_fx("pw", key, "t1$"), "OK": login_ok("u"),
            "M1": msg('"Type your username."'), "M2": msg('"Type your password."'),
            "M3": msg('"No account with that username. Use Register to ask for access."'),
@@ -2027,7 +2103,15 @@ def scr_login():
                                                "Color": "cOnJcb", "OnSelect": "SetFocus(%s)" % ctl.name, "Visible": vis,
                                                "PaddingTop": 0, "PaddingBottom": 0, "PaddingLeft": 0, "PaddingRight": 0}),
                 ctl]
-    pwmode = {"Mode": "TextMode.Password"}
+    pwmode = {"Mode": "If(gShowPw, TextMode.SingleLine, TextMode.Password)"}
+
+    def eye(n, y, vis):
+        return Ctl(n, "Classic/Icon", {"X": 600, "Y": y + 12, "Width": 26, "Height": 24,
+                                       "Icon": "If(gShowPw, Icon.Hide, Icon.View)", "Color": "cJcb", "HoverColor": "cOrange",
+                                       "OnSelect": "Set(gShowPw, !gShowPw)", "Visible": vis,
+                                       "Tooltip": 'If(gShowPw, "Hide password", "Show password")',
+                                       "AccessibleLabel": 'If(gShowPw, "Hide password", "Show password")',
+                                       "PaddingTop": 0, "PaddingBottom": 0, "PaddingLeft": 0, "PaddingRight": 0})
     kids = [
         lbl("t" + K, 'Switch(gLoginMode, "setpw", "Set Your Password", "register", "Request Access", "User Login")',
             0, 26, 700, 48, size=28, bold=True, color="cOrange", align="Center"),
@@ -2038,12 +2122,14 @@ def scr_login():
     kids += pillrow("u" + K, 124, "Username", "Person",
                     inp("usr" + K, 232, 124, 408, 48, hint="Type your username", size=13, visible=LOG), LOG)
     kids += pillrow("p" + K, 188, "Password", "Lock",
-                    inp("pwd" + K, 232, 188, 408, 48, hint="Type your password", size=13, visible=LOG, extra=pwmode), LOG)
+                    inp("pwd" + K, 232, 188, 360, 48, hint="Type your password", size=13, visible=LOG, extra=pwmode), LOG)
+    kids += [eye("eyP" + K, 188, LOG)]
     kids += pillrow("n1" + K, 124, "New Password", "Lock",
-                    inp("np1" + K, 232, 124, 408, 48, hint="At least 6 characters, a letter and a number", size=13,
+                    inp("np1" + K, 232, 124, 360, 48, hint="At least 6 characters, a letter and a number", size=13,
                         visible=SET, extra=pwmode), SET)
+    kids += [eye("eyN" + K, 124, SET)]
     kids += pillrow("n2" + K, 188, "Confirm", "Lock",
-                    inp("np2" + K, 232, 188, 408, 48, hint="Type it again", size=13, visible=SET, extra=pwmode), SET)
+                    inp("np2" + K, 232, 188, 360, 48, hint="Type it again", size=13, visible=SET, extra=pwmode), SET)
     reg_f = [("rgN", "Full Name", True, 0, 0, "Gaurav Shelke", None), ("rgU", "Username", True, 1, 0, "gaurav.shelke", None),
              ("rgB", "Business Unit", False, 0, 1, "EDS", None), ("rgM", "Email (Optional)", False, 1, 1, "name@jcb.com", None),
              ("rgP1", "Password", True, 0, 2, "At least 6, a letter and a number", pwmode),
@@ -2084,6 +2170,10 @@ CHECKS = [
     ("Stock movements", "Text(CountRows(tblMoves)) & \" rows\""),
     ("Requests / request lines", "Text(CountRows(tblRequests)) & \" / \" & Text(CountRows(tblReqLines)) & \" rows\""),
     ("Settings", "Text(CountRows(tblSettings)) & \" rows\""),
+    ("Purchase / PR-PO / invoices", "Text(CountRows(tblPurch)) & \" / \" & Text(CountRows(tblProc)) & \" / \" & "
+                                    "Text(CountRows(tblInvoice)) & \" rows\""),
+    ("New parts / licenses / calibration", "Text(CountRows(tblNewPart)) & \" / \" & Text(CountRows(tblLicenses)) & "
+                                           "\" / \" & Text(CountRows(tblCalib)) & \" rows\""),
     ("Formula engine (Power Fx 1.0)", "\"OK \" & First(Distinct(Table({x: 1}), x)).Value"),
     ("Parts read by the app", "Text(CountRows(nfParts)) & \" active parts\""),
     ("Movements read by the app", "Text(CountRows(nfMoves)) & \" movements\""),
@@ -2092,6 +2182,7 @@ CHECKS = [
     ("Example: biggest stock", "With({p: First(Sort(nfStock, OnHand, SortOrder.Descending))}, p.PartNo & \" · on hand \" & Text(p.OnHand))"),
     ("Out of stock / low stock", "Text(CountRows(Filter(nfStock, Status = \"OUT OF STOCK\"))) & \" / \" & Text(CountRows(Filter(nfStock, Status = \"LOW STOCK\")))"),
     ("Requests view", "Text(CountRows(nfReqView)) & \" requests\""),
+    ("BOM reader test", None),
     ("Row count check", "nfHealthText"),
     ("Last refresh", "Text(gLastSync, \"dd-mmm-yyyy hh:mm:ss\")"),
 ]
@@ -2102,25 +2193,30 @@ def scr_check():
     cannot hide the others. Reachable before login (Login screen) and from About."""
     K = "Ck"
     rows = []
+    bom_test = ('With({b: %s}, If(CountRows(b) = 2 && Sum(b, Q) = 6, "OK · 3 sample lines → 2 parts, qty 6", '
+                '"Error: sample BOM read as " & CountRows(b) & " part(s), qty " & Sum(b, Q)))'
+                % bom_parse('"1" & Char(9) & "7213/0024" & Char(9) & "RELAY 12 WAY" & Char(9) & "4" & Char(13) & Char(10) & '
+                            '"405/F8525, 2 NOS" & Char(10) & "Part No  Qty"'))
     for i, (name, f) in enumerate(CHECKS):
-        y = 118 + i * 33
+        f = f or bom_test
+        y = 112 + i * 28
         v = "v%d%s" % (i, K)
-        rows += [lbl("n%d%s" % (i, K), q(name), 40, y, 300, 30, size=11, bold=True, color="cInk"),
-                 lbl(v, 'IfError(%s, "Error: " & FirstError.Message)' % f, 350, y, 520, 30, size=11, color="cInk2"),
+        rows += [lbl("n%d%s" % (i, K), q(name), 40, y, 300, 26, size=11, bold=True, color="cInk"),
+                 lbl(v, 'IfError(%s, "Error: " & FirstError.Message)' % f, 350, y, 520, 26, size=11, color="cInk2"),
                  lbl("s%d%s" % (i, K), 'If(IsBlank(%s.Text), "NOT WORKING", StartsWith(%s.Text, "Error"), "ERROR", "OK")'
-                     % (v, v), 900, y + 4, 130, 22, size=9, bold=True, align="Center",
+                     % (v, v), 900, y + 3, 130, 20, size=9, bold=True, align="Center",
                      color='If(IsBlank(%s.Text) || StartsWith(%s.Text, "Error"), cStop, cOk)' % (v, v),
                      extra={"BorderColor": 'If(IsBlank(%s.Text) || StartsWith(%s.Text, "Error"), cStop, cOk)' % (v, v),
                             "BorderThickness": 1}),
-                 rect("l%d%s" % (i, K), 40, y + 31, 990, 1, "cLine")]
+                 rect("l%d%s" % (i, K), 40, y + 27, 990, 1, "cLine")]
     panel = box("pn" + K, 158, 50, 1070, 690, [
         lbl("t" + K, '"System Check"', 40, 22, 600, 40, size=24, bold=True, color="cOrange"),
         lbl("s" + K, '"Every link from the data file to the screens. All rows must show OK. If one does not, take a '
                      'screenshot of this page and send it."', 40, 62, 980, 40, size=11, color="cInk2", wrap=True,
             valign="Top")] + rows + [
-        btn("rf" + K, '"Refresh All Data"', 40, 628, 200, 40, REFRESH_ALL + '; Notify("Refreshed at " & '
+        btn("rf" + K, '"Refresh All Data"', 40, 634, 200, 40, REFRESH_ALL + '; Notify("Refreshed at " & '
             'Text(Now(), "hh:mm:ss") & ".", NotificationType.Information)', radius=20),
-        btn("bk" + K, '"‹  Back"', 256, 628, 140, 40, "Back()", kind="secondary", radius=20)],
+        btn("bk" + K, '"‹  Back"', 256, 634, 140, 40, "Back()", kind="secondary", radius=20)],
         fill="cGlass", border="cLine2", radius=24)
     kids = backdrop(K, "RGBA(8, 6, 10, 0.55)") + [panel]
     root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)

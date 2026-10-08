@@ -254,6 +254,100 @@ public static class Sim {
     Ok(N("CountRows(" + P("dmDmGal", "Items") + ")") > 0, "High Demand ranks issued parts");
     Ok(S(P("imgPieTest".Length > 0 ? "revPieMgr" : "", "Image")).StartsWith("data:image/svg+xml;utf8,"), "revenue pie renders an SVG data URI");
 
+    Console.WriteLine("== 15. Check Stock search and filters");
+    RecordValue It(string expr) => FormulaValue.NewRecordFromFields(new NamedValue("ThisItem", (RecordValue)E(expr)));
+    Sel("cStk", "All Categories"); Sel("sStk", "Any Status"); Txt("qStk", "7213/0024");
+    var stk = (TableValue)E(P("stStkGal", "Items"));
+    Ok(stk.Rows.Count() >= 1 && stk.Rows.All(r => ((StringValue)r.Value.GetField("PN")).Value.Contains("7213/0024")), $"search 7213/0024 -> {stk.Rows.Count()} row(s), all matching");
+    Txt("qStk", ""); Sel("sStk", "Out of Stock");
+    Ok(N($"CountRows({P("stStkGal", "Items")})") == N("CountRows(Filter(nfStock, Status = \"OUT OF STOCK\"))") && N($"CountRows({P("stStkGal", "Items")})") > 0, "status filter Out of Stock -> exactly the out-of-stock parts");
+    Sel("sStk", ""); Sel("cStk", "");
+    Ok(N($"CountRows({P("stStkGal", "Items")})") == 418, "nothing selected in the filters (as Studio does on first load) -> all 418 parts, not an empty list");
+    Sel("cStk", "All Categories"); Sel("sStk", "Any Status");
+
+    Console.WriteLine("== 16. BOM Compare reads every common paste format");
+    var P2 = S("Index(Filter(nfStock, PN <> \"7213/0024\" && PartNo <> \"" + P40 + "\"), 5).PartNo");
+    foreach (var (name, text, n) in new[] {
+        ("Excel copy with Sr + description + header", "Sr\tPart No\tDescription\tQty\n1\t7213/0024\tRELAY 12 WAY\t4\n2\t" + P2 + "\tWIRE 0.5 SQ\t2", 2),
+        ("comma separated, Windows line ends", "7213/0024,4\r\n" + P2 + ",2\r\n", 2),
+        ("units and non-breaking spaces", "7213/0024  4 NOS\n" + P2.ToLower() + "  2 nos", 2),
+        ("same part twice is added up", "7213/0024 1\n7213/0024 3\n" + P2 + " 2", 2) }) {
+      Txt("txtBom", text); Do("goBom");
+      Ok(N("CountRows(colBom)") == n && N("LookUp(colBom, PN = \"7213/0024\").Qty") == 4 && N($"LookUp(colBom, PN = \"{P2.ToUpper()}\").Qty") == 2
+         && S("LookUp(colBom, PN = \"7213/0024\").Status") != "NEW PART" && S("gBomInfo").Contains("compared"), $"{name}: {N("CountRows(colBom)")} parts, 7213/0024 x4 found in stock · '{S("gBomInfo")}'");
+    }
+
+    Console.WriteLine("== 17. an engineer's new request shows under My Requests and in the Queue");
+    Logout(); Login(eng, "Pune2026x"); Ok(S("gRole") == "Engineer", "engineer logged in");
+    Txt("txtBom", "1\t" + P40 + "\tTEST PART\t100 NOS\n2\t" + P2 + "\tRELAY\t1"); Do("goBom");
+    Ok(N("CountRows(colBom)") == 2 && N($"LookUp(colBom, PartNo = \"{P40}\").Qty") == 100, "BOM with Sr column and units read: 2 parts, " + P40 + " x100");
+    Do("subNr");
+    var NEWREQ = S($"First(Sort(Filter(nfReq, RaisedByEmail = \"{eng}\"), RequestNo, SortOrder.Descending)).RequestNo");
+    Ok(NEWREQ.StartsWith("REQ-") && MockNav.Log.LastOrDefault() == "scrMyReq", "request " + NEWREQ + " saved under " + eng + ", user sent to My Requests");
+    var my = (TableValue)E(P("rlMyGal", "Items"));
+    Ok(my.Rows.Any(r => ((StringValue)r.Value.GetField("RequestNo")).Value == NEWREQ) && !my.Rows.Any(r => ((StringValue)r.Value.GetField("RequestNo")).Value == REQ), $"My Requests lists {NEWREQ} ({my.Rows.Count()} row) and not other people's requests");
+    Ok(N("CountRows(" + P("rqDshGal", "Items") + ")") >= 1, "engineer dashboard shows the request");
+    E($"Patch(tblUsers, LookUp(tblUsers, Username = \"{eng}\"), {{Email: \"akshay@jcb.com\"}})"); Touch();
+    Logout(); Login(eng, "Pune2026x");
+    Ok(((TableValue)E(P("rlMyGal", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("RequestNo")).Value == NEWREQ), "still listed after the person's Email is filled in (identity = username)");
+    Logout(); Login("gaurav.shelke", "abc123");
+    Ok(((TableValue)E(P("rlQuGal", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("RequestNo")).Value == NEWREQ), "Lab Lead's Request Queue lists " + NEWREQ);
+    E($"Set(gReqNo, \"{NEWREQ}\")"); Do("aprRd");
+    Ok(S($"LookUp(nfReq, RequestNo = \"{NEWREQ}\").Status") == "APPROVED", "Approve -> APPROVED");
+    Do("resRd");
+    Ok(S($"LookUp(nfReq, RequestNo = \"{NEWREQ}\").Status") == "PURCHASE REQUIRED" && N($"LookUp(nfLines, RequestNo = \"{NEWREQ}\" && PartNo = \"{P40}\").QtyReserved") == N($"LookUp(nfStock, PartNo = \"{P40}\").OnHand"), "Reserve -> PURCHASE REQUIRED, everything on the shelf reserved");
+
+    Console.WriteLine("== 18. Ongoing Purchase: one row per part and request");
+    E($"Set(gReqNo, \"{SHT}\")"); Do("aprRd"); Do("resRd");   // the shortfall request now waits on purchase too
+    var purF = $"Upper(Trim(Text(PartNo))) = \"{P40.ToUpper()}\"";
+    while (N($"CountRows(Filter(tblPurch, {purF}))") > 0) E($"Remove(tblPurch, LookUp(tblPurch, {purF}))"); Touch();
+    var nReq = N($"CountRows(Distinct(Filter(nfGapLines, PN = \"{P40.ToUpper()}\"), RequestNo))");
+    Do("bkPuC7", "OnSelect", It($"LookUp(nfShortBook, PartNo = \"{P40}\")"));
+    var prl = (TableValue)E($"Filter(nfPurch, PartNo = \"{P40}\")");
+    Ok(nReq == 2 && prl.Rows.Count() == 2 && prl.Rows.All(r => !((StringValue)r.Value.GetField("RequestNo")).Value.Contains(",")), $"Add -> {prl.Rows.Count()} rows for {nReq} requests, each with one request number");
+    Do("bkPuC7", "OnSelect", It($"LookUp(nfShortBook, PartNo = \"{P40}\")"));
+    Ok(N($"CountRows(Filter(nfPurch, PartNo = \"{P40}\"))") == 2, "pressing Add again adds nothing");
+
+    Console.WriteLine("== 19. Cost Sheet paste");
+    Txt("bpCs", "1\t7213/0024\tRELAY 12 WAY\t2\t150\nNEW/X-1  3\n\nPart No Qty Cost"); Do("bpGoCs");
+    Ok(N("CountRows(colCostLines)") == 2 && N("LookUp(colCostLines, PartNo = \"7213/0024\").Qty") == 2 && N("LookUp(colCostLines, PartNo = \"7213/0024\").UnitCost") == 150 && N("LookUp(colCostLines, PartNo = \"NEW/X-1\").Qty") == 3, "Sr + description + qty + cost read; qty-only line read; header skipped");
+
+    Console.WriteLine("== 20. Invoice: no duplicate numbers, editing keeps the material cost");
+    var inv1 = pre + "001"; var mat1 = N($"LookUp(nfInv, InvoiceNo = \"{inv1}\").MaterialCost");
+    E("Set(gInvEdit, \"\")"); Txt("noIv", inv1); Do("svIv");
+    Ok(N("CountRows(nfInv)") == 1 && MockNotify.Log.Any(l => l.Contains("already exists")), "a new invoice with an existing number is refused");
+    E($"Set(gInvEdit, \"{inv1}\"); Clear(colInvLines)"); Touch(); Txt("noIv", inv1); Do("svIv");
+    Ok(N("CountRows(nfInv)") == 1 && N($"LookUp(nfInv, InvoiceNo = \"{inv1}\").MaterialCost") == mat1 && mat1 == 100, "re-saving an opened invoice keeps its material cost (" + mat1 + ")");
+    E($"Set(gInvReq, \"{REQ}\"); Set(gInvEdit, \"\")"); Do("ldIv");
+    Ok(N("CountRows(colInvLines)") == N($"CountRows(Filter(nfLines, RequestNo = \"{REQ}\"))"), "Load BOM from request fills the invoice lines");
+
+    Console.WriteLine("== 21. Brand New Purchase Part: edit in place, own list");
+    E("ClearCollect(colNP, {Id: 1, RequesterName: \"Someone Else\", Category: \"Electrical\", SubCategory: \"\", PlantCode: \"5040\", PartName: \"Fuse 10A\", MakeBrand: \"\", ModelNo: \"\", OtherSpecs: \"\", Remarks: \"\", UOM: \"NO\", HSNCode: \"85361010\"})"); Touch();
+    E("Set(gNpForm, First(colNP))");
+    foreach (var (f, v) in new[] { ("RequesterName", "Someone Else"), ("Category", "Electrical"), ("SubCategory", ""), ("PlantCode", "5040"), ("PartName", "Fuse 15A"), ("MakeBrand", ""), ("ModelNo", ""), ("OtherSpecs", ""), ("Remarks", ""), ("HSNCode", "85361010") }) Txt("npf" + f + "Np", v);
+    Sel("npfUOMNp", "NO");
+    Do("fmAddNp");
+    Ok(N("CountRows(colNP)") == 1 && S("First(colNP).PartName") == "Fuse 15A", "Update Part in List changes the row in place (no duplicate, nothing lost)");
+    Do("goNp");
+    var npr = S("First(Sort(nfNewPart, RequestNo, SortOrder.Descending)).RequestNo");
+    Ok(npr == "NPR-" + DateTime.Today.Year + "-00002" && ((TableValue)E(P("nmNpGal", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("RequestNo")).Value == npr), npr + " submitted and shown under Your New Part Requests (typed requester name differs)");
+
+    Console.WriteLine("== 22. Team Access is the Lab Lead's");
+    Ok(((TableValue)E(P("navGalDsh", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("Key")).Value == "team"), "Lab Lead sees Team Access");
+    E("Set(gIsLead, false); Set(gRole, \"Lab Admin\")");
+    Ok(!((TableValue)E(P("navGalDsh", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("Key")).Value == "team"), "Lab Admin (not Lead) does not");
+    E("Set(gIsLead, true); Set(gRole, \"Lab Lead\")");
+    var engRow2 = $"LookUp(tblUsers, Username = \"{eng}\")";
+    Txt("tmC1", "Akshay Aadarsh"); Txt("tmC2", "Engineer, Manager"); Txt("tmC3", "EDS"); Txt("tmC4", "akshay@jcb.com");
+    Do("tmC6", "OnSelect", It(engRow2));
+    Ok(S(engRow2 + ".Role") == "Engineer, Manager", "Role edited as text keeps both roles ('Engineer, Manager')");
+
+    Console.WriteLine("== 23. System Check page");
+    foreach (var (k, c) in h.Ctl.Where(kv => System.Text.RegularExpressions.Regex.IsMatch(kv.Key, "^v[0-9]+Ck$"))) {
+      var t = S(P(k, "Text"));
+      Ok(!string.IsNullOrEmpty(t) && !t.StartsWith("Error"), $"{k}: {t}");
+    }
+
     Console.WriteLine($"\nworkflow simulation: {Pass} passed, {Fail} failed");
     // Excel recalculates the Settings Data Health formulas after every write; do the same for the previews
     E("Patch(tblSettings, LookUp(tblSettings, Key = \"ExcelMovementRows\"), {Value: Text(CountRows(tblMoves))}); Patch(tblSettings, LookUp(tblSettings, Key = \"ExcelStockTotal\"), {Value: Text(Sum(nfMoves, SQty))})"); Touch();

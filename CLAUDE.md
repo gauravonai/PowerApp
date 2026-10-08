@@ -19,12 +19,15 @@ Generator: `tools/*.py` → `app/Src/*.pa.yaml`, `paste/*`, `app/EDS-Lab-Portal.
 6. `tools/fix_src.py` repairs any old .msapp/folder; `check()` is the build guard (build.py + make_msapp.py).
 
 ## Every release
+- **Send UI screenshots first and wait for the user's OK before packing/sending the msapp** (user rule, v2.0.6).
 - Bump `APP_VERSION` in `tools/screens.py` (shown on Welcome) and send the msapp as `EDS-Lab-Portal-v<version>.msapp`
   (same file name as an older build caused the user to import the wrong one).
 - Run `tools/verify/run_all.sh`: schema, serializer, property names, parse, bind = 0 errors; simulation all pass;
   smoke test 0 runtime errors; pack prints the import guards line.
 - v2.0.5 = plain names again (v2.0.4 `_1` build was wrong for a fresh import). v2.0.2 imports in the user's Studio but showed no data (Power Fx 1.0 off). v2.0.3 = fix + System Check screen
   (Login → System Check) + docs/10 hand-built live test. Ask for the System Check screenshot first when data looks wrong.
+- v2.0.6 = audit fixes (docs/11): BOM reader (Sr/desc/units), username identity + login guard on every screen,
+  per-request purchase rows, invoice/new-part/team fixes, System Check 18 rows incl. BOM reader test. Sim 156 checks.
 
 ## Product decisions (agreed with the user)
 - Login = username + password from Users (scrambled `p1$`, temp codes `t1$`); first password only if the PC's M365 user

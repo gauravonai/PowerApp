@@ -67,6 +67,22 @@ def rename_ds(text, m):
     return text
 
 
+PUBLIC = ("scrWelcome", "scrLogin", "scrCheck")
+
+
+def screen_props(sname):
+    """Every working screen needs a logged-in person: opened without one (Studio play from a screen, a stale
+    link), it goes to the login page instead of saving requests under an empty user."""
+    p = {"Fill": "cBg" if sname != "scrPrint" else "RGBA(255, 255, 255, 1)"}
+    if sname not in PUBLIC:
+        p["OnVisible"] = ('If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); '
+                          'Navigate(scrLogin, ScreenTransition.None))')
+    if sname == "scrTeam":   # Team Access is the Lab Lead's page only (passwords, roles)
+        p["OnVisible"] = p["OnVisible"][:-1] + (', !gIsLead, Notify("Team Access is for the Lab Lead only.", '
+                                                'NotificationType.Warning); Navigate(scrDash, ScreenTransition.None))')
+    return p
+
+
 def main():
     os.makedirs(SRC, exist_ok=True)
     os.makedirs(PASTE, exist_ok=True)
@@ -102,7 +118,7 @@ def main():
         f.write(pa.HEADER + "EditorState:\n  ScreensOrder:\n" + "".join("    - %s\n" % s for s, _, _ in scr))
     for sname, _, root in scr:
         with open(os.path.join(SRC, sname + ".pa.yaml"), "w") as f:
-            f.write(pa.emit_screen(sname, {"Fill": "cBg" if sname != "scrPrint" else "RGBA(255, 255, 255, 1)"}, root))
+            f.write(pa.emit_screen(sname, screen_props(sname), root))
 
     # ---------------------------------------------------------- Route B: paste files
     with open(os.path.join(PASTE, "00-App.Formulas.txt"), "w") as f:
@@ -119,6 +135,8 @@ def main():
     allf = [{"id": "App.Formulas", "f": formulas, "kind": "formulas"},
             {"id": "App.OnStart", "f": onstart}, {"id": "App.StartScreen", "f": start}]
     for sname, _, root in scr:
+        for k, v in screen_props(sname).items():
+            allf.append({"id": "%s.%s" % (sname, k), "f": v})
         for c in root.walk():
             for k, v in c.props.items():
                 allf.append({"id": "%s.%s.%s" % (sname, c.name, k), "f": pa._fmt(v)})
@@ -141,6 +159,8 @@ def main():
         for ch in c.children:
             flat(ch, sname, c.name if c.ctype == pa.GALLERY else gal, c.name)
     for sname, _, root in scr:
+        model["controls"].append({"name": sname + "_screen", "type": "Screen", "screen": sname, "gallery": None,
+                                  "parent": None, "props": screen_props(sname)})
         flat(root, sname, None, None)
     with open(os.path.join(OUT, "app.json"), "w") as f:
         json.dump(model, f, ensure_ascii=False)

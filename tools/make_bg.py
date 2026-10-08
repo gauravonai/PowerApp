@@ -1,197 +1,386 @@
-"""Builds the background picture: a backhoe loader backlit by a sunset on a dusty site.
-Drawn as a detailed vector scene, rasterised in Chromium, then photo-graded with Pillow
-(haze, bloom, dust, film grain, vignette) so it reads as a photograph, not clip-art.
+"""Builds the background picture: a JCB-style 3CX backhoe loader backlit by a low sun on a dusty site,
+shot "on a long lens": the machine is a true-to-proportion silhouette (measured in metres, then scaled),
+the sky shows through the cab glass, the beacon is lit, dust glows in the light, and the picture is
+graded like a photograph (bloom, lens flare, depth of field, chromatic fringe, grain, vignette).
+
+The machine stands on the RIGHT third so the login card (centre) never hides it.
 
     python3 tools/make_bg.py      -> app/media/bg-backhoe.jpg  (1600 x 900)
 Needs node + playwright (build machine only). The JPEG is committed, so this rarely runs."""
+import math
 import os
 import random
 import subprocess
-import sys
 
-from PIL import Image, ImageFilter, ImageChops, ImageEnhance
+from PIL import Image, ImageChops, ImageEnhance, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 OUT = os.path.join(ROOT, "app", "media", "bg-backhoe.jpg")
 W, H = 1600, 900
-random.seed(7)
+HORIZON = 652
+S, X0, G = 76, 905, 784    # px per metre, x of the loader bucket tip, ground line
+SUN = (int(X0 + 2.0 * S), int(G - 1.98 * S))   # just above the bonnet: the machine half-hides the sun
 
 
-def clouds():
+def p(x, y):
+    """Machine coordinates (metres; x from the front bucket tip to the rear, y up from the ground) -> image px."""
+    return "%.1f %.1f" % (X0 + x * S, G - y * S)
+
+
+def poly(pts):
+    return "M" + " L".join(p(x, y) for x, y in pts) + " Z"
+
+
+def circ(x, y, r, **kw):
+    a = " ".join("%s='%s'" % (k.replace("_", "-"), v) for k, v in kw.items())
+    return "<circle cx='%.1f' cy='%.1f' r='%.1f' %s/>" % (X0 + x * S, G - y * S, r * S, a)
+
+
+def stroke(pts, w, col, extra=""):
+    d = "M" + " ".join(("C" if i % 3 == 1 else "") + p(x, y) for i, (x, y) in enumerate(pts))
+    return "<path d='%s' fill='none' stroke='%s' stroke-width='%.1f' stroke-linecap='round' stroke-linejoin='round' %s/>" % (
+        d, col, w * S, extra)
+
+
+def wheel(cx, cy, r):
+    out = [circ(cx, cy, r, fill="#07050a")]
+    # tread lugs: chevrons round the tyre
+    n = int(r * 40)
+    for i in range(n):
+        a = 2 * math.pi * i / n
+        x1, y1 = cx + r * math.cos(a), cy + r * math.sin(a)
+        x2, y2 = cx + (r + 0.035) * math.cos(a + 0.03), cy + (r + 0.035) * math.sin(a + 0.03)
+        out.append("<line x1='%.1f' y1='%.1f' x2='%.1f' y2='%.1f' stroke='#07050a' stroke-width='%.1f'/>" % (
+            X0 + x1 * S, G - y1 * S, X0 + x2 * S, G - y2 * S, 0.06 * S))
+    out.append(circ(cx, cy, r * 0.62, fill="#120d0b"))
+    out.append(circ(cx, cy, r * 0.56, fill="url(#rim)"))
+    for i in range(8):
+        a = 2 * math.pi * i / 8
+        out.append(circ(cx + r * 0.38 * math.cos(a), cy + r * 0.38 * math.sin(a), r * 0.045, fill="#0a0708"))
+    out.append(circ(cx, cy, r * 0.2, fill="#0b0809"))
+    return "".join(out)
+
+
+def machine_body():
+    """Every solid part of the machine, drawn in one dark colour (the caller sets the fill)."""
+    parts = [
+        # chassis rail from the loader tower to the backhoe kingpost
+        poly([(1.05, 0.62), (4.85, 0.62), (4.95, 0.95), (4.9, 1.42), (4.4, 1.5), (1.05, 1.0)]),
+        # bonnet: grille at the front, rising towards the cab
+        poly([(1.02, 0.66), (1.02, 1.22), (1.12, 1.32), (2.70, 1.66), (2.80, 1.64), (2.80, 0.8)]),
+        # cab frame (glass is cut in later)
+        poly([(2.76, 1.20), (2.80, 1.66), (2.93, 2.80), (2.86, 2.84), (2.86, 2.93), (4.44, 2.93), (4.44, 2.84),
+              (4.36, 2.80), (4.42, 1.52), (4.40, 1.20)]),
+        # rear mudguard (big arc over the rear wheel)
+        "M%s A%.1f %.1f 0 0 1 %s L%s A%.1f %.1f 0 0 0 %s Z" % (
+            p(2.86, 0.95), 0.92 * S, 0.92 * S, p(4.58, 0.95), p(4.46, 0.95), 0.80 * S, 0.80 * S, p(2.98, 0.95)),
+        # front mudguard
+        "M%s A%.1f %.1f 0 0 1 %s L%s A%.1f %.1f 0 0 0 %s Z" % (
+            p(0.98, 0.62), 0.6 * S, 0.6 * S, p(2.12, 0.62), p(2.04, 0.62), 0.52 * S, 0.52 * S, p(1.06, 0.62)),
+        # exhaust stack with rain cap
+        poly([(2.36, 1.58), (2.36, 2.36), (2.31, 2.40), (2.31, 2.45), (2.50, 2.45), (2.50, 2.40), (2.45, 2.36), (2.45, 1.6)]),
+        # air intake pre-cleaner
+        poly([(2.05, 1.52), (2.05, 1.86), (2.18, 1.88), (2.18, 1.55)]),
+        # loader bucket (side plate), resting flat on the ground
+        poly([(0.0, 0.03), (0.06, 0.0), (0.86, 0.02), (0.96, 0.14), (0.99, 0.86), (0.84, 1.0), (0.46, 1.0),
+              (0.22, 0.80), (0.10, 0.48)]),
+        # kingpost + swing casting
+        poly([(4.86, 0.55), (5.30, 0.55), (5.36, 1.62), (5.12, 1.78), (4.90, 1.62)]),
+        # stabiliser legs and pads (down, working)
+        poly([(4.70, 1.25), (4.86, 1.30), (5.22, 0.12), (5.10, 0.08)]),
+        poly([(4.98, 0.06), (5.42, 0.06), (5.42, 0.0), (4.98, 0.0)]),
+        poly([(5.02, 1.18), (5.16, 1.26), (5.58, 0.12), (5.46, 0.08)]),
+        poly([(5.34, 0.06), (5.78, 0.06), (5.78, 0.0), (5.34, 0.0)]),
+        # backhoe bucket (curled under, teeth biting into the heap)
+        poly([(7.10, 0.95), (7.48, 0.98), (7.66, 0.70), (7.60, 0.36), (7.40, 0.16), (7.30, 0.04), (7.24, 0.16),
+              (7.16, 0.06), (7.10, 0.20), (7.02, 0.12), (6.98, 0.30), (7.12, 0.55)]),
+        # beacon + work lights on the roof
+        poly([(3.56, 2.93), (3.58, 3.02), (3.70, 3.02), (3.72, 2.93)]),
+        poly([(2.90, 2.86), (2.88, 2.94), (3.02, 2.94), (3.02, 2.86)]),
+        poly([(4.30, 2.86), (4.30, 2.94), (4.44, 2.94), (4.44, 2.86)]),
+        # mirror arm
+        poly([(2.80, 2.30), (2.62, 2.48), (2.58, 2.70), (2.66, 2.70), (2.70, 2.50), (2.84, 2.38)]),
+    ]
+    out = ["<path d='%s'/>" % d for d in parts]
+    # loader arm: tower pivot by the cab, down past the bonnet to the bucket
+    out.append(stroke([(2.62, 1.98), (2.1, 1.86), (1.6, 1.62), (1.30, 1.32)], 0.22, "currentColor"))
+    out.append(stroke([(1.30, 1.32), (1.12, 1.05), (0.98, 0.80), (0.90, 0.58)], 0.20, "currentColor"))
+    out.append(stroke([(2.58, 1.36), (2.2, 1.30), (1.8, 1.10), (1.40, 0.92)], 0.08, "currentColor"))   # lift ram
+    # backhoe boom (the "banana"), dipper and their rams
+    out.append(stroke([(5.14, 1.40), (5.40, 2.70), (5.90, 3.55), (6.62, 3.42)], 0.30, "currentColor"))
+    out.append(stroke([(6.62, 3.42), (6.70, 3.40), (6.80, 3.35), (6.86, 3.30)], 0.26, "currentColor"))
+    out.append(stroke([(6.84, 3.36), (7.0, 2.6), (7.2, 1.6), (7.30, 0.92)], 0.22, "currentColor"))
+    out.append(stroke([(5.30, 1.30), (5.50, 1.90), (5.70, 2.40), (5.86, 2.80)], 0.10, "currentColor"))   # boom ram
+    out.append(stroke([(5.80, 3.62), (6.20, 3.75), (6.60, 3.75), (6.96, 3.56)], 0.09, "currentColor"))  # dipper ram
+    out.append(stroke([(6.95, 1.5), (7.05, 1.25), (7.15, 1.05), (7.24, 0.92)], 0.07, "currentColor"))   # bucket ram
+    return "".join(out)
+
+
+def glass():
+    """Cab windows: the sky shows straight through them (the giveaway of a real backlit photo)."""
+    front = poly([(2.92, 1.74), (3.03, 2.72), (3.52, 2.72), (3.52, 1.74)])
+    side = poly([(3.62, 1.74), (3.62, 2.72), (4.25, 2.72), (4.31, 1.62), (4.20, 1.58)])
+    operator = ("<g opacity='0.55' filter='url(#b3)'><path d='M%s C%s %s %s C%s %s %s L%s L%s Z' fill='#2a1510'/>" % (
+        p(3.78, 1.74), p(3.74, 2.02), p(3.80, 2.18), p(3.92, 2.22), p(4.06, 2.18), p(4.10, 2.02), p(4.06, 1.74),
+        p(4.06, 1.74), p(3.78, 1.74)) +
+        circ(3.93, 2.36, 0.12, fill="#2a1510") + "</g>" +
+        stroke([(3.40, 1.90), (3.52, 1.98), (3.60, 2.0), (3.66, 1.96)], 0.05, "#1a0e0b"))
+    return ("<g><path d='%s' fill='url(#glass)'/><path d='%s' fill='url(#glass2)'/>%s"
+            "<path d='%s' fill='none' stroke='#fff0c8' stroke-width='1' opacity='0.35'/></g>" % (front, side, operator, front))
+
+
+def clouds_filter():
+    return ("<filter id='cloud' x='0' y='0' width='100%%' height='100%%'>"
+            "<feTurbulence type='fractalNoise' baseFrequency='0.0016 0.0105' numOctaves='5' seed='23'/>"
+            "<feColorMatrix type='matrix' values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 2.6 -1.25'/>"
+            "<feGaussianBlur stdDeviation='1.2'/></filter>")
+
+
+def skyline():
+    """A hazy industrial site on the horizon: sheds, a chimney, a tower crane, distant poles."""
+    random.seed(5)
     out = []
-    for _ in range(26):
-        x, y = random.randint(-100, 1700), random.randint(60, 420)
-        rx, ry = random.randint(120, 380), random.randint(10, 34)
-        op = random.uniform(0.18, 0.5)
-        col = random.choice(["#ff9a5a", "#e46a4a", "#ffb877", "#c2514a", "#ffcf8e"])
-        out.append("<ellipse cx='%d' cy='%d' rx='%d' ry='%d' fill='%s' opacity='%.2f'/>" % (x, y, rx, ry, col, op))
-    return "\n".join(out)
+    x = 0
+    while x < 1600:
+        w = random.randint(40, 170)
+        h = random.randint(8, 46)
+        if random.random() < 0.35:   # tree clump
+            for k in range(random.randint(3, 7)):
+                out.append("<circle cx='%d' cy='%d' r='%d'/>" % (x + random.randint(0, w), HORIZON - random.randint(4, 22),
+                                                                 random.randint(8, 18)))
+        else:
+            out.append("<rect x='%d' y='%d' width='%d' height='%d'/>" % (x, HORIZON - h, w, h + 6))
+        if random.random() < 0.45:
+            out.append("<path d='M%d %d L%d %d L%d %d Z'/>" % (x, HORIZON - h, x + w // 2, HORIZON - h - 12, x + w, HORIZON - h))
+        x += w + random.randint(0, 30)
+    out.append("<rect x='300' y='%d' width='9' height='70'/>" % (HORIZON - 108))       # chimney
+    out.append("<rect x='520' y='%d' width='5' height='160'/>" % (HORIZON - 196))      # tower crane mast
+    out.append("<path d='M440 %d L700 %d L700 %d L440 %d Z'/>" % (HORIZON - 196, HORIZON - 196, HORIZON - 191, HORIZON - 193))
+    out.append("<line x1='522' y1='%d' x2='660' y2='%d' stroke='#000' stroke-width='1'/>" % (HORIZON - 214, HORIZON - 196))
+    out.append("<rect x='519' y='%d' width='8' height='18'/>" % (HORIZON - 214))
+    for px in range(40, 1600, 190):
+        out.append("<rect x='%d' y='%d' width='2' height='34'/>" % (px, HORIZON - 30))
+    return "".join(out)
 
 
-def ridge(y0, amp, step, seed):
-    random.seed(seed)
-    pts, x, y = ["M0 %d" % H], 0, y0
-    while x <= W + step:
-        y = max(y0 - amp, min(y0 + amp, y + random.randint(-amp // 3, amp // 3)))
-        pts.append("L%d %d" % (x, y))
-        x += step
-    pts.append("L%d %d Z" % (W, H))
-    return " ".join(pts)
-
-
-def dust():
+def dust_motes():
+    random.seed(17)
     out = []
-    random.seed(11)
-    for _ in range(60):
-        x, y = random.randint(380, 1500), random.randint(640, 800)
-        r = random.randint(30, 120)
-        out.append("<circle cx='%d' cy='%d' r='%d' fill='#f0a060' opacity='%.3f'/>" % (x, y, r, random.uniform(0.03, 0.08)))
-    return "\n".join(out)
+    for _ in range(110):
+        x = random.gauss(SUN[0] - 120, 300)
+        y = random.gauss(SUN[1] - 40, 110)
+        if X0 + 0.0 * S < x < X0 + 8.0 * S and y > G - 3.0 * S:
+            continue
+        r = random.choice([0.8, 1.1, 1.4, 1.8, 2.2, 3, 5])
+        d = math.hypot(x - SUN[0], y - SUN[1])
+        op = max(0.04, 0.55 - d / 900) * (0.6 if r > 6 else 1)
+        out.append("<circle cx='%.0f' cy='%.0f' r='%.1f' fill='#ffd8a0' opacity='%.2f'/>" % (x, y, r, op))
+    return "".join(out)
 
 
-MACHINE = """
-<g id='machine' filter='url(#soft)'>
- <!-- backhoe (rear) : stabiliser legs -->
- <path d='M792 640 L812 640 L796 756 L812 770 L760 770 L776 756 Z' fill='url(#steel)'/>
- <path d='M846 640 L866 640 L858 756 L874 770 L824 770 L840 756 Z' fill='url(#steel)'/>
- <!-- swing frame -->
- <path d='M760 600 L880 590 L890 660 L770 668 Z' fill='url(#body)'/>
- <!-- boom (curved banana) -->
- <path d='M796 612 C786 560 770 500 742 452 C716 410 680 384 640 372 C618 366 600 376 600 394 C600 408 612 414 626 418
-          C660 428 690 452 710 486 C730 520 744 566 752 624 Z' fill='url(#body)'/>
- <path d='M772 598 L716 470' stroke='#3a332b' stroke-width='8' stroke-linecap='round'/>
- <!-- dipper -->
- <path d='M598 392 L626 380 L566 640 L540 650 Z' fill='url(#body)'/>
- <path d='M612 420 L566 610' stroke='#2e2a25' stroke-width='6' stroke-linecap='round'/>
- <!-- backhoe bucket with teeth -->
- <path d='M538 640 C520 660 512 690 522 720 L586 712 C590 690 584 662 566 646 Z' fill='url(#body)'/>
- <path d='M522 720 L516 732 L530 728 L534 740 L546 726 L556 736 L562 722 L574 730 L586 712 Z' fill='#1b140d'/>
- <!-- rear counterweight / frame -->
- <path d='M860 600 L1010 596 L1012 676 L870 682 Z' fill='url(#body)'/>
- <!-- cab -->
- <path d='M872 470 L1032 470 L1040 476 L1036 488 L1022 488 L1018 600 L884 604 L882 488 L866 488 L864 476 Z' fill='url(#body)'/>
- <path d='M892 494 L1008 494 L1006 590 L896 594 Z' fill='url(#glass)'/>
- <path d='M948 494 L952 494 L952 592 L948 592 Z' fill='#1b140d'/>
- <path d='M900 500 L940 500 L938 540 Z' fill='#ffe2b0' opacity='0.18'/>
- <!-- operator seat silhouette -->
- <path d='M960 548 L986 548 L990 586 L958 588 Z' fill='#140d08' opacity='0.85'/>
- <!-- engine hood -->
- <path d='M1010 560 L1210 566 C1250 568 1282 586 1290 618 L1296 668 L1010 676 Z' fill='url(#body)'/>
- <path d='M1030 580 L1260 588' stroke='#f2c04a' stroke-width='1.5' opacity='0.18'/>
- <path d='M1040 600 L1270 608 M1040 616 L1272 624 M1040 632 L1274 640' stroke='#0d0906' stroke-width='3' opacity='0.5'/>
- <!-- exhaust -->
- <rect x='1100' y='512' width='12' height='56' rx='3' fill='url(#steel)'/>
- <!-- loader arms -->
- <path d='M1000 560 L1050 548 L1340 640 L1336 668 L1300 662 Z' fill='url(#body)'/>
- <path d='M1060 600 L1300 660' stroke='#2e2a25' stroke-width='7' stroke-linecap='round'/>
- <!-- loader bucket -->
- <path d='M1318 616 L1404 626 C1426 650 1440 700 1444 748 L1336 756 C1328 716 1320 676 1318 616 Z' fill='url(#body)'/>
- <path d='M1336 756 L1444 748 L1450 760 L1334 768 Z' fill='#120c08'/>
- <!-- axles / fenders -->
- <path d='M846 640 C850 600 1010 600 1016 640 L1016 660 L846 664 Z' fill='url(#body)'/>
- <path d='M1186 664 C1190 636 1306 636 1312 664 Z' fill='url(#body)'/>
- <!-- rear wheel -->
- <circle cx='930' cy='690' r='84' fill='#0e0a08'/>
- <circle cx='930' cy='690' r='84' fill='none' stroke='#2a221b' stroke-width='14' stroke-dasharray='10 9'/>
- <circle cx='930' cy='690' r='46' fill='url(#rim)'/>
- <circle cx='930' cy='690' r='14' fill='#1b140d'/>
- <!-- front wheel -->
- <circle cx='1250' cy='714' r='56' fill='#0e0a08'/>
- <circle cx='1250' cy='714' r='56' fill='none' stroke='#2a221b' stroke-width='10' stroke-dasharray='8 8'/>
- <circle cx='1250' cy='714' r='30' fill='url(#rim)'/>
- <circle cx='1250' cy='714' r='9' fill='#1b140d'/>
- <!-- rim light from the sun (top edges) -->
- <path d='M866 476 L1040 476 M1010 560 L1210 566 C1250 568 1282 586 1290 618 M600 390 C604 370 620 366 640 372 C680 384 716 410 742 452 C770 500 786 560 796 612
-          M1318 616 L1404 626 C1426 650 1440 700 1444 748' fill='none' stroke='#ffb648' stroke-width='3' opacity='0.85'/>
- <path d='M846 640 C850 600 1010 600 1016 640 M1186 664 C1190 636 1306 636 1312 664' fill='none' stroke='#ffb648' stroke-width='2.5' opacity='0.7'/>
- <circle cx='930' cy='690' r='84' fill='none' stroke='#ff9d3c' stroke-width='2' opacity='0.45' stroke-dasharray='120 400' transform='rotate(-120 930 690)'/>
- <circle cx='1250' cy='714' r='56' fill='none' stroke='#ff9d3c' stroke-width='2' opacity='0.45' stroke-dasharray='80 300' transform='rotate(-120 1250 714)'/>
-</g>"""
+def ruts():
+    random.seed(29)
+    out = []
+    for _ in range(70):
+        y = random.uniform(HORIZON + 6, 860)
+        k = (y - HORIZON) / (900 - HORIZON)
+        x = random.uniform(-100, 1600)
+        out.append("<ellipse cx='%.0f' cy='%.0f' rx='%.0f' ry='%.1f' fill='%s' opacity='%.2f'/>" % (
+            x, y, 40 + 260 * k, 1 + 6 * k, random.choice(["#000", "#140a06", "#2a160c"]), random.uniform(0.25, 0.55)))
+    return "".join(out)
+
+
+def grass():
+    random.seed(41)
+    out = []
+    for _ in range(90):
+        x = random.choice([random.uniform(-20, 420), random.uniform(1380, 1620)])
+        h = random.uniform(30, 120)
+        lean = random.uniform(-40, 40)
+        out.append("<path d='M%.0f 905 Q%.0f %.0f %.0f %.0f' stroke-width='%.1f' opacity='0.9'/>" % (
+            x, x + lean * 0.3, 905 - h * 0.6, x + lean, 905 - h, random.uniform(2, 5)))
+    return "".join(out)
+
+
+def mounds():
+    random.seed(53)
+    out = []
+    for cx, w, h in ((80, 260, 34), (300, 340, 22), (560, 220, 30), (760, 300, 16), (1560, 200, 26)):
+        y = HORIZON + 8
+        out.append("<path d='M%d %d C%d %d %d %d %d %d C%d %d %d %d %d %d Z' fill='#1e110b'/>" % (
+            cx - w // 2, y, cx - w // 4, y - h, cx - w // 8, y - h * 1.1, cx, y - h, cx + w // 6, y - h * 0.9, cx + w // 3, y - h * 0.5,
+            cx + w // 2, y))
+        out.append("<path d='M%d %d C%d %d %d %d %d %d' fill='none' stroke='#f0a060' stroke-width='1.6' opacity='0.55'/>" % (
+            cx - w // 2 + 10, y - 2, cx - w // 4, y - h, cx - w // 8, y - h * 1.1, cx, y - h))
+    return "".join(out)
+
+
+def stones():
+    random.seed(61)
+    out = []
+    for _ in range(160):
+        y = random.uniform(HORIZON + 14, 830)
+        k = (y - HORIZON) / (900 - HORIZON)
+        x = random.uniform(0, 1600)
+        r = 1 + 7 * k * random.random()
+        out.append("<ellipse cx='%.0f' cy='%.0f' rx='%.1f' ry='%.1f' fill='#120a07'/>"
+                   "<ellipse cx='%.0f' cy='%.1f' rx='%.1f' ry='%.1f' fill='#d9905a' opacity='0.35'/>" % (
+                       x, y, r * 1.6, r * 0.7, x - r * 0.3, y - r * 0.45, r * 0.9, r * 0.22))
+    return "".join(out)
+
+
+def tracks():
+    out = []
+    for off, w in ((-30, 16), (30, 16), (-150, 10), (-100, 10)):
+        out.append("<path d='M%d 900 C%d 840 %d 800 %d %d' fill='none' stroke='#000' stroke-opacity='0.35' "
+                   "stroke-width='%d' stroke-dasharray='5 4'/>" % (420 + off * 3, 600 + off * 2, 820 + off, 960 + off, G + 4, w))
+    return "".join(out)
+
 
 SVG = """<svg xmlns='http://www.w3.org/2000/svg' width='%(W)d' height='%(H)d' viewBox='0 0 %(W)d %(H)d'>
 <defs>
  <linearGradient id='sky' x1='0' y1='0' x2='0' y2='1'>
-  <stop offset='0' stop-color='#140d1c'/><stop offset='0.22' stop-color='#3b1a36'/><stop offset='0.42' stop-color='#8c2f38'/>
-  <stop offset='0.58' stop-color='#d9612c'/><stop offset='0.68' stop-color='#f79a3c'/><stop offset='0.74' stop-color='#ffd38a'/></linearGradient>
- <radialGradient id='sun' cx='0.5' cy='0.5' r='0.5'><stop offset='0' stop-color='#fff8e0'/><stop offset='0.12' stop-color='#ffe7a8'/>
-  <stop offset='0.35' stop-color='#ffb24a' stop-opacity='0.55'/><stop offset='1' stop-color='#ff7a2a' stop-opacity='0'/></radialGradient>
- <linearGradient id='body' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#2a1d0c'/><stop offset='0.3' stop-color='#160f08'/>
-  <stop offset='1' stop-color='#060403'/></linearGradient>
- <linearGradient id='steel' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#15110d'/><stop offset='0.5' stop-color='#3a332b'/>
-  <stop offset='1' stop-color='#15110d'/></linearGradient>
- <radialGradient id='rim' cx='0.4' cy='0.35' r='0.7'><stop offset='0' stop-color='#3a2c12'/><stop offset='1' stop-color='#110c06'/></radialGradient>
- <linearGradient id='glass' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ff9f4a' stop-opacity='0.75'/>
-  <stop offset='0.6' stop-color='#a8452c' stop-opacity='0.6'/><stop offset='1' stop-color='#2a1410' stop-opacity='0.9'/></linearGradient>
- <linearGradient id='ground' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#4a2a18'/><stop offset='0.25' stop-color='#2a1810'/>
-  <stop offset='1' stop-color='#0c0807'/></linearGradient>
- <filter id='blur6' x='-50%%' y='-50%%' width='200%%' height='200%%'><feGaussianBlur stdDeviation='6'/></filter>
- <filter id='blur18' x='-50%%' y='-50%%' width='200%%' height='200%%'><feGaussianBlur stdDeviation='18'/></filter>
- <filter id='blur40' x='-50%%' y='-50%%' width='200%%' height='200%%'><feGaussianBlur stdDeviation='40'/></filter>
- <filter id='soft'><feGaussianBlur stdDeviation='1.1'/></filter>
- <filter id='terrain'><feTurbulence type='fractalNoise' baseFrequency='0.9 0.08' numOctaves='3' seed='4'/>
-  <feColorMatrix values='0 0 0 0 0.10  0 0 0 0 0.06  0 0 0 0 0.03  0 0 0 0.55 0'/><feComposite in2='SourceGraphic' operator='in'/></filter>
+  <stop offset='0' stop-color='#0d0b1c'/><stop offset='0.18' stop-color='#22163a'/><stop offset='0.36' stop-color='#55203f'/>
+  <stop offset='0.52' stop-color='#a5373a'/><stop offset='0.62' stop-color='#de6430'/><stop offset='0.69' stop-color='#f6a24a'/>
+  <stop offset='0.735' stop-color='#ffd796'/><stop offset='1' stop-color='#ffd796'/></linearGradient>
+ <radialGradient id='sunglow' cx='%(SX)d' cy='%(SY)d' r='900' gradientUnits='userSpaceOnUse'>
+  <stop offset='0' stop-color='#fffbe8'/><stop offset='0.04' stop-color='#ffeab0'/><stop offset='0.13' stop-color='#ffb85a' stop-opacity='0.75'/>
+  <stop offset='0.35' stop-color='#ff7a32' stop-opacity='0.30'/><stop offset='1' stop-color='#ff5a20' stop-opacity='0'/></radialGradient>
+ <linearGradient id='cloudcol' x1='0' y1='0' x2='0' y2='1'>
+  <stop offset='0' stop-color='#3a2448'/><stop offset='0.45' stop-color='#b4485a'/><stop offset='0.8' stop-color='#ffad6a'/>
+  <stop offset='1' stop-color='#ffd9a0'/></linearGradient>
+ <linearGradient id='ground' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#6a3a22'/><stop offset='0.12' stop-color='#3c2216'/>
+  <stop offset='0.5' stop-color='#1d120d'/><stop offset='1' stop-color='#0a0607'/></linearGradient>
+ <linearGradient id='glass' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='#ffcf86'/><stop offset='0.55' stop-color='#ff9a4c'/>
+  <stop offset='1' stop-color='#c85a34'/></linearGradient>
+ <linearGradient id='glass2' x1='0' y1='0' x2='0' y2='1'><stop offset='0' stop-color='#e2794a'/><stop offset='1' stop-color='#ffbe72'/></linearGradient>
+ <radialGradient id='rim' cx='0.35' cy='0.3' r='0.8'><stop offset='0' stop-color='#3b2a14'/><stop offset='0.6' stop-color='#1d150b'/>
+  <stop offset='1' stop-color='#0c0807'/></radialGradient>
+ <radialGradient id='beacon' cx='0.5' cy='0.5' r='0.5'><stop offset='0' stop-color='#ffe0a0'/><stop offset='0.25' stop-color='#ffa030' stop-opacity='0.8'/>
+  <stop offset='1' stop-color='#ff8000' stop-opacity='0'/></radialGradient>
+ <filter id='b1'><feGaussianBlur stdDeviation='1.1'/></filter>
+ <filter id='b3' x='-20%%' y='-20%%' width='140%%' height='140%%'><feGaussianBlur stdDeviation='3'/></filter>
+ <filter id='b8' x='-50%%' y='-50%%' width='200%%' height='200%%'><feGaussianBlur stdDeviation='8'/></filter>
+ <filter id='b20' x='-50%%' y='-50%%' width='200%%' height='200%%'><feGaussianBlur stdDeviation='20'/></filter>
+ <filter id='b50' x='-50%%' y='-50%%' width='200%%' height='200%%'><feGaussianBlur stdDeviation='50'/></filter>
+ %(CLOUDF)s
+ <filter id='soil' x='0' y='0' width='100%%' height='100%%'><feTurbulence type='fractalNoise' baseFrequency='0.045 0.11' numOctaves='4' seed='9'/>
+  <feColorMatrix values='0 0 0 0 0.62  0 0 0 0 0.38  0 0 0 0 0.24  0 0 0 1.4 -0.62'/></filter>
+ <mask id='cloudmask'><rect width='%(W)d' height='%(H)d' fill='#fff' filter='url(#cloud)'/></mask>
 </defs>
+
+<!-- sky, sun glow, cloud streaks lit from below -->
 <rect width='%(W)d' height='%(H)d' fill='url(#sky)'/>
-<g filter='url(#blur18)'>%(CLOUDS)s</g>
-<circle cx='1150' cy='600' r='420' fill='url(#sun)'/>
-<circle cx='1150' cy='600' r='54' fill='#fff4d2'/>
-<g opacity='0.045' filter='url(#blur6)'>%(RAYS)s</g>
-<path d='%(R1)s' fill='#5a2a35' opacity='0.55' filter='url(#blur6)'/>
-<path d='%(R2)s' fill='#3a1a24' opacity='0.8' filter='url(#blur6)'/>
-<!-- distant site: crane and a second machine in the haze -->
-<g fill='#2a1420' opacity='0.75' filter='url(#blur6)'>
- <path d='M120 640 L150 600 L210 590 L236 612 L250 640 Z'/><path d='M236 612 L300 560 L330 566 L340 600 L322 604 L314 584 L256 626 Z'/>
- <circle cx='150' cy='646' r='12'/><circle cx='226' cy='646' r='12'/>
- <path d='M1460 640 L1520 600 L1560 606 L1566 640 Z'/><circle cx='1480' cy='650' r='14'/><circle cx='1545' cy='650' r='14'/>
+<rect width='%(W)d' height='%(H)d' fill='url(#sunglow)'/>
+<rect width='%(W)d' height='%(HZ)d' fill='url(#cloudcol)' mask='url(#cloudmask)' opacity='0.85'/>
+<rect width='%(W)d' height='%(HZ)d' fill='url(#sunglow)' mask='url(#cloudmask)' opacity='0.55'/>
+<circle cx='%(SX)d' cy='%(SY)d' r='46' fill='#fffdf2'/>
+<circle cx='%(SX)d' cy='%(SY)d' r='120' fill='#fff2c8' opacity='0.35' filter='url(#b20)'/>
+
+<!-- far hills and the site on the horizon, flattened by haze -->
+<path d='M0 %(HZ)d L0 618 C180 600 300 612 460 606 C620 598 760 616 900 610 C1100 600 1300 616 1600 604 L1600 %(HZ)d Z'
+      fill='#7a3a46' opacity='0.55' filter='url(#b3)'/>
+<g fill='#5a2a36' opacity='0.62' filter='url(#b3)'>%(SKYLINE)s</g>
+<rect y='%(HZm)d' width='%(W)d' height='40' fill='#f6a868' opacity='0.35' filter='url(#b8)'/>
+
+<!-- ground: soil texture, tyre tracks, heap -->
+<rect y='%(HZ)d' width='%(W)d' height='%(GH)d' fill='url(#ground)'/>
+<g filter='url(#b1)'><rect y='%(HZ)d' width='%(W)d' height='%(GH)d' filter='url(#soil)' opacity='0.22'/></g>
+<g filter='url(#b8)' opacity='0.5'>%(RUTS)s</g>
+<rect y='%(HZ)d' width='%(W)d' height='26' fill='#e8925a' opacity='0.22' filter='url(#b8)'/>
+<g filter='url(#b3)'>%(MOUNDS)s</g>
+%(STONES)s
+%(TRACKS)s
+<ellipse cx='%(MX)d' cy='%(GY)d' rx='420' ry='14' fill='#000' opacity='0.65' filter='url(#b8)'/>
+<path d='M%(HEAP)s' fill='#24140d'/>
+<path d='M%(HEAPRIM)s' fill='none' stroke='#ffa75a' stroke-width='2' opacity='0.5' filter='url(#b1)'/>
+
+<!-- the machine: warm rim light on every edge facing the sun, body in deep shadow -->
+<g filter='url(#b1)'>
+ <g fill='#ffb455' color='#ffb455' filter='url(#b3)' opacity='0.85'>%(BODY)s</g>
+ <g fill='#ffc574' color='#ffc574'>%(BODY)s</g>
+ <g fill='#120c0a' color='#120c0a' transform='translate(2.2 2.6)'>%(BODY)s</g>
+ <g fill='#1a120d' color='#1a120d' transform='translate(3.2 3.6)' opacity='0.9'>%(BODY)s</g>
+ %(GLASS)s
+ %(WHEELS)s
 </g>
-<path d='%(R3)s' fill='url(#ground)'/>
-<rect y='640' width='%(W)d' height='260' fill='#000' filter='url(#terrain)'/>
-<ellipse cx='1000' cy='770' rx='560' ry='22' fill='#000' opacity='0.55' filter='url(#blur18)'/>
-<g filter='url(#blur40)'>%(DUST)s</g>
-%(MACHINE)s
-<path d='M440 776 C470 720 520 700 560 712 C600 724 630 748 660 776 Z' fill='#140c08'/>
-<path d='M470 744 C500 716 540 708 572 718' stroke='#ff9d3c' stroke-width='2' fill='none' opacity='0.45'/>
-<g filter='url(#blur18)' opacity='0.55'><ellipse cx='560' cy='730' rx='120' ry='36' fill='#c7743a'/></g>
-<g filter='url(#blur40)' opacity='0.28'><rect x='700' y='700' width='800' height='90' fill='#d98a48'/></g>
-<g filter='url(#blur40)' opacity='0.30'><ellipse cx='540' cy='740' rx='200' ry='60' fill='#f0a060'/>
- <ellipse cx='1440' cy='760' rx='160' ry='40' fill='#f0a060'/></g>
-<rect y='780' width='%(W)d' height='120' fill='#050304' opacity='0.55' filter='url(#blur18)'/>
+<circle cx='%(BX)d' cy='%(BY)d' r='34' fill='url(#beacon)'/>
+<circle cx='%(BX)d' cy='%(BY)d' r='3' fill='#fff2c0'/>
+
+<!-- dust kicked up and lit by the sun, motes in the air -->
+<g filter='url(#b50)' opacity='0.55'>
+ <ellipse cx='%(DX)d' cy='%(DY)d' rx='260' ry='70' fill='#f2a764'/>
+ <ellipse cx='1300' cy='%(GY)d' rx='420' ry='40' fill='#e9945a'/>
+ <ellipse cx='700' cy='%(GY)d' rx='300' ry='30' fill='#c8743e'/>
+</g>
+<g filter='url(#b1)'>%(MOTES)s</g>
+
+<!-- foreground out of focus -->
+<rect y='826' width='%(W)d' height='110' fill='#070405' opacity='0.8' filter='url(#b20)'/>
+<g filter='url(#b8)' fill='none' stroke='#0a0605' stroke-linecap='round'>%(GRASS)s</g>
 </svg>"""
 
 
-def rays():
-    out = []
-    for a in range(0, 360, 12):
-        out.append("<path d='M1150 600 L%d %d L%d %d Z' fill='#ffd9a0'/>" % (
-            1150 + 1400 * __import__("math").cos((a - 1.5) / 57.3), 600 + 1400 * __import__("math").sin((a - 1.5) / 57.3),
-            1150 + 1400 * __import__("math").cos((a + 1.5) / 57.3), 600 + 1400 * __import__("math").sin((a + 1.5) / 57.3)))
-    return "".join(out)
+def flare(im):
+    """Lens flare: anamorphic streak through the sun and soft ghosts on the line through the frame centre."""
+    from PIL import ImageDraw
+    fl = Image.new("RGB", (W, H), (0, 0, 0))
+    d = ImageDraw.Draw(fl)
+    d.ellipse([SUN[0] - 420, SUN[1] - 1.5, SUN[0] + 420, SUN[1] + 1.5], fill=(200, 140, 80))
+    fl = fl.filter(ImageFilter.GaussianBlur(3))
+    gh = Image.new("RGB", (W, H), (0, 0, 0))
+    d = ImageDraw.Draw(gh)
+    cx, cy = W / 2, H / 2
+    for t, r, col in ((0.5, 16, (90, 50, 20)), (1.3, 38, (50, 40, 30)), (1.65, 10, (90, 60, 30)), (2.1, 70, (30, 22, 26))):
+        x, y = SUN[0] + (cx - SUN[0]) * t, SUN[1] + (cy - SUN[1]) * t
+        d.ellipse([x - r, y - r, x + r, y + r], fill=col)
+    gh = gh.filter(ImageFilter.GaussianBlur(6))
+    return ImageChops.screen(ImageChops.screen(im, fl), ImageEnhance.Brightness(gh).enhance(0.35))
 
 
 def grade(png):
     im = Image.open(png).convert("RGB")
-    # bloom: bright areas glow
-    bright = im.point(lambda v: max(0, v - 170) * 3)
-    bloom = bright.filter(ImageFilter.GaussianBlur(28))
-    im = ImageChops.screen(im, bloom)
-    # slight lens softness, contrast and warmth
-    im = im.filter(ImageFilter.GaussianBlur(0.6))
-    im = ImageEnhance.Contrast(im).enhance(1.08)
+    bright = im.point(lambda v: max(0, v - 175) * 3)
+    im = ImageChops.screen(im, bright.filter(ImageFilter.GaussianBlur(24)))       # bloom
+    im = ImageChops.screen(im, ImageEnhance.Brightness(bright.filter(ImageFilter.GaussianBlur(90))).enhance(0.6))
+    im = flare(im)
+    # depth of field: the far horizon slightly soft, the machine sharp, the bottom strip very soft
+    soft = im.filter(ImageFilter.GaussianBlur(2.2))
+    mask = Image.new("L", (W, H), 0)
+    for y in range(H):
+        v = 0
+        if y < 560:
+            v = 110
+        elif y > 800:
+            v = min(255, (y - 800) * 4)
+        mask.paste(v, (0, y, W, y + 1))
+    im = Image.composite(soft, im, mask)
+    # chromatic fringe (1 px), contrast, warm highlights / cool shadows
     r, g, b = im.split()
-    im = Image.merge("RGB", (r.point(lambda v: min(255, v * 1.03)), g, b.point(lambda v: v * 0.94)))
-    # vignette
-    vig = Image.radial_gradient("L").resize((W, H)).point(lambda v: 255 - int(v * 0.75))
-    im = Image.composite(im, Image.new("RGB", (W, H), (8, 5, 6)), vig)
-    # film grain
-    noise = Image.effect_noise((W, H), 22).convert("RGB")
-    im = Image.blend(im, ImageChops.overlay(im, noise), 0.10)
+    r = ImageChops.offset(r, 1, 0)
+    b = ImageChops.offset(b, -1, 0)
+    im = Image.merge("RGB", (r, g, b))
+    im = ImageEnhance.Contrast(im).enhance(1.06)
+    r, g, b = im.split()
+    im = Image.merge("RGB", (r.point(lambda v: min(255, int(v * 1.02 + 2))), g, b.point(lambda v: int(v * 0.93 + 6))))
+    vig = Image.radial_gradient("L").resize((W, H)).point(lambda v: 255 - int(v * 0.7))
+    im = Image.composite(im, Image.new("RGB", (W, H), (6, 4, 6)), vig)
+    noise = Image.effect_noise((W, H), 26).convert("RGB")
+    im = Image.blend(im, ImageChops.overlay(im, noise), 0.12)                       # film grain
     return im
 
 
 def main():
-    svg = SVG % {"W": W, "H": H, "CLOUDS": clouds(), "RAYS": rays(), "DUST": dust(), "MACHINE": MACHINE,
-                 "R1": ridge(560, 40, 60, 1), "R2": ridge(610, 26, 45, 2), "R3": ridge(660, 12, 30, 3)}
+    heap_pts = [(6.3, 0.0), (6.6, 0.28), (6.95, 0.42), (7.3, 0.40), (7.7, 0.30), (8.2, 0.05), (8.3, 0.0)]
+    heap = " L".join(p(x, y) for x, y in heap_pts) + " Z"
+    heaprim = " L".join(p(x, y) for x, y in heap_pts[:4])
+    wheels = wheel(1.55, 0.48, 0.48) + wheel(3.72, 0.75, 0.75)
+    svg = SVG % {"W": W, "H": H, "SX": SUN[0], "SY": SUN[1], "HZ": HORIZON, "HZm": HORIZON - 20, "GH": H - HORIZON,
+                 "CLOUDF": clouds_filter(), "SKYLINE": skyline(), "TRACKS": tracks(), "BODY": machine_body(),
+                 "GLASS": glass(), "WHEELS": wheels, "MOTES": dust_motes(), "RUTS": ruts(), "MOUNDS": mounds(), "STONES": stones(), "GRASS": grass(), "HEAP": heap, "HEAPRIM": heaprim,
+                 "MX": X0 + 4 * S, "GY": G, "BX": X0 + 3.64 * S, "BY": G - 3.0 * S,
+                 "DX": X0 + 7.0 * S, "DY": G - 30}
     tmp = os.path.join(HERE, "out")
     os.makedirs(tmp, exist_ok=True)
     sp, pp = os.path.join(tmp, "bg.svg"), os.path.join(tmp, "bg.png")
@@ -200,7 +389,7 @@ def main():
           "const p=await b.newPage({viewport:{width:%d,height:%d}});await p.goto('file://%s');"
           "await p.screenshot({path:'%s'});await b.close();})();" % (W, H, sp, pp))
     subprocess.run(["node", "-e", js], check=True)
-    grade(pp).save(OUT, "JPEG", quality=80, optimize=True, progressive=True)
+    grade(pp).save(OUT, "JPEG", quality=84, optimize=True, progressive=True)
     print("wrote", OUT, os.path.getsize(OUT) // 1024, "KB")
 
 

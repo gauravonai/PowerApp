@@ -286,7 +286,7 @@
             HoverColor: =cJcb
             HoverFill: =cJcbWash
             OnSelect: |-
-              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gMeMail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
             PaddingLeft: =8
             PaddingRight: =8
             PressedBorderColor: =cJcb
@@ -328,7 +328,7 @@
             BorderThickness: =0
             Fill: =RGBA(0,0,0,0)
             Height: =696
-            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
+            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
             OnSelect: |-
               =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                 "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
@@ -458,8 +458,8 @@
                   RadiusTopLeft: =9
                   RadiusTopRight: =9
                   Size: =9
-                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
-                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, RaisedByEmail = gMeEmail && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
+                  Text: =Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0)
+                  Visible: =!ThisItem.Hdr && Switch(ThisItem.Key, "queue", nfQueueCount, "myreq", CountRows(Filter(nfReq, (RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && RaisedByEmail = gMeMail)) && !(Status in nfDeadStatus))), "newpartq", CountRows(Filter(nfNewPart, Status = "SUBMITTED")), 0) > 0
                   Width: =26
                   X: =190
                   Y: =11
@@ -1718,7 +1718,7 @@
                         Fill: =RGBA(0,0,0,0)
                         Height: =530
                         Items: |-
-                          =With({s: Upper(Trim(qInv.Text)), c: cInv.Selected.Value, st: sInv.Selected.Value}, Filter(nfStock, (IsBlank(s) || s in PN || s in Upper(Description) || s in Upper(Location)) && (c = "All Categories" || Category = c) && (st = "Any Status" || Status = Upper(st)) && (dqInv.Selected.Value = "Any Data Quality" || (dqInv.Selected.Value = "OK") = IsBlank(Quality))))
+                          =With({s: Upper(Trim(qInv.Text)), c: cInv.Selected.Value, st: sInv.Selected.Value}, Filter(nfStock, (IsBlank(s) || s in PN || s in Upper(Description) || s in Upper(Location)) && (IsBlank(c) || c = "All Categories" || Category = c) && (IsBlank(st) || st = "Any Status" || Status = Upper(st)) && (dqInv.Selected.Value = "Any Data Quality" || (dqInv.Selected.Value = "OK") = IsBlank(Quality))))
                         ShowScrollbar: =true
                         TemplatePadding: =0
                         TemplateSize: =42

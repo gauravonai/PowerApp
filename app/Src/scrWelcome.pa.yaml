@@ -327,7 +327,7 @@ Screens:
                   PaddingRight: =0
                   PaddingTop: =0
                   Size: =9
-                  Text: ="Version 2.0.5 · 08-Oct-2026"
+                  Text: ="Version 2.0.6 · 08-Oct-2026"
                   VerticalAlign: =VerticalAlign.Middle
                   Width: =240
                   X: =1100

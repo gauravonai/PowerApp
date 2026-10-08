@@ -66,7 +66,8 @@ PILL = [("IN STOCK", "cOk", "In Stock"), ("LOW STOCK", "cWarn", "Low Stock"), ("
         ("ENGINEER", "cInk2", "Engineer"), ("PO", "cJcb", "PO"), ("FOC", "cSteel", "FOC"),
         ("NOT SET UP", "cWarn", "Not Set Up"), ("SET", "cOk", "Set"), ("TEMPORARY", "cWarn", "Temporary"),
         ("NOT SET", "cInk3", "Not Set"), ("PENDING APPROVAL", "cJcb", "Pending Approval"), ("MATERIAL", "cInk2", "Material"), ("SERVICE", "cInk2", "Service"),
-        ("TOOL", "cInk2", "Tool"), ("LICENSE", "cInk2", "License"), ("COMPONENTS", "cInk2", "Components")]
+        ("TOOL", "cInk2", "Tool"), ("LICENSE", "cInk2", "License"), ("COMPONENTS", "cInk2", "Components"),
+        ("CAPEX", "cInk2", "Capex"), ("OPEX", "cInk2", "Opex"), ("AMC", "cInk2", "AMC")]
 
 
 def nav_table():
@@ -91,13 +92,17 @@ def nav_switch():
 
 
 def D(x):
-    """Read any Excel date cell (Date, DateTime, ISO text or local text) as a Date."""
-    return "If(IsBlank(%s), Blank(), DateValue(Text(%s)))" % (x, x)
+    """Read any Excel date cell as a Date: a real date, ISO / local text, or an Excel serial number (46303.5).
+    Never an error: an unreadable cell is blank, so one bad cell cannot break a whole list."""
+    return ('If(IsBlank(%s), Blank(), IfError(With({t: Trim(Text(%s))}, If(!("-" in t) && !("/" in t) && !(":" in t) && '
+            '!IsBlank(IfError(Value(t), Blank())) && Value(t) > 1000, DateAdd(Date(1899, 12, 30), RoundDown(Value(t), 0), '
+            'TimeUnit.Days), DateValue(t))), Blank()))' % (x, x))
 
 
 def N(x):
-    """Read any Excel number cell (number or text) as a number, blank -> 0."""
-    return "Coalesce(Value(Text(%s)), 0)" % x
+    """Read any Excel number cell as a number: number, text "12.5", or text with a unit ("10 NOS" -> 10).
+    Blank or unreadable -> 0, never an error (one bad cell must not break stock for every part)."""
+    return ("Coalesce(IfError(Value(Text(%s)), IfError(Value(First(Split(Trim(Text(%s)), \" \")).Value), 0)), 0)" % (x, x))
 
 
 def T(x):
@@ -340,7 +345,7 @@ nfRevTotal = Sum(nfInv, TotalCost);
 nfProcBars = Table(
     {K: "Delivered", V: CountRows(Filter(nfProc, "DELIVERED" in Stage)), C: cOk},
     {K: "PO", V: CountRows(Filter(nfProc, !("DELIVERED" in Stage) && ("PO" in Stage || "GRN" in Stage))), C: cSteel},
-    {K: "PR", V: CountRows(Filter(nfProc, !("DELIVERED" in Stage) && !("PO" in Stage) && !("GRN" in Stage))), C: cJcb});
+    {K: "PR", V: CountRows(Filter(nfProc, !("DELIVERED" in Stage) && !("PO" in Stage) && !("GRN" in Stage) && Stage <> "REJECTED")), C: cJcb});
 nfOngoing = CountRows(Filter(nfReq, !(Status in nfDeadStatus)));
 nfUpcoming = CountRows(Filter(nfReq As R, !(R.Status in nfDeadStatus) &&
     CountRows(Filter(nfLines As L, L.RequestNo = R.RequestNo && (L.QtyReserved > 0 || L.QtyRequested > L.QtyReleased))) > 0));
@@ -399,6 +404,7 @@ Set(gMe, LookUp(tblUsers, false));
 Set(gPend, LookUp(tblUsers, false));
 Set(gMeName, "");
 Set(gMeEmail, "");
+Set(gMeMail, "");
 Set(gMeInitials, "");
 Set(gIsLead, false);
 Set(gIsAdmin, false);
@@ -408,6 +414,10 @@ Set(gLoginMode, "login");
 Set(gLoginMsg, "");
 Set(gLoginTries, 0);
 Set(gTempCode, "");
+Set(gBomInfo, "");
+Set(gMyNpr, "");
+Set(gBomRead, 0);
+Set(gShowPw, false);
 Set(gLastSync, Now());
 Set(gSyncNote, "");
 Set(gPhotoCheck, "Not tested yet on this device.");
@@ -500,7 +510,7 @@ def hash_py(pw, salt, prefix):
 def login_ok(u):
     """Behaviour formula: make record u the signed-in person and open their usual role."""
     return ('Set(gMe, %(U)s); Set(gMeName, Coalesce(Trim(Text(gMe.FullName)), Trim(Text(gMe.Username)))); '
-            'Set(gMeEmail, Lower(Coalesce(Trim(Text(gMe.Email)), Trim(Text(gMe.Username))))); '
+            'Set(gMeEmail, Lower(Trim(Text(gMe.Username)))); Set(gMeMail, Lower(Trim(Text(gMe.Email)))); '
             'Set(gMeInitials, Upper(Concat(FirstN(Split(gMeName, " "), 2), Left(Value, 1)))); '
             'With({rl: %(RL)s}, Set(gIsLead, "Lab Lead" in rl); Set(gIsAdmin, gIsLead || "Lab Admin" in rl); '
             'Set(gIsMgr, "Manager" in rl); Set(gRoleHome, Coalesce(First(rl).Value, "Engineer"))); '
