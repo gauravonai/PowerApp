@@ -21,6 +21,7 @@ export PLAIN_DS=1
 echo "== build";                  python3 tools/build.py
 static_checks
 echo "== workflow simulation";    dotnet $FX render tools/out/data.json tools/out/bind.json tools/out/render > tools/out/sim.log; grep -E "FAIL|workflow simulation" tools/out/sim.log
+echo "== phase 1 (engineer -> lab admin)"; dotnet $FX phase1 tools/out/data.json tools/out/bind.json tools/out/phase1 | tail -1
 echo "== every button";           dotnet $FX smoke tools/out/data.json tools/out/bind.json | tail -1
 echo "== screenshots";            python3 tools/verify/draw_html.py tools/out/render tools/out/html && node tools/verify/shoot.js tools/out/html tools/out/png full
 echo "######## pass 2: table names as connected in Studio (tools/datasources.json)"
