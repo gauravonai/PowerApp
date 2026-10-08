@@ -2,6 +2,7 @@
 # Fast loop: build + schema + property names + parse + bind + simulation (no pack, no screenshots).
 set -uo pipefail
 cd "$(dirname "$0")/../.."
+export PLAIN_DS=1
 python3 tools/build.py | tail -2 || exit 1
 python3 tools/verify/schema_check.py tools/verify/pa.schema.yaml | tail -1
 python3 tools/verify/prop_check.py | tail -3

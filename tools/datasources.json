@@ -1,0 +1,15 @@
+{
+  "_note": "Data source names exactly as they appear in Studio's Data panel. Key = name in the generator, value = name in the user's app. Set a value equal to its key to use the plain name. Build with PLAIN_DS=1 to ignore this file (the verification harness does that first).",
+  "tblCalib": "tblCalib",
+  "tblInvoice": "tblInvoice_1",
+  "tblLicenses": "tblLicenses_1",
+  "tblMoves": "tblMoves_1",
+  "tblNewPart": "tblNewPart_1",
+  "tblParts": "tblParts_1",
+  "tblProc": "tblProc_1",
+  "tblPurch": "tblPurch_1",
+  "tblReqLines": "tblReqLines_1",
+  "tblRequests": "tblRequests_1",
+  "tblSettings": "tblSettings",
+  "tblUsers": "tblUsers_1"
+}

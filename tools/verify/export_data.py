@@ -2,6 +2,7 @@
 the way Power Apps' Excel connector would type them (number / text / datetime)."""
 import datetime as dt
 import json
+import os
 import sys
 
 import openpyxl
@@ -61,6 +62,9 @@ def main(xlsx, out):
                 if rec:
                     data.append(rec)
             res[tn] = {"types": types, "rows": data}
+    if os.environ.get("PLAIN_DS") != "1":        # same names as the generated app (tools/datasources.json)
+        m = json.load(open(os.path.join(os.path.dirname(__file__), "..", "datasources.json")))
+        res = {m.get(k, k): v for k, v in res.items()}
     json.dump(res, open(out, "w"), indent=0)
     print({k: len(v["rows"]) for k, v in res.items()})
 

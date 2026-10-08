@@ -1,8 +1,8 @@
 // App.OnStart - only session state. All data lives in the named formulas (App.Formulas).
 Set(gRole, "");
 Set(gRoleHome, "Engineer");
-Set(gMe, LookUp(tblUsers, false));
-Set(gPend, LookUp(tblUsers, false));
+Set(gMe, LookUp(tblUsers_1, false));
+Set(gPend, LookUp(tblUsers_1, false));
 Set(gMeName, "");
 Set(gMeEmail, "");
 Set(gMeInitials, "");

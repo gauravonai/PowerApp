@@ -127,7 +127,7 @@ Screens:
                   HoverBorderColor: =cClear
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
-                  OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+                  OnSelect: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblPurch_1); Refresh(tblProc_1); Refresh(tblInvoice_1); Refresh(tblNewPart_1); Refresh(tblLicenses_1); Refresh(tblUsers_1); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cClear
@@ -150,7 +150,7 @@ Screens:
                   AutoStart: =true
                   Duration: =120000
                   Height: =10
-                  OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+                  OnTimerEnd: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblSettings); Set(gLastSync, Now())
                   Repeat: =true
                   Visible: =false
                   Width: =10
@@ -295,7 +295,7 @@ Screens:
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
                   OnSelect: |-
-                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers_1, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cJcb
@@ -1199,7 +1199,7 @@ Screens:
                               Fill: =RGBA(0,0,0,0)
                               Height: =128
                               Items: |-
-                                =Table({Check: "Parts rows", Excel: nXlParts, App: nAppParts, Ok: nXlParts = nAppParts, Fix: "Data row limit too low, or tblParts not connected"}, {Check: "Movement rows", Excel: nXlMoves, App: nAppMoves, Ok: nXlMoves = nAppMoves, Fix: "Set Settings > Data row limit to 2000"}, {Check: "Stock total (all parts)", Excel: nXlStock, App: nAppStock, Ok: Abs(nXlStock - nAppStock) < 0.001, Fix: "A movement row was not read, or has a Type the app does not know"})
+                                =Table({Check: "Parts rows", Excel: nXlParts, App: nAppParts, Ok: nXlParts = nAppParts, Fix: "Data row limit too low, or tblParts_1 not connected"}, {Check: "Movement rows", Excel: nXlMoves, App: nAppMoves, Ok: nXlMoves = nAppMoves, Fix: "Set Settings > Data row limit to 2000"}, {Check: "Stock total (all parts)", Excel: nXlStock, App: nAppStock, Ok: Abs(nXlStock - nAppStock) < 0.001, Fix: "A movement row was not read, or has a Type the app does not know"})
                               ShowScrollbar: =true
                               TemplatePadding: =0
                               TemplateSize: =40
@@ -1419,7 +1419,7 @@ Screens:
                               HoverBorderColor: =cOrange
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
-                              OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify(nfHealthText & ".", If(nfHealthOk, NotificationType.Success, NotificationType.Warning))
+                              OnSelect: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblPurch_1); Refresh(tblProc_1); Refresh(tblInvoice_1); Refresh(tblNewPart_1); Refresh(tblLicenses_1); Refresh(tblUsers_1); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify(nfHealthText & ".", If(nfHealthOk, NotificationType.Success, NotificationType.Warning))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange

@@ -90,7 +90,8 @@ public class Host {
     foreach (var n in new[] { "gIsLead", "gIsAdmin", "gIsMgr" }) V(n, FormulaValue.New(false));
     V("gLoginTries", FormulaValue.New(0.0));
     V("gRoleOptions", FormulaValue.NewTable(Rec(("Value", S)), FormulaValue.NewRecordFromFields(new NamedValue("Value", FormulaValue.New("Engineer")))));
-    V("gMe", Blankish(TableTypes["tblUsers"])); V("gPend", Blankish(TableTypes["tblUsers"]));
+    var usersT = TableTypes[TableTypes.Keys.First(k => k == "tblUsers" || k.StartsWith("tblUsers_"))];
+    V("gMe", Blankish(usersT)); V("gPend", Blankish(usersT));
     V("colBom", FormulaValue.NewTable(Rec(("Sr", N), ("PartNo", S), ("PN", S), ("Qty", N), ("Description", S), ("UOM", S), ("Location", S), ("OnHand", N), ("Reserved", N), ("Avail", N), ("UnitCost", N), ("Short", N), ("Status", S), ("Found", B))));
     V("colNP", FormulaValue.NewTable(Rec(("Id", N), ("RequesterName", S), ("Category", S), ("SubCategory", S), ("PlantCode", S), ("PartName", S), ("MakeBrand", S), ("ModelNo", S), ("OtherSpecs", S), ("Remarks", S), ("UOM", S), ("HSNCode", S))));
     var npT = Rec(("Id", N), ("RequesterName", S), ("Category", S), ("SubCategory", S), ("PlantCode", S), ("PartName", S), ("MakeBrand", S), ("ModelNo", S), ("OtherSpecs", S), ("Remarks", S), ("UOM", S), ("HSNCode", S));

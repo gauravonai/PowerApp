@@ -179,8 +179,8 @@ App:
       nXlParts = Value(LookUp(nfSet, Key = "ExcelPartRows").Val);
       nXlMoves = Value(LookUp(nfSet, Key = "ExcelMovementRows").Val);
       nXlStock = Value(LookUp(nfSet, Key = "ExcelStockTotal").Val);
-      nAppParts = CountRows(tblParts);
-      nAppMoves = CountRows(tblMoves);
+      nAppParts = CountRows(tblParts_1);
+      nAppMoves = CountRows(tblMoves_1);
       nAppStock = Round(Sum(nfMoves, SQty), 3);
       nfHealthOk = !IsBlank(nXlMoves) && nXlParts = nAppParts && nXlMoves = nAppMoves && Abs(nXlStock - nAppStock) < 0.001;
       nfHealthText = If(IsBlank(nXlMoves), "Health rows missing in Settings",
@@ -208,7 +208,7 @@ App:
 
       // ---------- Parts (retired parts, Active = No, are hidden like the HTA) ----------
       nfParts = ForAll(
-          Filter(tblParts, !IsBlank(PartNo) && Lower(Trim(Text(Active))) <> "no") As P,
+          Filter(tblParts_1, !IsBlank(PartNo) && Lower(Trim(Text(Active))) <> "no") As P,
           {PartNo: Trim(Text(P.PartNo)), PN: Upper(Trim(Text(P.PartNo))), Description: Text(P.Description),
            Category: Text(P.Category), SubCategory: Text(P.SubCategory), UOM: Coalesce(Text(P.UOM), "NO"),
            Location: Text(P.Location), Supplier: Text(P.Supplier), UnitCost: Coalesce(Value(Text(P.UnitCost)), 0),
@@ -216,7 +216,7 @@ App:
 
       // ---------- Movements, signed by type exactly like the LiveStock SUMIFS ----------
       nfMoves = ForAll(
-          Filter(tblMoves, !IsBlank(PartNo)) As M,
+          Filter(tblMoves_1, !IsBlank(PartNo)) As M,
           With({t: Upper(Trim(Text(M.Type))), q: Abs(Coalesce(Value(Text(M.Qty)), 0))},
               {Date: If(IsBlank(M.Date), Blank(), DateValue(Text(M.Date))), PartNo: Trim(Text(M.PartNo)), PN: Upper(Trim(Text(M.PartNo))),
                Type: If(t = "ISSUE", "RELEASE", t), RawType: t, Qty: q,
@@ -228,7 +228,7 @@ App:
 
       // ---------- Requests + lines ----------
       nfReq = ForAll(
-          Filter(tblRequests, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As R,
+          Filter(tblRequests_1, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As R,
           {RequestNo: Text(R.RequestNo), Kind: Upper(Text(R.Kind)), Status: Upper(Coalesce(Text(R.Status), "SUBMITTED")),
            RaisedByEmail: Lower(Text(R.RaisedByEmail)), RaisedByName: Text(R.RaisedByName), DateRaised: If(IsBlank(R.DateRaised), Blank(), DateValue(Text(R.DateRaised))),
            Machine: Text(R.Machine), ProjectCode: Text(R.ProjectCode), HarnessPartNo: Text(R.HarnessPartNo),
@@ -237,7 +237,7 @@ App:
            RequiredBy: If(IsBlank(R.RequiredBy), Blank(), DateValue(Text(R.RequiredBy))), ScopeOfWork: Text(R.ScopeOfWork), ParentRequest: Text(R.ParentRequest),
            LastUpdated: Text(R.LastUpdated), LastUpdatedBy: Text(R.LastUpdatedBy), History: Text(R.History)});
       nfLines = ForAll(
-          Filter(tblReqLines, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As L,
+          Filter(tblReqLines_1, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As L,
           {RequestNo: Text(L.RequestNo), Sr: Coalesce(Value(Text(L.Sr)), 0), PartNo: Trim(Text(L.PartNo)), PN: Upper(Trim(Text(L.PartNo))),
            Description: Text(L.Description), QtyRequested: Coalesce(Value(Text(L.QtyRequested)), 0), QtyReserved: Coalesce(Value(Text(L.QtyReserved)), 0),
            QtyReleased: Coalesce(Value(Text(L.QtyReleased)), 0), UOM: Text(L.UOM), LineStatus: Upper(Text(L.LineStatus)),
@@ -290,13 +290,13 @@ App:
                NewPart: IsBlank(LookUp(nfParts, PN = G.Value))})), Qty, SortOrder.Descending);
 
       // ---------- other tabs ----------
-      nfPurch = ForAll(Filter(tblPurch, !IsBlank(PartNo) && !StartsWith(Text(PartNo), "SAMPLE")) As U,
+      nfPurch = ForAll(Filter(tblPurch_1, !IsBlank(PartNo) && !StartsWith(Text(PartNo), "SAMPLE")) As U,
           {PartNo: Trim(Text(U.PartNo)), PN: Upper(Trim(Text(U.PartNo))), Description: Text(U.Description),
            QtyRequired: Coalesce(Value(Text(U.QtyRequired)), 0), QtyConfirmed: Coalesce(Value(Text(U.QtyConfirmed)), 0), RequestNo: Text(U.RequestNo),
            RaisedBy: Text(U.RaisedBy), PRNumber: Text(U.PRNumber), SupplierNo: Text(U.SupplierNo),
            SupplierName: Text(U.SupplierName), Stage: Upper(Coalesce(Text(U.Stage), "REQUIRED")),
            DateRaised: If(IsBlank(U.DateRaised), Blank(), DateValue(Text(U.DateRaised))), ExpectedDate: If(IsBlank(U.ExpectedDate), Blank(), DateValue(Text(U.ExpectedDate))), Notes: Text(U.Notes)});
-      nfProc = ForAll(Filter(tblProc, !IsBlank(PRNumber) && !StartsWith(Text(PRNumber), "SAMPLE")) As X,
+      nfProc = ForAll(Filter(tblProc_1, !IsBlank(PRNumber) && !StartsWith(Text(PRNumber), "SAMPLE")) As X,
           {PRNumber: Text(X.PRNumber), Department: Text(X.Department), Summary: Text(X.Summary),
            ServiceType: Text(X.ServiceType), Qty: Coalesce(Value(Text(X.Qty)), 0), DateRaised: If(IsBlank(X.DateRaised), Blank(), DateValue(Text(X.DateRaised))), RaisedBy: Text(X.RaisedBy),
            ApprovedBy: Text(X.ApprovedBy), ApprovedDate: If(IsBlank(X.ApprovedDate), Blank(), DateValue(Text(X.ApprovedDate))), PONumber: Text(X.PONumber),
@@ -304,19 +304,19 @@ App:
            PODate: If(IsBlank(X.PODate), Blank(), DateValue(Text(X.PODate))), DeliveredDate: If(IsBlank(X.DeliveredDate), Blank(), DateValue(Text(X.DeliveredDate))), Notes: Text(X.Notes), PRAmount: Coalesce(Value(Text(X.PRAmount)), 0),
            InvestmentType: Text(X.InvestmentType), POApprovedDate: If(IsBlank(X.POApprovedDate), Blank(), DateValue(Text(X.POApprovedDate))), Ownership: Text(X.Ownership),
            POCopyPath: Text(X.POCopyPath)});
-      nfLic = ForAll(Filter(tblLicenses, !IsBlank(SoftwareName) && !StartsWith(Text(SoftwareName), "SAMPLE")) As C,
+      nfLic = ForAll(Filter(tblLicenses_1, !IsBlank(SoftwareName) && !StartsWith(Text(SoftwareName), "SAMPLE")) As C,
           With({exp: If(IsBlank(C.ExpiryDate), Blank(), DateValue(Text(C.ExpiryDate)))},
               {SoftwareName: Text(C.SoftwareName), Vendor: Text(C.Vendor), LicenseType: Text(C.LicenseType),
                SeatsTotal: Coalesce(Value(Text(C.SeatsTotal)), 0), SeatsInUse: Coalesce(Value(Text(C.SeatsInUse)), 0), ExpiryDate: exp, AnnualCost: Coalesce(Value(Text(C.AnnualCost)), 0),
                Notes: Text(C.Notes),
                Status: If(IsBlank(exp), "", exp < Today(), "EXPIRED", exp <= DateAdd(Today(), 45, TimeUnit.Days), "EXPIRING SOON", "ACTIVE")}));
-      nfNewPart = ForAll(Filter(tblNewPart, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As NP,
+      nfNewPart = ForAll(Filter(tblNewPart_1, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As NP,
           {SrNo: Coalesce(Value(Text(NP.SrNo)), 0), RequestNo: Text(NP.RequestNo), RequesterName: Text(NP.RequesterName),
            Category: Text(NP.Category), SubCategory: Text(NP.SubCategory), PlantCode: Text(NP.PlantCode),
            PartName: Text(NP.PartName), MakeBrand: Text(NP.MakeBrand), ModelNo: Text(NP.ModelNo),
            OtherSpecs: Text(NP.OtherSpecs), Remarks: Text(NP.Remarks), UOM: Text(NP.UOM), HSNCode: Text(NP.HSNCode),
            Status: Upper(Coalesce(Text(NP.Status), "DRAFT")), DateRaised: If(IsBlank(NP.DateRaised), Blank(), DateValue(Text(NP.DateRaised)))});
-      nfInv = ForAll(Filter(tblInvoice, !IsBlank(InvoiceNo) && !StartsWith(Text(InvoiceNo), "SAMPLE")) As V,
+      nfInv = ForAll(Filter(tblInvoice_1, !IsBlank(InvoiceNo) && !StartsWith(Text(InvoiceNo), "SAMPLE")) As V,
           {InvoiceNo: Text(V.InvoiceNo), InvoiceDate: If(IsBlank(V.InvoiceDate), Blank(), DateValue(Text(V.InvoiceDate))), ToName: Text(V.ToName), CCName: Text(V.CCName),
            FromName: Text(V.FromName), FromExt: Text(V.FromExt), FromMobile: Text(V.FromMobile),
            HarnessPartNos: Text(V.HarnessPartNos), JobDescription: Text(V.JobDescription),
@@ -379,8 +379,8 @@ App:
       =// App.OnStart - only session state. All data lives in the named formulas (App.Formulas).
       Set(gRole, "");
       Set(gRoleHome, "Engineer");
-      Set(gMe, LookUp(tblUsers, false));
-      Set(gPend, LookUp(tblUsers, false));
+      Set(gMe, LookUp(tblUsers_1, false));
+      Set(gPend, LookUp(tblUsers_1, false));
       Set(gMeName, "");
       Set(gMeEmail, "");
       Set(gMeInitials, "");

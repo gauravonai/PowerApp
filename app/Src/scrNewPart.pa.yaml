@@ -127,7 +127,7 @@ Screens:
                   HoverBorderColor: =cClear
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
-                  OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+                  OnSelect: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblPurch_1); Refresh(tblProc_1); Refresh(tblInvoice_1); Refresh(tblNewPart_1); Refresh(tblLicenses_1); Refresh(tblUsers_1); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cClear
@@ -150,7 +150,7 @@ Screens:
                   AutoStart: =true
                   Duration: =120000
                   Height: =10
-                  OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+                  OnTimerEnd: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblSettings); Set(gLastSync, Now())
                   Repeat: =true
                   Visible: =false
                   Width: =10
@@ -295,7 +295,7 @@ Screens:
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
                   OnSelect: |-
-                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+                    =Set(gRole, ""); Set(gMe, LookUp(tblUsers_1, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
                   PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cJcb
@@ -1838,7 +1838,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
                               OnSelect: |-
-                                =IfError(With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, With({bad: Filter(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {Row: I.Value, Miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(Trim(v))), n, ", ")})), !IsBlank(Miss))}, If(CountRows(live) = 0, Notify("Add at least one part to the list before submitting.", NotificationType.Error), CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", NotificationType.Error), Set(gBusy, true); With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart, {SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: DateAdd(Today(), 12, TimeUnit.Hours)}))); Notify(no & " submitted with " & CountRows(live) & " part(s). The store will raise the purchase request.", NotificationType.Success); Clear(colNP); Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Set(gBusy, false))))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(With({live: Filter(colNP, !IsBlank(Trim(PartName)))}, With({bad: Filter(ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, {Row: I.Value, Miss: Concat(Filter(Table({n: "Requester Name", v: r.RequesterName}, {n: "Category", v: r.Category}, {n: "Plant Code", v: r.PlantCode}, {n: "Part / Machine Name", v: r.PartName}, {n: "UOM", v: r.UOM}, {n: "8-Digit HSN", v: r.HSNCode}), IsBlank(Trim(v))), n, ", ")})), !IsBlank(Miss))}, If(CountRows(live) = 0, Notify("Add at least one part to the list before submitting.", NotificationType.Error), CountRows(bad) > 0, Notify("Row " & First(bad).Row & " is missing " & First(bad).Miss & ", which is mandatory.", NotificationType.Error), Set(gBusy, true); With({no: "NPR-" & nfYearPfx & "-" & Text(nfNextNprSeq, "00000")}, ForAll(Sequence(CountRows(live)) As I, With({r: Index(live, I.Value)}, Collect(tblNewPart_1, {SrNo: I.Value, RequestNo: no, RequesterName: r.RequesterName, Category: r.Category, SubCategory: r.SubCategory, PlantCode: r.PlantCode, PartName: r.PartName, MakeBrand: r.MakeBrand, ModelNo: r.ModelNo, OtherSpecs: r.OtherSpecs, Remarks: r.Remarks, UOM: r.UOM, HSNCode: r.HSNCode, Status: "SUBMITTED", DateRaised: DateAdd(Today(), 12, TimeUnit.Hours)}))); Notify(no & " submitted with " & CountRows(live) & " part(s). The store will raise the purchase request.", NotificationType.Success); Clear(colNP); Set(gNpForm, {Id: 0, RequesterName: gMeName, Category: "", SubCategory: "", PlantCode: "", PartName: "", MakeBrand: "", ModelNo: "", OtherSpecs: "", Remarks: "", UOM: "NO", HSNCode: ""}); Set(gBusy, false))))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange

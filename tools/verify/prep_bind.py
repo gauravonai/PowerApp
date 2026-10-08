@@ -20,6 +20,7 @@ HOST_ENUMS = {"DropShadow", "Align", "VerticalAlign", "FontWeight", "ScreenTrans
 
 TABLES = ["tblParts", "tblMoves", "tblUsers", "tblSettings", "tblProc", "tblLicenses", "tblNewPart", "tblInvoice",
           "tblPurch", "tblCalib", "tblRequests", "tblReqLines"]
+TABLES += [t + "_%d" % i for t in TABLES for i in range(1, 4)]      # names Studio gives a second connection
 
 
 def prep(f, email, name):

@@ -118,7 +118,7 @@
             HoverBorderColor: =cClear
             HoverColor: =cJcb
             HoverFill: =cJcbWash
-            OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+            OnSelect: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblPurch_1); Refresh(tblProc_1); Refresh(tblInvoice_1); Refresh(tblNewPart_1); Refresh(tblLicenses_1); Refresh(tblUsers_1); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
             PaddingLeft: =8
             PaddingRight: =8
             PressedBorderColor: =cClear
@@ -141,7 +141,7 @@
             AutoStart: =true
             Duration: =120000
             Height: =10
-            OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+            OnTimerEnd: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblSettings); Set(gLastSync, Now())
             Repeat: =true
             Visible: =false
             Width: =10
@@ -286,7 +286,7 @@
             HoverColor: =cJcb
             HoverFill: =cJcbWash
             OnSelect: |-
-              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+              =Set(gRole, ""); Set(gMe, LookUp(tblUsers_1, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
             PaddingLeft: =8
             PaddingRight: =8
             PressedBorderColor: =cJcb
@@ -2114,7 +2114,7 @@
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
                         OnSelect: |-
-                          =IfError(With({no: Trim(pfPRNumberPc.Text)}, If(IsBlank(no) || IsBlank(Trim(pfSummaryPc.Text)), Notify("PR number and summary are required.", NotificationType.Error), IsBlank(gEditPr) && !IsBlank(LookUp(tblProc, Text(PRNumber) = no)), Notify("A PR with that number already exists.", NotificationType.Error), With({rec: {PRNumber: Trim(pfPRNumberPc.Text), Department: Trim(pfDepartmentPc.Text), Summary: Trim(pfSummaryPc.Text), ServiceType: Upper(pfServiceTypePc.Selected.Value), Qty: Coalesce(IfError(Value(pfQtyPc.Text), 0), 0), DateRaised: DateAdd(pfDateRaisedPc.SelectedDate, 12, TimeUnit.Hours), RaisedBy: Trim(pfRaisedByPc.Text), ApprovedBy: Trim(pfApprovedByPc.Text), ApprovedDate: DateAdd(pfApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), PONumber: Trim(pfPONumberPc.Text), Vendor: Trim(pfVendorPc.Text), POAmount: Coalesce(IfError(Value(pfPOAmountPc.Text), 0), 0), Stage: Upper(pfStagePc.Selected.Value), PODate: DateAdd(pfPODatePc.SelectedDate, 12, TimeUnit.Hours), DeliveredDate: DateAdd(pfDeliveredDatePc.SelectedDate, 12, TimeUnit.Hours), PRAmount: Coalesce(IfError(Value(pfPRAmountPc.Text), 0), 0), InvestmentType: Upper(pfInvestmentTypePc.Selected.Value), POApprovedDate: DateAdd(pfPOApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), Ownership: Trim(pfOwnershipPc.Text), POCopyPath: Trim(pfPOCopyPathPc.Text), Notes: Trim(pfNotesPc.Text)}}, If(IsBlank(gEditPr), Collect(tblProc, rec), Patch(tblProc, LookUp(tblProc, Text(PRNumber) = gEditPr), rec))); Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, ""))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                          =IfError(With({no: Trim(pfPRNumberPc.Text)}, If(IsBlank(no) || IsBlank(Trim(pfSummaryPc.Text)), Notify("PR number and summary are required.", NotificationType.Error), IsBlank(gEditPr) && !IsBlank(LookUp(tblProc_1, Text(PRNumber) = no)), Notify("A PR with that number already exists.", NotificationType.Error), With({rec: {PRNumber: Trim(pfPRNumberPc.Text), Department: Trim(pfDepartmentPc.Text), Summary: Trim(pfSummaryPc.Text), ServiceType: Upper(pfServiceTypePc.Selected.Value), Qty: Coalesce(IfError(Value(pfQtyPc.Text), 0), 0), DateRaised: DateAdd(pfDateRaisedPc.SelectedDate, 12, TimeUnit.Hours), RaisedBy: Trim(pfRaisedByPc.Text), ApprovedBy: Trim(pfApprovedByPc.Text), ApprovedDate: DateAdd(pfApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), PONumber: Trim(pfPONumberPc.Text), Vendor: Trim(pfVendorPc.Text), POAmount: Coalesce(IfError(Value(pfPOAmountPc.Text), 0), 0), Stage: Upper(pfStagePc.Selected.Value), PODate: DateAdd(pfPODatePc.SelectedDate, 12, TimeUnit.Hours), DeliveredDate: DateAdd(pfDeliveredDatePc.SelectedDate, 12, TimeUnit.Hours), PRAmount: Coalesce(IfError(Value(pfPRAmountPc.Text), 0), 0), InvestmentType: Upper(pfInvestmentTypePc.Selected.Value), POApprovedDate: DateAdd(pfPOApprovedDatePc.SelectedDate, 12, TimeUnit.Hours), Ownership: Trim(pfOwnershipPc.Text), POCopyPath: Trim(pfPOCopyPathPc.Text), Notes: Trim(pfNotesPc.Text)}}, If(IsBlank(gEditPr), Collect(tblProc_1, rec), Patch(tblProc_1, LookUp(tblProc_1, Text(PRNumber) = gEditPr), rec))); Notify(no & " saved.", NotificationType.Success); Set(gEditPr, ""); Set(gVendorPick, ""); Set(gPanel, ""))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                         PaddingLeft: =8
                         PaddingRight: =8
                         PressedBorderColor: =cOrange
@@ -2645,7 +2645,7 @@
                               HoverColor: =cJcb
                               HoverFill: =cJcbWash
                               OnSelect: |-
-                                =IfError(Switch(ThisItem.Stage, "PR RAISED", Patch(tblProc, LookUp(tblProc, Text(PRNumber) = ThisItem.PRNumber), {Stage: "APPROVED", ApprovedBy: gMeName, ApprovedDate: DateAdd(Today(), 12, TimeUnit.Hours)}), "APPROVED", Set(gEditPr, ThisItem.PRNumber); Set(gPanel, "proc"); Notify("Fill in the PO number, vendor, amount and date, set Stage = PO RAISED, then Save.", NotificationType.Information), "PO RAISED", Patch(tblProc, LookUp(tblProc, Text(PRNumber) = ThisItem.PRNumber), {Stage: "GRN IN PROGRESS"}), "GRN IN PROGRESS", Patch(tblProc, LookUp(tblProc, Text(PRNumber) = ThisItem.PRNumber), {Stage: "DELIVERED (CLOSED)", DeliveredDate: DateAdd(Today(), 12, TimeUnit.Hours)})), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(Switch(ThisItem.Stage, "PR RAISED", Patch(tblProc_1, LookUp(tblProc_1, Text(PRNumber) = ThisItem.PRNumber), {Stage: "APPROVED", ApprovedBy: gMeName, ApprovedDate: DateAdd(Today(), 12, TimeUnit.Hours)}), "APPROVED", Set(gEditPr, ThisItem.PRNumber); Set(gPanel, "proc"); Notify("Fill in the PO number, vendor, amount and date, set Stage = PO RAISED, then Save.", NotificationType.Information), "PO RAISED", Patch(tblProc_1, LookUp(tblProc_1, Text(PRNumber) = ThisItem.PRNumber), {Stage: "GRN IN PROGRESS"}), "GRN IN PROGRESS", Patch(tblProc_1, LookUp(tblProc_1, Text(PRNumber) = ThisItem.PRNumber), {Stage: "DELIVERED (CLOSED)", DeliveredDate: DateAdd(Today(), 12, TimeUnit.Hours)})), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cJcb
@@ -2716,7 +2716,7 @@
                               HoverColor: =cInk
                               HoverFill: =RGBA(242,114,98,0.24)
                               OnSelect: |-
-                                =IfError(Patch(tblProc, LookUp(tblProc, Text(PRNumber) = ThisItem.PRNumber), {Stage: "REJECTED"}), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(Patch(tblProc_1, LookUp(tblProc_1, Text(PRNumber) = ThisItem.PRNumber), {Stage: "REJECTED"}), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cStop

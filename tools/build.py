@@ -53,6 +53,20 @@ def sample_bom():
     return " & Char(10) & ".join(pa.q(l.replace("\t", "    ")) for l in lines)
 
 
+def ds_map():
+    """Data source names as connected in the user's app (tools/datasources.json); PLAIN_DS=1 -> the plain names."""
+    if os.environ.get("PLAIN_DS") == "1":
+        return {}
+    m = json.load(open(os.path.join(HERE, "datasources.json")))
+    return {k: v for k, v in m.items() if not k.startswith("_") and k != v}
+
+
+def rename_ds(text, m):
+    for k, v in m.items():
+        text = re.sub(r"\b%s\b(?!_\d)" % re.escape(k), v, text)
+    return text
+
+
 def main():
     os.makedirs(SRC, exist_ok=True)
     os.makedirs(PASTE, exist_ok=True)
@@ -138,6 +152,16 @@ def main():
             probs = check(open(os.path.join(d, f), encoding="utf-8").read())
             if probs:
                 raise SystemExit("%s/%s would fail Studio import: %s" % (d, f, "; ".join(probs)))
+
+    # ---------------------------------------------------------- data source names as connected in Studio
+    m = ds_map()
+    if m:
+        files = [os.path.join(d, f) for d in (SRC, PASTE) for f in os.listdir(d)] + \
+                [os.path.join(OUT, "formulas.json"), os.path.join(OUT, "app.json")]
+        for fp in files:
+            t = open(fp, encoding="utf-8").read()
+            open(fp, "w", encoding="utf-8").write(rename_ds(t, m))
+        print("data source names: " + ", ".join(sorted(set(m.values()))))
 
     nctl = sum(1 for _, _, r in scr for _ in r.walk())
     print("screens: %d, controls: %d, formulas: %d" % (len(scr), nctl, len(allf)))

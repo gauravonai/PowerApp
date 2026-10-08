@@ -14,7 +14,7 @@ ENG = 'gRole = "Engineer"'
 BUSY = "gBusy"
 
 SCREENS = []          # (screen name, nav key, root container)
-APP_VERSION = "2.0.3 · 07-Oct-2026"   # shown on the Welcome screen, so you can tell which build is imported
+APP_VERSION = "2.0.4 · 08-Oct-2026"   # shown on the Welcome screen, so you can tell which build is imported
 
 
 def DISP(x):

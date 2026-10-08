@@ -118,7 +118,7 @@
             HoverBorderColor: =cClear
             HoverColor: =cJcb
             HoverFill: =cJcbWash
-            OnSelect: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblPurch); Refresh(tblProc); Refresh(tblInvoice); Refresh(tblNewPart); Refresh(tblLicenses); Refresh(tblUsers); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
+            OnSelect: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblPurch_1); Refresh(tblProc_1); Refresh(tblInvoice_1); Refresh(tblNewPart_1); Refresh(tblLicenses_1); Refresh(tblUsers_1); Refresh(tblSettings); Refresh(tblCalib); Set(gLastSync, Now()); Notify("Data refreshed at " & Text(Now(), "hh:mm") & "." & If(gRole in ["Lab Admin", "Lab Lead"], " " & nfHealthText & ".", ""), NotificationType.Information)
             PaddingLeft: =8
             PaddingRight: =8
             PressedBorderColor: =cClear
@@ -141,7 +141,7 @@
             AutoStart: =true
             Duration: =120000
             Height: =10
-            OnTimerEnd: =Refresh(tblParts); Refresh(tblMoves); Refresh(tblRequests); Refresh(tblReqLines); Refresh(tblSettings); Set(gLastSync, Now())
+            OnTimerEnd: =Refresh(tblParts_1); Refresh(tblMoves_1); Refresh(tblRequests_1); Refresh(tblReqLines_1); Refresh(tblSettings); Set(gLastSync, Now())
             Repeat: =true
             Visible: =false
             Width: =10
@@ -286,7 +286,7 @@
             HoverColor: =cJcb
             HoverFill: =cJcbWash
             OnSelect: |-
-              =Set(gRole, ""); Set(gMe, LookUp(tblUsers, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
+              =Set(gRole, ""); Set(gMe, LookUp(tblUsers_1, false)); Set(gMeName, ""); Set(gMeEmail, ""); Set(gIsLead, false); Set(gIsAdmin, false); Set(gIsMgr, false); Set(gRoleOptions, Table({Value: "Engineer"})); Set(gReqNo, ""); Set(gBomText, ""); Clear(colBom); Clear(colNP); Set(gPanel, ""); Set(gShortSr, -1); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  You have logged out."); Navigate(scrLogin, ScreenTransition.Fade)
             PaddingLeft: =8
             PaddingRight: =8
             PressedBorderColor: =cJcb
@@ -908,7 +908,7 @@
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
                         OnSelect: |-
-                          =IfError(If(IsBlank(Trim(taUsernameTm.Text)) || IsBlank(Trim(taFullNameTm.Text)), Notify("Username and full name are required.", NotificationType.Error), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(taUsernameTm.Text)))), Notify("That username already exists.", NotificationType.Error), Collect(tblUsers, {Username: Lower(Trim(taUsernameTm.Text)), FullName: Trim(taFullNameTm.Text), Role: taRoleTm.Selected.Value, BusinessUnit: Trim(taBusinessUnitTm.Text), Email: Lower(Trim(taEmailTm.Text))}); Notify("Added. Now give them a temporary password (Temp Password on their row) so they can log in.", NotificationType.Success); Set(gPanel, "")), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                          =IfError(If(IsBlank(Trim(taUsernameTm.Text)) || IsBlank(Trim(taFullNameTm.Text)), Notify("Username and full name are required.", NotificationType.Error), !IsBlank(LookUp(tblUsers_1, Lower(Trim(Text(Username))) = Lower(Trim(taUsernameTm.Text)))), Notify("That username already exists.", NotificationType.Error), Collect(tblUsers_1, {Username: Lower(Trim(taUsernameTm.Text)), FullName: Trim(taFullNameTm.Text), Role: taRoleTm.Selected.Value, BusinessUnit: Trim(taBusinessUnitTm.Text), Email: Lower(Trim(taEmailTm.Text))}); Notify("Added. Now give them a temporary password (Temp Password on their row) so they can log in.", NotificationType.Success); Set(gPanel, "")), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                         PaddingLeft: =8
                         PaddingRight: =8
                         PressedBorderColor: =cOrange
@@ -984,7 +984,7 @@
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =11
-                        Text: =CountRows(tmGal.AllItems) & " people  ·  " & CountRows(Filter(tblUsers, Lower(Trim(Text(Role))) = "pending")) & " waiting for approval"
+                        Text: =CountRows(tmGal.AllItems) & " people  ·  " & CountRows(Filter(tblUsers_1, Lower(Trim(Text(Role))) = "pending")) & " waiting for approval"
                         VerticalAlign: =VerticalAlign.Middle
                         Width: =230
                         X: =436
@@ -1158,7 +1158,7 @@
                         Fill: =RGBA(0,0,0,0)
                         Height: =530
                         Items: |-
-                          =With({s: Lower(Trim(qTm.Text))}, Sort(Filter(tblUsers, !IsBlank(Username) && (IsBlank(s) || s in Lower(Text(Username) & " " & Text(FullName) & " " & Text(Role) & " " & Text(BusinessUnit) & " " & Text(Email)))), Text(Username)))
+                          =With({s: Lower(Trim(qTm.Text))}, Sort(Filter(tblUsers_1, !IsBlank(Username) && (IsBlank(s) || s in Lower(Text(Username) & " " & Text(FullName) & " " & Text(Role) & " " & Text(BusinessUnit) & " " & Text(Email)))), Text(Username)))
                         ShowScrollbar: =true
                         TemplatePadding: =0
                         TemplateSize: =42
@@ -1348,7 +1348,7 @@
                               HoverColor: =cJcb
                               Icon: =Icon.Save
                               OnSelect: |-
-                                =IfError(Patch(tblUsers, ThisItem, {FullName: tmC1.Text, Role: tmC2.Selected.Value, BusinessUnit: tmC3.Text, Email: Lower(Trim(tmC4.Text))}); Notify(ThisItem.Username & " saved.", NotificationType.Success), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(Patch(tblUsers_1, ThisItem, {FullName: tmC1.Text, Role: tmC2.Selected.Value, BusinessUnit: tmC3.Text, Email: Lower(Trim(tmC4.Text))}); Notify(ThisItem.Username & " saved.", NotificationType.Success), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingBottom: =8
                               PaddingLeft: =8
                               PaddingRight: =8
@@ -1378,7 +1378,7 @@
                               HoverColor: =cJcb
                               HoverFill: =cJcbWash
                               OnSelect: |-
-                                =IfError(With({code: Text(RandBetween(100000, 999999)), u: ThisItem}, Patch(tblUsers, ThisItem, {Password: With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & code & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "t1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: ""}); Set(gTempCode, "Temporary password for " & ThisItem.Username & ": " & code); Notify(gTempCode & ". Tell them in person. It works once, then they choose their own.", NotificationType.Information)), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(With({code: Text(RandBetween(100000, 999999)), u: ThisItem}, Patch(tblUsers_1, ThisItem, {Password: With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & code & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "t1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: ""}); Set(gTempCode, "Temporary password for " & ThisItem.Username & ": " & code); Notify(gTempCode & ". Tell them in person. It works once, then they choose their own.", NotificationType.Information)), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cJcb
