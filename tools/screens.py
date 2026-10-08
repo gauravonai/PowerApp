@@ -189,7 +189,7 @@ def scr_dash():
         Col("Status", None, "ThisItem.Status", "pill")], h=424, row_h=38, empty="All parts are above threshold"),
         right=[btn("cdLowGo" + K, '"Full inventory"', "Parent.Width - 132", 9, 116, 28,
                    "Navigate(scrInventory, ScreenTransition.None)", kind="secondary", size=10)], visible=ADMIN)
-    content = [head(K, '"DASHBOARD"', 'gRole & " view · " & Text(Today(), "dd-mmm-yyyy")'), t1, t2, t3, req, np, lowc]
+    content = [head(K, 'If(Hour(Now()) < 12, "Good Morning", Hour(Now()) < 17, "Good Afternoon", "Good Evening") & ", " & First(Split(gMeName, " ")).Value', '"EDS Laboratory Material Overview  ·  " & gRole & " view  ·  " & Text(Today(), "dddd, dd-mmm-yyyy")'), t1, t2, t3, req, np, lowc]
     shell(K, "scrDash", "dash", content)
 
 
@@ -305,7 +305,7 @@ def scr_mgr():
             onrow='Set(gReqNo, ThisItem.RequestNo); Set(gShortSr, -1); Navigate(scrReqDetail, ScreenTransition.Fade)',
             empty="Nothing waiting for approval", empty_sub="Open a request to approve or reject it."),
         title_is_formula=True)
-    content = [head(K, '"Dashboard"', '"Live overview of electrical and controls inventory, spend and delivery"'),
+    content = [head(K, 'If(Hour(Now()) < 12, "Good Morning", Hour(Now()) < 17, "Good Afternoon", "Good Evening") & ", " & First(Split(gMeName, " ")).Value', '"Live overview of electrical and controls inventory, spend and delivery  ·  " & Text(Today(), "dddd, dd-mmm-yyyy")'),
                t, appr, split1, split2, cal, cal0]
     shell(K, "scrMgrDash", "dash", content)
 
@@ -2097,16 +2097,17 @@ def scr_login():
            "OK": msg('"✓  Request sent. You can log in as soon as the Lab Lead approves it."')})
 
     def pillrow(n, y, text, ico, ctl, vis):
-        return [btn(n + "Pl", q(text), 60, y, 160, 48, "SetFocus(%s)" % ctl.name, size=11, radius=12, align="Left",
-                    visible=vis, extra={"PaddingLeft": 44}),
-                Ctl(n + "Ic", "Classic/Icon", {"X": 76, "Y": y + 14, "Width": 20, "Height": 20, "Icon": "Icon." + ico,
+        # gold icon block joined to the box; the field name is the box's hint text and the block's tooltip
+        return [btn(n + "Pl", '""', 60, y, 60, 52, "SetFocus(%s)" % ctl.name, size=11, radius=12,
+                    visible=vis, extra={"Tooltip": q(text)}),
+                Ctl(n + "Ic", "Classic/Icon", {"X": 78, "Y": y + 14, "Width": 24, "Height": 24, "Icon": "Icon." + ico,
                                                "Color": "cOnJcb", "OnSelect": "SetFocus(%s)" % ctl.name, "Visible": vis,
                                                "PaddingTop": 0, "PaddingBottom": 0, "PaddingLeft": 0, "PaddingRight": 0}),
                 ctl]
     pwmode = {"Mode": "If(gShowPw, TextMode.SingleLine, TextMode.Password)"}
 
     def eye(n, y, vis):
-        return Ctl(n, "Classic/Icon", {"X": 600, "Y": y + 12, "Width": 26, "Height": 24,
+        return Ctl(n, "Classic/Icon", {"X": 596, "Y": y + 14, "Width": 28, "Height": 24,
                                        "Icon": "If(gShowPw, Icon.Hide, Icon.View)", "Color": "cJcb", "HoverColor": "cOrange",
                                        "OnSelect": "Set(gShowPw, !gShowPw)", "Visible": vis,
                                        "Tooltip": 'If(gShowPw, "Hide password", "Show password")',
@@ -2120,16 +2121,16 @@ def scr_login():
                      'soon as it is approved.", "Sign in with your lab username and password.")',
             40, 74, 620, 24, size=11, color="cInk2", align="Center")]
     kids += pillrow("u" + K, 124, "Username", "Person",
-                    inp("usr" + K, 232, 124, 408, 48, hint="Type your username", size=13, visible=LOG), LOG)
+                    inp("usr" + K, 116, 124, 524, 52, hint="Username", size=13, visible=LOG), LOG)
     kids += pillrow("p" + K, 188, "Password", "Lock",
-                    inp("pwd" + K, 232, 188, 360, 48, hint="Type your password", size=13, visible=LOG, extra=pwmode), LOG)
+                    inp("pwd" + K, 116, 188, 524, 52, hint="Password", size=13, visible=LOG, extra=dict(pwmode, PaddingRight=48)), LOG)
     kids += [eye("eyP" + K, 188, LOG)]
     kids += pillrow("n1" + K, 124, "New Password", "Lock",
-                    inp("np1" + K, 232, 124, 360, 48, hint="At least 6 characters, a letter and a number", size=13,
-                        visible=SET, extra=pwmode), SET)
+                    inp("np1" + K, 116, 124, 524, 52, hint="New password: 6+ characters, a letter and a number", size=13,
+                        visible=SET, extra=dict(pwmode, PaddingRight=48)), SET)
     kids += [eye("eyN" + K, 124, SET)]
     kids += pillrow("n2" + K, 188, "Confirm", "Lock",
-                    inp("np2" + K, 232, 188, 360, 48, hint="Type it again", size=13, visible=SET, extra=pwmode), SET)
+                    inp("np2" + K, 116, 188, 524, 52, hint="Confirm new password", size=13, visible=SET, extra=dict(pwmode, PaddingRight=48)), SET)
     reg_f = [("rgN", "Full Name", True, 0, 0, "Gaurav Shelke", None), ("rgU", "Username", True, 1, 0, "gaurav.shelke", None),
              ("rgB", "Business Unit", False, 0, 1, "EDS", None), ("rgM", "Email (Optional)", False, 1, 1, "name@jcb.com", None),
              ("rgP1", "Password", True, 0, 2, "At least 6, a letter and a number", pwmode),
@@ -2140,11 +2141,11 @@ def scr_login():
                      color="cInk2", visible=REG),
                  inp(nm + K, x, y + 20, 280, 40, hint=hint, visible=REG, extra=ex)]
     kids += [
-        lbl("m" + K, "gLoginMsg", 40, 'If(%s, 304, 246)' % REG, 620, 28, size=11, bold=True, align="Center",
+        lbl("m" + K, "gLoginMsg", 40, 'If(%s, 304, 244)' % REG, 620, 28, size=11, bold=True, align="Center",
             color='If(StartsWith(gLoginMsg, "✓"), cOk, cStop)'),
-        btn("go" + K, '"Login"', 60, 284, 280, 50, login, size=14, radius=12, visible=LOG),
-        btn("rg" + K, '"Register"', 360, 284, 280, 50, 'Set(gLoginMode, "register"); Set(gLoginMsg, "")', size=14,
-            radius=12, visible=LOG, kind="secondary", extra={"Color": "cJcb", "BorderColor": "cJcb"}),
+        btn("go" + K, '"Login   →"', 60, 276, 580, 52, login, size=15, radius=12, visible=LOG),
+        btn("rg" + K, '"Register"', 60, 340, 580, 48, 'Set(gLoginMode, "register"); Set(gLoginMsg, "")', size=14,
+            radius=12, visible=LOG, kind="secondary", extra={"Color": "cJcb", "BorderColor": "cJcb", "Fill": "cClear"}),
         btn("sp" + K, '"Save and Log In"', 60, 284, 280, 50, setpw, size=14, radius=12, visible=SET),
         btn("sx" + K, '"Cancel"', 360, 284, 280, 50, 'Set(gLoginMode, "login"); Set(gLoginMsg, ""); Reset(np1%s); '
             'Reset(np2%s)' % (K, K), kind="secondary", size=14, radius=12, visible=SET),
@@ -2153,11 +2154,14 @@ def scr_login():
             kind="secondary", size=14, radius=12, visible=REG),
         lbl("f" + K, 'If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", '
                      '"Your password is stored scrambled; nobody can read it, not even the Lab Lead.")',
-            40, 'If(%s, 404, 352)' % REG, 620, 22, size=10, color="cInk3", align="Center")]
-    panel = box("pn" + K, 333, 150, 700, 'If(%s, 450, 400)' % REG, kids, fill="cGlass", border="cLine2", radius=24)
+            40, 'If(gLoginMode = "setpw", 352, 404)', 620, 22, size=10, color="cInk3", align="Center")]
+    panel = box("pn" + K, 333, 140, 700, 'If(gLoginMode = "setpw", 400, 450)', kids, fill="cGlass", border="cLine2",
+                radius=24)
     kids = backdrop(K, "RGBA(8, 6, 10, 0.25)") + topbar(K, [
-        btn("ck" + K, '"System Check"', 1020, 30, 150, 38, "Navigate(scrCheck, ScreenTransition.Fade)", kind="ghost",
-            radius=19),
+        lbl("ckD" + K, '"●"', 1022, 30, 30, 38, size=12, color="cOk", align="Center"),
+        btn("ck" + K, '"System Check"', 1012, 30, 160, 38, "Navigate(scrCheck, ScreenTransition.Fade)", kind="ghost",
+            radius=19, extra={"BorderColor": "cJcb", "BorderThickness": 1, "PaddingLeft": 22, "Color": "cInk",
+                              "Fill": "cClear"}),
         btn("bk" + K, '"‹  Back"', 1180, 30, 140, 38, 'Set(gLoginMsg, ""); Navigate(scrWelcome, ScreenTransition.Fade)',
             kind="secondary", radius=19)]) + [panel]
     root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)

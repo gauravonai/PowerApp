@@ -518,7 +518,7 @@
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =22
-                        Text: ="Dashboard"
+                        Text: =If(Hour(Now()) < 12, "Good Morning", Hour(Now()) < 17, "Good Afternoon", "Good Evening") & ", " & First(Split(gMeName, " ")).Value
                         VerticalAlign: =VerticalAlign.Middle
                         Width: =820
                         X: =0
@@ -536,7 +536,7 @@
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =12
-                        Text: =gRole & " view · " & Text(Today(), "dd-mmm-yyyy")
+                        Text: ="EDS Laboratory Material Overview  ·  " & gRole & " view  ·  " & Text(Today(), "dddd, dd-mmm-yyyy")
                         VerticalAlign: =VerticalAlign.Middle
                         Width: =1000
                         X: =0

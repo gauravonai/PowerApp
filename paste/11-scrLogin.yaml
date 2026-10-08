@@ -80,13 +80,31 @@
             Width: =420
             X: =96
             Y: =52
+      - ckDLi:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cOk
+            Font: =fUI
+            FontWeight: =FontWeight.Normal
+            Height: =38
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: ="●"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =30
+            X: =1022
+            Y: =30
       - ckLi:
           Control: Classic/Button
           Properties:
             Align: =Align.Center
-            BorderColor: =cClear
-            BorderThickness: =0
-            Color: =cInk2
+            BorderColor: =cJcb
+            BorderThickness: =1
+            Color: =cInk
             DisabledBorderColor: =cLine
             DisabledColor: =cInk3
             DisabledFill: =RGBA(255,255,255,0.05)
@@ -100,7 +118,7 @@
             HoverColor: =cJcb
             HoverFill: =cJcbWash
             OnSelect: =Navigate(scrCheck, ScreenTransition.Fade)
-            PaddingLeft: =8
+            PaddingLeft: =22
             PaddingRight: =8
             PressedBorderColor: =cClear
             PressedColor: =cJcb
@@ -111,8 +129,8 @@
             RadiusTopRight: =19
             Size: =11
             Text: ="System Check"
-            Width: =150
-            X: =1020
+            Width: =160
+            X: =1012
             Y: =30
       - bkLi:
           Control: Classic/Button
@@ -156,14 +174,14 @@
             BorderThickness: =1
             DropShadow: =DropShadow.None
             Fill: =cGlass
-            Height: =If(gLoginMode = "register", 450, 400)
+            Height: =If(gLoginMode = "setpw", 400, 450)
             RadiusBottomLeft: =24
             RadiusBottomRight: =24
             RadiusTopLeft: =24
             RadiusTopRight: =24
             Width: =700
             X: =333
-            Y: =150
+            Y: =140
           Children:
             - tLi:
                 Control: Label
@@ -204,7 +222,7 @@
             - uLiPl:
                 Control: Classic/Button
                 Properties:
-                  Align: =Align.Left
+                  Align: =Align.Center
                   BorderColor: =cJcb
                   BorderThickness: =1
                   Color: =cOnJcb
@@ -216,12 +234,12 @@
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =48
+                  Height: =52
                   HoverBorderColor: =cOrange
                   HoverColor: =cOnJcb
                   HoverFill: =cOrange
                   OnSelect: =SetFocus(usrLi)
-                  PaddingLeft: =44
+                  PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cOrange
                   PressedColor: =cOnJcb
@@ -231,16 +249,17 @@
                   RadiusTopLeft: =12
                   RadiusTopRight: =12
                   Size: =11
-                  Text: ="Username"
+                  Text: =""
+                  Tooltip: ="Username"
                   Visible: =gLoginMode = "login"
-                  Width: =160
+                  Width: =60
                   X: =60
                   Y: =124
             - uLiIc:
                 Control: Classic/Icon
                 Properties:
                   Color: =cOnJcb
-                  Height: =20
+                  Height: =24
                   Icon: =Icon.Person
                   OnSelect: =SetFocus(usrLi)
                   PaddingBottom: =0
@@ -248,8 +267,8 @@
                   PaddingRight: =0
                   PaddingTop: =0
                   Visible: =gLoginMode = "login"
-                  Width: =20
-                  X: =76
+                  Width: =24
+                  X: =78
                   Y: =138
             - usrLi:
                 Control: Classic/TextInput
@@ -265,8 +284,8 @@
                   FocusedBorderColor: =cOrange
                   FocusedBorderThickness: =2
                   Font: =fUI
-                  Height: =48
-                  HintText: ="Type your username"
+                  Height: =52
+                  HintText: ="Username"
                   HoverBorderColor: =cJcb
                   HoverColor: =cInputInk
                   HoverFill: =cInputHover
@@ -281,13 +300,13 @@
                   RadiusTopRight: =8
                   Size: =13
                   Visible: =gLoginMode = "login"
-                  Width: =408
-                  X: =232
+                  Width: =524
+                  X: =116
                   Y: =124
             - pLiPl:
                 Control: Classic/Button
                 Properties:
-                  Align: =Align.Left
+                  Align: =Align.Center
                   BorderColor: =cJcb
                   BorderThickness: =1
                   Color: =cOnJcb
@@ -299,12 +318,12 @@
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =48
+                  Height: =52
                   HoverBorderColor: =cOrange
                   HoverColor: =cOnJcb
                   HoverFill: =cOrange
                   OnSelect: =SetFocus(pwdLi)
-                  PaddingLeft: =44
+                  PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cOrange
                   PressedColor: =cOnJcb
@@ -314,16 +333,17 @@
                   RadiusTopLeft: =12
                   RadiusTopRight: =12
                   Size: =11
-                  Text: ="Password"
+                  Text: =""
+                  Tooltip: ="Password"
                   Visible: =gLoginMode = "login"
-                  Width: =160
+                  Width: =60
                   X: =60
                   Y: =188
             - pLiIc:
                 Control: Classic/Icon
                 Properties:
                   Color: =cOnJcb
-                  Height: =20
+                  Height: =24
                   Icon: =Icon.Lock
                   OnSelect: =SetFocus(pwdLi)
                   PaddingBottom: =0
@@ -331,8 +351,8 @@
                   PaddingRight: =0
                   PaddingTop: =0
                   Visible: =gLoginMode = "login"
-                  Width: =20
-                  X: =76
+                  Width: =24
+                  X: =78
                   Y: =202
             - pwdLi:
                 Control: Classic/TextInput
@@ -348,14 +368,14 @@
                   FocusedBorderColor: =cOrange
                   FocusedBorderThickness: =2
                   Font: =fUI
-                  Height: =48
-                  HintText: ="Type your password"
+                  Height: =52
+                  HintText: ="Password"
                   HoverBorderColor: =cJcb
                   HoverColor: =cInputInk
                   HoverFill: =cInputHover
                   Mode: =If(gShowPw, TextMode.SingleLine, TextMode.Password)
                   PaddingLeft: =10
-                  PaddingRight: =6
+                  PaddingRight: =48
                   PressedBorderColor: =cJcb
                   PressedColor: =cInputInk
                   PressedFill: =cInput
@@ -365,8 +385,8 @@
                   RadiusTopRight: =8
                   Size: =13
                   Visible: =gLoginMode = "login"
-                  Width: =360
-                  X: =232
+                  Width: =524
+                  X: =116
                   Y: =188
             - eyPLi:
                 Control: Classic/Icon
@@ -383,13 +403,13 @@
                   PaddingTop: =0
                   Tooltip: =If(gShowPw, "Hide password", "Show password")
                   Visible: =gLoginMode = "login"
-                  Width: =26
-                  X: =600
-                  Y: =200
+                  Width: =28
+                  X: =596
+                  Y: =202
             - n1LiPl:
                 Control: Classic/Button
                 Properties:
-                  Align: =Align.Left
+                  Align: =Align.Center
                   BorderColor: =cJcb
                   BorderThickness: =1
                   Color: =cOnJcb
@@ -401,12 +421,12 @@
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =48
+                  Height: =52
                   HoverBorderColor: =cOrange
                   HoverColor: =cOnJcb
                   HoverFill: =cOrange
                   OnSelect: =SetFocus(np1Li)
-                  PaddingLeft: =44
+                  PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cOrange
                   PressedColor: =cOnJcb
@@ -416,16 +436,17 @@
                   RadiusTopLeft: =12
                   RadiusTopRight: =12
                   Size: =11
-                  Text: ="New Password"
+                  Text: =""
+                  Tooltip: ="New Password"
                   Visible: =gLoginMode = "setpw"
-                  Width: =160
+                  Width: =60
                   X: =60
                   Y: =124
             - n1LiIc:
                 Control: Classic/Icon
                 Properties:
                   Color: =cOnJcb
-                  Height: =20
+                  Height: =24
                   Icon: =Icon.Lock
                   OnSelect: =SetFocus(np1Li)
                   PaddingBottom: =0
@@ -433,8 +454,8 @@
                   PaddingRight: =0
                   PaddingTop: =0
                   Visible: =gLoginMode = "setpw"
-                  Width: =20
-                  X: =76
+                  Width: =24
+                  X: =78
                   Y: =138
             - np1Li:
                 Control: Classic/TextInput
@@ -450,14 +471,15 @@
                   FocusedBorderColor: =cOrange
                   FocusedBorderThickness: =2
                   Font: =fUI
-                  Height: =48
-                  HintText: ="At least 6 characters, a letter and a number"
+                  Height: =52
+                  HintText: |-
+                    ="New password: 6+ characters, a letter and a number"
                   HoverBorderColor: =cJcb
                   HoverColor: =cInputInk
                   HoverFill: =cInputHover
                   Mode: =If(gShowPw, TextMode.SingleLine, TextMode.Password)
                   PaddingLeft: =10
-                  PaddingRight: =6
+                  PaddingRight: =48
                   PressedBorderColor: =cJcb
                   PressedColor: =cInputInk
                   PressedFill: =cInput
@@ -467,8 +489,8 @@
                   RadiusTopRight: =8
                   Size: =13
                   Visible: =gLoginMode = "setpw"
-                  Width: =360
-                  X: =232
+                  Width: =524
+                  X: =116
                   Y: =124
             - eyNLi:
                 Control: Classic/Icon
@@ -485,13 +507,13 @@
                   PaddingTop: =0
                   Tooltip: =If(gShowPw, "Hide password", "Show password")
                   Visible: =gLoginMode = "setpw"
-                  Width: =26
-                  X: =600
-                  Y: =136
+                  Width: =28
+                  X: =596
+                  Y: =138
             - n2LiPl:
                 Control: Classic/Button
                 Properties:
-                  Align: =Align.Left
+                  Align: =Align.Center
                   BorderColor: =cJcb
                   BorderThickness: =1
                   Color: =cOnJcb
@@ -503,12 +525,12 @@
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =48
+                  Height: =52
                   HoverBorderColor: =cOrange
                   HoverColor: =cOnJcb
                   HoverFill: =cOrange
                   OnSelect: =SetFocus(np2Li)
-                  PaddingLeft: =44
+                  PaddingLeft: =8
                   PaddingRight: =8
                   PressedBorderColor: =cOrange
                   PressedColor: =cOnJcb
@@ -518,16 +540,17 @@
                   RadiusTopLeft: =12
                   RadiusTopRight: =12
                   Size: =11
-                  Text: ="Confirm"
+                  Text: =""
+                  Tooltip: ="Confirm"
                   Visible: =gLoginMode = "setpw"
-                  Width: =160
+                  Width: =60
                   X: =60
                   Y: =188
             - n2LiIc:
                 Control: Classic/Icon
                 Properties:
                   Color: =cOnJcb
-                  Height: =20
+                  Height: =24
                   Icon: =Icon.Lock
                   OnSelect: =SetFocus(np2Li)
                   PaddingBottom: =0
@@ -535,8 +558,8 @@
                   PaddingRight: =0
                   PaddingTop: =0
                   Visible: =gLoginMode = "setpw"
-                  Width: =20
-                  X: =76
+                  Width: =24
+                  X: =78
                   Y: =202
             - np2Li:
                 Control: Classic/TextInput
@@ -552,14 +575,14 @@
                   FocusedBorderColor: =cOrange
                   FocusedBorderThickness: =2
                   Font: =fUI
-                  Height: =48
-                  HintText: ="Type it again"
+                  Height: =52
+                  HintText: ="Confirm new password"
                   HoverBorderColor: =cJcb
                   HoverColor: =cInputInk
                   HoverFill: =cInputHover
                   Mode: =If(gShowPw, TextMode.SingleLine, TextMode.Password)
                   PaddingLeft: =10
-                  PaddingRight: =6
+                  PaddingRight: =48
                   PressedBorderColor: =cJcb
                   PressedColor: =cInputInk
                   PressedFill: =cInput
@@ -569,8 +592,8 @@
                   RadiusTopRight: =8
                   Size: =13
                   Visible: =gLoginMode = "setpw"
-                  Width: =360
-                  X: =232
+                  Width: =524
+                  X: =116
                   Y: =188
             - rgNLiLb:
                 Control: Label
@@ -903,7 +926,7 @@
                   VerticalAlign: =VerticalAlign.Middle
                   Width: =620
                   X: =40
-                  Y: =If(gLoginMode = "register", 304, 246)
+                  Y: =If(gLoginMode = "register", 304, 244)
             - goLi:
                 Control: Classic/Button
                 Properties:
@@ -919,7 +942,7 @@
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =50
+                  Height: =52
                   HoverBorderColor: =cOrange
                   HoverColor: =cOnJcb
                   HoverFill: =cOrange
@@ -934,12 +957,12 @@
                   RadiusBottomRight: =12
                   RadiusTopLeft: =12
                   RadiusTopRight: =12
-                  Size: =14
-                  Text: ="Login"
+                  Size: =15
+                  Text: ="Login   →"
                   Visible: =gLoginMode = "login"
-                  Width: =280
+                  Width: =580
                   X: =60
-                  Y: =284
+                  Y: =276
             - rgLi:
                 Control: Classic/Button
                 Properties:
@@ -950,12 +973,12 @@
                   DisabledBorderColor: =cLine
                   DisabledColor: =cInk3
                   DisabledFill: =RGBA(255,255,255,0.05)
-                  Fill: =RGBA(255,255,255,0.08)
+                  Fill: =cClear
                   FocusedBorderColor: =cJcb
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =50
+                  Height: =48
                   HoverBorderColor: =cJcb
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
@@ -972,9 +995,9 @@
                   Size: =14
                   Text: ="Register"
                   Visible: =gLoginMode = "login"
-                  Width: =280
-                  X: =360
-                  Y: =284
+                  Width: =580
+                  X: =60
+                  Y: =340
             - spLi:
                 Control: Classic/Button
                 Properties:
@@ -1134,4 +1157,4 @@
                   VerticalAlign: =VerticalAlign.Middle
                   Width: =620
                   X: =40
-                  Y: =If(gLoginMode = "register", 404, 352)
+                  Y: =If(gLoginMode = "setpw", 352, 404)
