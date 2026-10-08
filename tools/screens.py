@@ -15,6 +15,9 @@ ENG = 'gRole = "Engineer"'
 BUSY = "gBusy"
 
 SCREENS = []          # (screen name, nav key, root container)
+import os as _os
+import art as _art
+STYLE = _os.environ.get("UI_STYLE", "B")   # B = centred login card (default); A = brand hero left + login card (preview)
 APP_VERSION = "2.0.6 · 08-Oct-2026"
 
 
@@ -2029,10 +2032,71 @@ def scr_welcome():
         btn("rg" + K, '"Request Access"', 306, 330, 250, 52, 'Set(gLoginMode, "register"); Set(gLoginMsg, ""); '
             'Navigate(scrLogin, ScreenTransition.Fade)', kind="secondary", size=13, radius=26)],
         fill="cGlass", border="cLine2", radius=24)
-    kids = backdrop(K, "RGBA(8, 6, 10, 0.05)") + topbar(K) + [hero,
-        lbl("ver" + K, '"Version %s"' % APP_VERSION, 1100, 730, 240, 22, size=9, color="cInk3", align="Right")]
+    if STYLE == "A":
+        hero = box("hero" + K, 600, 190, 420, 380, [
+            lbl("h1" + K, '"Welcome"', 0, 34, 420, 40, size=24, bold=True, color="cInk", align="Center"),
+            lbl("p" + K, '"Live stock, BOM checks in seconds, and every material request in one place."', 40, 80, 340,
+                48, size=12, color="cInk2", wrap=True, align="Center", valign="Top"),
+            lbl("ch1" + K, '"✓  Live Stock"', 40, 146, 160, 30, size=10, bold=True, color="cJcb", fill="cJcbWash",
+                align="Center"),
+            lbl("ch2" + K, '"✓  BOM Compare"', 220, 146, 160, 30, size=10, bold=True, color="cJcb", fill="cJcbWash",
+                align="Center"),
+            btn("go" + K, '"LOG IN   →"', 40, 206, 340, 52, 'Set(gLoginMode, "login"); Set(gLoginMsg, ""); '
+                'Navigate(scrLogin, ScreenTransition.Fade)', size=14, radius=10),
+            btn("rg" + K, '"Request Access"', 40, 274, 340, 48, 'Set(gLoginMode, "register"); Set(gLoginMsg, ""); '
+                'Navigate(scrLogin, ScreenTransition.Fade)', kind="secondary", size=13, radius=10,
+                extra={"Fill": "cClear", "BorderColor": "cInk2"})],
+            fill="cGlass", border="cLine2", radius=16)
+    kids = backdrop(K, "RGBA(8, 6, 10, 0.05)") + (hero_a(K) if STYLE == "A" else []) + topbar(K) + [hero,
+        lbl("ver" + K, '"Version %s"' % APP_VERSION, 1100, 744 if STYLE == "A" else 730, 240, 20, size=9, color="cInk3",
+            align="Right")]
     root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)
     SCREENS.append(("scrWelcome", "", root))
+
+
+def hex_icon(glyph):
+    """Gold hexagon outline with a line glyph, as an image formula (Welcome/Login style A)."""
+    return _art.uri("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 "
+                    "L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' "
+                    "stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'>%s</g></svg>" % glyph)
+
+
+HERO_ICONS = [("Components", "<rect x='22' y='22' width='20' height='20' rx='2'/><path d='M26 22v-5M32 22v-5M38 22v-5M26 42v5"
+                             "M32 42v5M38 42v5M22 26h-5M22 32h-5M22 38h-5M42 26h5M42 32h5M42 38h5'/>"),
+              ("Connectors", "<rect x='20' y='24' width='18' height='16' rx='3'/><path d='M38 28h8M38 36h8M20 32h-6'/>"),
+              ("Wires & Cables", "<path d='M14 24c8 0 8 8 16 8s8-8 16-8 M14 32c8 0 8 8 16 8s8-8 16-8 M14 40c8 0 8 8 16 8'/>"),
+              ("Tools", "<path d='M40 18a8 8 0 0 0-10 10L18 40l6 6 12-12a8 8 0 0 0 10-10l-5 5-5-1-1-5z'/>"),
+              ("Engineering Samples", "<path d='M32 16l14 8v16l-14 8-14-8V24z M18 24l14 8 14-8 M32 32v16'/>")]
+
+
+def hero_a(K):
+    """Style A: brand block on the left of Welcome / Login (from the user's JCB-style mockup)."""
+    shade = _art.uri("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'>"
+                     "<defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#07050a' "
+                     "stop-opacity='0.92'/><stop offset='0.42' stop-color='#07050a' stop-opacity='0.55'/><stop offset='0.7' "
+                     "stop-color='#07050a' stop-opacity='0'/></linearGradient></defs><rect width='100' height='100' "
+                     "fill='url(#g)'/></svg>")
+    kids = [img("hsh" + K, 0, 0, 1366, 768, shade, extra={"ImagePosition": "ImagePosition.Stretch"}),
+            lbl("hey" + K, '"ENGINEERING   •   MATERIAL   •   CONTROL"', 60, 196, 460, 22, size=10, bold=True, color="cInk2"),
+            lbl("hh1" + K, '"EDS LAB"', 56, 220, 480, 62, size=44, bold=True, color="cJcb"),
+            lbl("hh2" + K, '"MATERIAL PORTAL"', 56, 276, 480, 56, size=36, bold=True, color="cInk"),
+            rect("hln" + K, 60, 344, 56, 4, "cJcb"),
+            lbl("ht1" + K, '"Engineering materials."', 60, 362, 470, 36, size=24, bold=True, color="cInk"),
+            lbl("ht2" + K, '"Controlled better."', 60, 396, 470, 36, size=24, bold=True, color="cInk"),
+            lbl("hp" + K, '"A centralised workspace for EDS lab materials, components and engineering samples: live stock, '
+                          'BOM checks and every request from submission to release."', 60, 444, 440, 66, size=12,
+                color="cInk2", wrap=True, valign="Top")]
+    for i, (name, g) in enumerate(HERO_ICONS):
+        x = 60 + i * 92
+        kids += [img("hi%d%s" % (i, K), x + 16, 540, 52, 52, hex_icon(g)),
+                 lbl("hl%d%s" % (i, K), q(name.upper()), x - 4, 598, 92, 32, size=8, bold=True, color="cInk2",
+                     align="Center", wrap=True, valign="Top")]
+    kids += [rect("hf0" + K, 60, 726, 36, 2, "cJcb"),
+             lbl("hf1" + K, '"JCB INDIA   |   ELECTRICAL DEVELOPMENT LAB, PUNE"', 106, 714, 460, 26, size=9, bold=True,
+                 color="cInk2"),
+             lbl("hf2" + K, '"LIVE STOCK   |   BOM CHECK   |   APPROVALS"', 900, 714, 420, 26, size=9, bold=True,
+                 color="cInk2", align="Right")]
+    return kids
 
 
 def pw_rules(p):
@@ -2113,6 +2177,8 @@ def scr_login():
                                        "Tooltip": 'If(gShowPw, "Hide password", "Show password")',
                                        "AccessibleLabel": 'If(gShowPw, "Hide password", "Show password")',
                                        "PaddingTop": 0, "PaddingBottom": 0, "PaddingLeft": 0, "PaddingRight": 0})
+    if STYLE == "A":
+        return _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye)
     kids = [
         lbl("t" + K, 'Switch(gLoginMode, "setpw", "Set Your Password", "register", "Request Access", "User Login")',
             0, 26, 700, 48, size=28, bold=True, color="cOrange", align="Center"),
@@ -2158,6 +2224,82 @@ def scr_login():
     panel = box("pn" + K, 333, 140, 700, 'If(gLoginMode = "setpw", 400, 450)', kids, fill="cGlass", border="cLine2",
                 radius=24)
     kids = backdrop(K, "RGBA(8, 6, 10, 0.25)") + topbar(K, [
+        lbl("ckD" + K, '"●"', 1022, 30, 30, 38, size=12, color="cOk", align="Center"),
+        btn("ck" + K, '"System Check"', 1012, 30, 160, 38, "Navigate(scrCheck, ScreenTransition.Fade)", kind="ghost",
+            radius=19, extra={"BorderColor": "cJcb", "BorderThickness": 1, "PaddingLeft": 22, "Color": "cInk",
+                              "Fill": "cClear"}),
+        btn("bk" + K, '"‹  Back"', 1180, 30, 140, 38, 'Set(gLoginMsg, ""); Navigate(scrWelcome, ScreenTransition.Fade)',
+            kind="secondary", radius=19)]) + [panel]
+    root = box("root" + K, 0, 0, 1366, 768, kids, fill="cBg", border="cBg", thick=0)
+    SCREENS.append(("scrLogin", "", root))
+
+
+REG_FIELDS = lambda pwmode: [
+    ("rgN", "Full Name", True, 0, 0, "Gaurav Shelke", None), ("rgU", "Username", True, 1, 0, "gaurav.shelke", None),
+    ("rgB", "Business Unit", False, 0, 1, "EDS", None), ("rgM", "Email (Optional)", False, 1, 1, "name@jcb.com", None),
+    ("rgP1", "Password", True, 0, 2, "At least 6, a letter and a number", pwmode),
+    ("rgP2", "Confirm Password", True, 1, 2, "Type it again", pwmode)]
+
+
+def _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye):
+    """Style A login (user's JCB-style mockup): brand hero on the left, compact login card beside it."""
+    NREG = "!(%s)" % REG
+    pwx = dict(pwmode, PaddingRight=44)
+
+    def row(n, y, ico, ctl, vis):
+        return [btn(n + "Pl", '""', 30, y, 48, 48, "SetFocus(%s)" % ctl.name, radius=10, visible=vis),
+                Ctl(n + "Ic", "Classic/Icon", {"X": 42, "Y": y + 12, "Width": 24, "Height": 24, "Icon": "Icon." + ico,
+                                               "Color": "cOnJcb", "OnSelect": "SetFocus(%s)" % ctl.name, "Visible": vis,
+                                               "PaddingTop": 0, "PaddingBottom": 0, "PaddingLeft": 0, "PaddingRight": 0}),
+                ctl]
+
+    def eye_a(n, y, vis):
+        e = eye(n, y, vis)
+        e.props["X"] = 352
+        return e
+    kids = [img("ic" + K, 180, 24, 60, 60, hex_icon("<path d='M40 18a8 8 0 0 0-10 10L18 40l6 6 12-12a8 8 0 0 0 10-10"
+                                                    "l-5 5-5-1-1-5z'/>"), visible=NREG),
+            lbl("t" + K, 'Switch(gLoginMode, "setpw", "Set Your Password", "register", "Request Access", "User Login")',
+                0, 'If(%s, 26, 92)' % REG, "Parent.Width", 40, size=22, bold=True, color="cInk", align="Center"),
+            lbl("s" + K, 'Switch(gLoginMode, "setpw", "Hi " & Coalesce(gPend.FullName, gPend.Username) & ", choose your '
+                         'password.", "register", "Ask the Lab Lead for an account. You can log in as soon as it is '
+                         'approved.", "Sign in to EDS Lab Material Portal")',
+                20, 'If(%s, 70, 132)' % REG, "Parent.Width - 40", 22, size=11, color="cInk2", align="Center")]
+    kids += row("u" + K, 176, "Person", inp("usr" + K, 78, 176, 312, 48, hint="Username", size=13, visible=LOG), LOG)
+    kids += row("p" + K, 236, "Lock", inp("pwd" + K, 78, 236, 312, 48, hint="Password", size=13, visible=LOG,
+                                           extra=pwx), LOG)
+    kids += [eye_a("eyP" + K, 236, LOG)]
+    kids += row("n1" + K, 176, "Lock", inp("np1" + K, 78, 176, 312, 48, hint="New password", size=13, visible=SET,
+                                            extra=pwx), SET)
+    kids += [eye_a("eyN" + K, 176, SET)]
+    kids += row("n2" + K, 236, "Lock", inp("np2" + K, 78, 236, 312, 48, hint="Confirm new password", size=13, visible=SET,
+                                            extra=pwx), SET)
+    for nm, label, req, col, r, hint, ex in REG_FIELDS(pwmode):
+        x, y = 60 + col * 300, 110 + r * 64
+        kids += [lbl(nm + K + "Lb", q(label + (" *" if req else "")), x, y, 280, 18, size=10, semibold=True,
+                     color="cInk2", visible=REG),
+                 inp(nm + K, x, y + 20, 280, 40, hint=hint, visible=REG, extra=ex)]
+    kids += [
+        lbl("m" + K, "gLoginMsg", 20, 'If(%s, 304, 288)' % REG, "Parent.Width - 40", 26, size=10, bold=True, align="Center",
+            color='If(StartsWith(gLoginMsg, "✓"), cOk, cStop)'),
+        btn("go" + K, '"LOGIN   →"', 30, 318, 360, 50, login, size=14, radius=10, visible=LOG),
+        rect("or1" + K, 30, 392, 150, 1, "cLine2", visible=LOG),
+        lbl("or" + K, '"OR"', 180, 380, 60, 24, size=9, color="cInk3", align="Center", visible=LOG),
+        rect("or2" + K, 240, 392, 150, 1, "cLine2", visible=LOG),
+        btn("rg" + K, '"Register"', 30, 414, 360, 46, 'Set(gLoginMode, "register"); Set(gLoginMsg, "")', size=13,
+            radius=10, visible=LOG, kind="secondary", extra={"Color": "cInk", "BorderColor": "cInk2", "Fill": "cClear"}),
+        btn("sp" + K, '"Save and Log In"', 30, 318, 360, 50, setpw, size=14, radius=10, visible=SET),
+        btn("sx" + K, '"Cancel"', 30, 414, 360, 46, 'Set(gLoginMode, "login"); Set(gLoginMsg, ""); Reset(np1%s); '
+            'Reset(np2%s)' % (K, K), kind="secondary", size=13, radius=10, visible=SET),
+        btn("rs" + K, '"Send Request"', 60, 340, 280, 50, reg, size=14, radius=12, visible=REG),
+        btn("rb" + K, '"Back to Login"', 360, 340, 280, 50, 'Set(gLoginMode, "login"); Set(gLoginMsg, "")',
+            kind="secondary", size=14, radius=12, visible=REG),
+        lbl("f" + K, 'If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", '
+                     '"Your password is stored scrambled; nobody can read it."',
+            20, 'If(%s, 404, 470)' % REG, "Parent.Width - 40", 20, size=9, color="cInk3", align="Center")]
+    panel = box("pn" + K, 600, 'If(%s, 150, 130)' % REG, 'If(%s, 700, 420)' % REG, 'If(%s, 450, 504)' % REG, kids,
+                fill="cGlass", border="cLine2", radius=16)
+    kids = backdrop(K, "RGBA(8, 6, 10, 0.05)") + hero_a(K) + topbar(K, [
         lbl("ckD" + K, '"●"', 1022, 30, 30, 38, size=12, color="cOk", align="Center"),
         btn("ck" + K, '"System Check"', 1012, 30, 160, 38, "Navigate(scrCheck, ScreenTransition.Fade)", kind="ghost",
             radius=19, extra={"BorderColor": "cJcb", "BorderThickness": 1, "PaddingLeft": 22, "Color": "cInk",
