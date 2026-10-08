@@ -10,6 +10,11 @@ pick `EDS-Lab-Data-PowerApps.xlsx` → tick **all 12** tables → **Connect**.
 In the Data panel the names must be **exactly** these (no `_1` at the end):
 `tblParts, tblMoves, tblUsers, tblSettings, tblRequests, tblReqLines, tblPurch, tblProc, tblInvoice, tblNewPart, tblLicenses, tblCalib`.
 
+**If names end in `_1`** (`tblParts_1`…): a table with that name was already connected, so Power Apps added a suffix and
+the app can't find its tables (every list stays empty). Fix: Data panel → **⋯ → Remove** on *every* table until the panel
+is empty → **File → Save** → close the Studio tab → reopen the app (Apps → ⋯ → Edit) → add all 12 tables **once**, from
+**one** file only. Never rename (Power Apps can't), never add a table that is still in the list, never mix two workbooks.
+
 Also check two settings (gear icon **Settings**):
 1. **General → Data row limit = 2000.** The default 500 hides most Movements rows, so stock is wrong.
 2. **Updates → Power Fx 1.0 → On**, if you see it. v2.0.3 turns it on by itself. It was **off** in v2.0.2, which is the
