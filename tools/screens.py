@@ -2295,7 +2295,7 @@ def _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye):
         btn("rb" + K, '"Back to Login"', 360, 340, 280, 50, 'Set(gLoginMode, "login"); Set(gLoginMsg, "")',
             kind="secondary", size=14, radius=12, visible=REG),
         lbl("f" + K, 'If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", '
-                     '"Your password is stored scrambled; nobody can read it."',
+                     '"Your password is stored scrambled; nobody can read it.")',
             20, 'If(%s, 404, 470)' % REG, "Parent.Width - 40", 20, size=9, color="cInk3", align="Center")]
     panel = box("pn" + K, 600, 'If(%s, 150, 130)' % REG, 'If(%s, 700, 420)' % REG, 'If(%s, 450, 504)' % REG, kids,
                 fill="cGlass", border="cLine2", radius=16)
