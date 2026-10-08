@@ -312,7 +312,7 @@
             Color: =cInk3
             Font: =fUI
             FontWeight: =FontWeight.Normal
-            Height: =22
+            Height: =20
             PaddingBottom: =0
             PaddingLeft: =0
             PaddingRight: =0
