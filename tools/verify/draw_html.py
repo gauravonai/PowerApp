@@ -48,7 +48,9 @@ def item(d):
                 % (st, fill, col, bt, bc, j if d.get("Align") else "center", bold, size, font, rad, d.get("PaddingLeft") or 0,
                    html.escape(d.get("Text") or "")))
     if k in ("input", "dropdown", "date"):
-        val = d.get("Default") or "" if k == "input" else d.get("Text") or ""
+        val = (d.get("Typed") or d.get("Default") or "") if k == "input" else d.get("Text") or ""
+        if k == "input" and d.get("Pw") and val:
+            val = "\u2022" * len(val)
         if k == "date":
             val = d.get("DefaultDate") or ""
             val = val[:11]
@@ -67,6 +69,14 @@ def item(d):
             fit = {"ImagePosition.Fill": "cover", "ImagePosition.Stretch": "fill"}.get(d.get("ImagePosition"), "contain")
             return '<img class="pa" style="position:absolute;%sobject-fit:%s;border-radius:%spx" src="%s">' % (st, fit, rad, html.escape(src))
         return '<div class="pa" style="%sbackground:#24272d;color:#71767e;font:9pt sans-serif;display:flex;align-items:center;justify-content:center">image</div>' % st
+    if k == "toast":   # Power Apps Notify banner across the top of the screen
+        t = d.get("Text") or ""
+        kind, _, msg = t.partition(": ")
+        bg = {"NotificationType.Success": "#2f7d32", "NotificationType.Error": "#b3261e",
+              "NotificationType.Warning": "#a8610a"}.get(kind, "#2b5797")
+        return ('<div class="pa" style="%sbackground:%s;color:#fff;display:flex;align-items:center;padding:0 18px;'
+                'font:600 11pt \'Segoe UI\',sans-serif;z-index:9;box-shadow:0 2px 8px rgba(0,0,0,.4)">%s</div>'
+                % (st, bg, html.escape(msg or t)))
     if k == "icon":
         return '<div class="pa" style="%scolor:%s;display:flex;align-items:center;justify-content:center;font:700 13pt sans-serif">%s</div>' % (
             st, col, GLYPH.get(d.get("Icon"), "&#9679;"))

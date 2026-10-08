@@ -17,7 +17,7 @@ BUSY = "gBusy"
 SCREENS = []          # (screen name, nav key, root container)
 import os as _os
 import art as _art
-STYLE = _os.environ.get("UI_STYLE", "B")   # B = centred login card (default); A = brand hero left + login card (preview)
+STYLE = _os.environ.get("UI_STYLE", "A")   # A = brand hero left + login card (user chose, default); B = centred card
 APP_VERSION = "2.0.6 · 08-Oct-2026"
 
 
@@ -170,7 +170,7 @@ def scr_dash():
         Col("Submitted", None, fdate("ThisItem.DateRaised"), "mono")],
         h=374, row_h=40, onrow='Set(gReqNo, ThisItem.RequestNo); Set(gShortSr, -1); Navigate(scrReqDetail, ScreenTransition.None)',
         empty="Nothing here yet",
-        empty_sub='When an engineer submits a BOM it lands here.'),
+        empty_sub='To raise one: BOM Compare, paste the BOM, then Raise Part Request.'),
         right=[btn("cdReqGo" + K, '"Open all"', "Parent.Width - 112", 9, 96, 28,
                    'If(%s, Navigate(scrQueue, ScreenTransition.None), Navigate(scrMyReq, ScreenTransition.None))' % ADMIN,
                    kind="secondary", size=10)], title_is_formula=True)
@@ -443,23 +443,34 @@ def bom_rows(src):
             '%s, 1, 0))})' % (bom_lines(src), is_num("First(R.Tok).Value")))
 
 
+def bom_items(src):
+    """Each BOM line -> {PN, Rest}. A few catalogue part numbers contain spaces ("MC000ACZAUN7IG 9001"), so the
+    part number is the longest run of the first 1-3 values that IS a catalogue part, else the first value."""
+    return ('ForAll(%s As R, With({t1: Upper(First(R.T).Value), '
+            't2: If(CountRows(R.T) >= 2, Upper(Concat(FirstN(R.T, 2), Value, " ")), ""), '
+            't3: If(CountRows(R.T) >= 3, Upper(Concat(FirstN(R.T, 3), Value, " ")), "")}, '
+            'With({k: If(!IsBlank(t3) && !IsBlank(LookUp(nfStock, PN = t3)), 3, '
+            '!IsBlank(t2) && !IsBlank(LookUp(nfStock, PN = t2)), 2, 1)}, '
+            '{PN: Switch(k, 3, t3, 2, t2, t1), Rest: LastN(R.T, CountRows(R.T) - k)})))' % bom_rows(src))
+
+
 def bom_parse(src):
     """BOM rule: part number = FIRST value on the line (after an optional Sr), quantity = LAST NUMBER after it.
     So a description column in between ("7219/0373  CONNECTOR 12 WAY  20"), a unit ("20 NOS") or a header row
     ("Part No  Qty") all work. Lines without a quantity drop out; the same part on several lines is added up."""
-    return ('With({raw: Filter(ForAll(%s As R, With({nums: Filter(LastN(R.T, CountRows(R.T) - 1), %s)}, '
-            '{PN: Upper(First(R.T).Value), Q: If(CountRows(nums) = 0, 0, Value(Last(nums).Value))})), !IsBlank(PN) && Q > 0)}, '
+    return ('With({raw: Filter(ForAll(%s As R, With({nums: Filter(R.Rest, %s)}, '
+            '{PN: R.PN, Q: If(CountRows(nums) = 0, 0, Value(Last(nums).Value))})), !IsBlank(PN) && Q > 0)}, '
             'ForAll(Distinct(raw, PN) As D, {PN: D.Value, Q: Sum(Filter(raw, PN = D.Value), Q)}))'
-            % (bom_rows(src), is_num("Value")))
+            % (bom_items(src), is_num("Value")))
 
 
 def cost_parse(src):
     """Cost-sheet rule: part number = first value, then the last two numbers are Qty and Cost / Unit
     (only one number: it is the Qty and the cost comes from the parts list)."""
-    return ('Filter(ForAll(%s As R, With({nums: Filter(LastN(R.T, CountRows(R.T) - 1), %s)}, '
-            '{PN: Upper(First(R.T).Value), Q: If(CountRows(nums) = 0, 0, CountRows(nums) = 1, Value(Last(nums).Value), '
+    return ('Filter(ForAll(%s As R, With({nums: Filter(R.Rest, %s)}, '
+            '{PN: R.PN, Q: If(CountRows(nums) = 0, 0, CountRows(nums) = 1, Value(Last(nums).Value), '
             'Value(Index(nums, CountRows(nums) - 1).Value)), C: If(CountRows(nums) >= 2, Value(Last(nums).Value), 0)})), '
-            '!IsBlank(PN) && Q > 0)' % (bom_rows(src), is_num("Value")))
+            '!IsBlank(PN) && Q > 0)' % (bom_items(src), is_num("Value")))
 
 
 def scr_bom():
@@ -485,7 +496,7 @@ def scr_bom():
                % (bom_parse("txt%s.Text" % K), bom_lines("txt%s.Text" % K)))
     paste = card("cdP" + K, "1 · Paste your BOM", 250, [
         inp("txt" + K, 16, 62, "Parent.Width - 32", 120, default="gBomText", mode="multi", font=MONO,
-            hint="7219/0373  20  (part number, then quantity — select the two columns in Excel, Ctrl+C, click here, Ctrl+V)"),
+            hint="Select the BOM rows in Excel (Sr, part number, description, qty...), Ctrl+C, click here, Ctrl+V"),
         btn("go" + K, '"COMPARE AGAINST STOCK"', 16, 196, 220, 36, compare),
         btn("smp" + K, '"LOAD A SAMPLE HARNESS"', 248, 196, 210, 36, sample_set, kind="secondary"),
         btn("clr" + K, '"CLEAR"', 470, 196, 90, 36, 'Set(gBomText, ""); Set(gBomInfo, ""); Reset(txt%s); Clear(colBom)' % K,
@@ -516,8 +527,8 @@ def scr_bom():
         right=[btn("req" + K, '"Raise part request ›"', "Parent.Width - 196", 9, 180, 28,
                    "Navigate(scrNewReq, ScreenTransition.None)", visible='gRole <> "Manager"', size=10)],
         visible=has)
-    content = [head(K, '"BOM COMPARE"', '"Paste two columns from Excel — part number and quantity — and see instantly '
-                                         'what the lab can supply"'), paste, t, res]
+    content = [head(K, '"BOM COMPARE"', '"Copy the BOM rows from Excel and paste them here: part number first, quantity last. '
+                                         'See instantly what the lab can supply."'), paste, t, res]
     shell(K, "scrBom", "bom", content)
 
 
@@ -710,6 +721,9 @@ def scr_reqdetail():
                 lbl(n + "r", cur, x, 0, w - 8, rh, size=11, font=MONO, visible="!(%s)" % canact)]
 
     gap = "Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased))"
+    # before the store reserves anything, "short" = what free stock cannot cover (same as BOM Compare)
+    gap = ('If(%s in ["SUBMITTED", "ADMIN REVIEW", "APPROVED"] && ThisItem.QtyReserved + ThisItem.QtyReleased = 0, '
+           'Max(0, ThisItem.QtyRequested - Coalesce(LookUp(nfStock, PN = ThisItem.PN).Avail, 0)), %s)' % (st, gap))
 
     def status_cell(n, x, w, rh):
         return [pill(n, x, 6, w - 8, "ThisItem.LineStatus"),

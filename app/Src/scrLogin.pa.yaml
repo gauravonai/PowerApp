@@ -37,12 +37,331 @@ Screens:
             - bgShLi:
                 Control: Rectangle
                 Properties:
-                  BorderColor: =RGBA(8, 6, 10, 0.25)
-                  Fill: =RGBA(8, 6, 10, 0.25)
+                  BorderColor: =RGBA(8, 6, 10, 0.05)
+                  Fill: =RGBA(8, 6, 10, 0.05)
                   Height: =768
                   Width: =1366
                   X: =0
                   Y: =0
+            - hshLi:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =768
+                  Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#07050a' stop-opacity='0.92'/><stop offset='0.42' stop-color='#07050a' stop-opacity='0.55'/><stop offset='0.7' stop-color='#07050a' stop-opacity='0'/></linearGradient></defs><rect width='100' height='100' fill='url(#g)'/></svg>")
+                  ImagePosition: =ImagePosition.Stretch
+                  Width: =1366
+                  X: =0
+                  Y: =0
+            - heyLi:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =22
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =10
+                  Text: ="ENGINEERING   •   MATERIAL   •   CONTROL"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =460
+                  X: =60
+                  Y: =196
+            - hh1Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cJcb
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =62
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =44
+                  Text: ="EDS LAB"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =480
+                  X: =56
+                  Y: =220
+            - hh2Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =56
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =36
+                  Text: ="MATERIAL PORTAL"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =480
+                  X: =56
+                  Y: =276
+            - hlnLi:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cJcb
+                  Fill: =cJcb
+                  Height: =4
+                  Width: =56
+                  X: =60
+                  Y: =344
+            - ht1Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =36
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =24
+                  Text: ="Engineering materials."
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =470
+                  X: =60
+                  Y: =362
+            - ht2Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =36
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =24
+                  Text: ="Controlled better."
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =470
+                  X: =60
+                  Y: =396
+            - hpLi:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Normal
+                  Height: =66
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =12
+                  Text: |-
+                    ="A centralised workspace for EDS lab materials, components and engineering samples: live stock, BOM checks and every request from submission to release."
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =440
+                  Wrap: =true
+                  X: =60
+                  Y: =444
+            - hi0Li:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =52
+                  Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='22' y='22' width='20' height='20' rx='2'/><path d='M26 22v-5M32 22v-5M38 22v-5M26 42v5M32 42v5M38 42v5M22 26h-5M22 32h-5M22 38h-5M42 26h5M42 32h5M42 38h5'/></g></svg>")
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =52
+                  X: =76
+                  Y: =540
+            - hl0Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =32
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =8
+                  Text: ="COMPONENTS"
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =92
+                  Wrap: =true
+                  X: =56
+                  Y: =598
+            - hi1Li:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =52
+                  Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='20' y='24' width='18' height='16' rx='3'/><path d='M38 28h8M38 36h8M20 32h-6'/></g></svg>")
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =52
+                  X: =168
+                  Y: =540
+            - hl1Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =32
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =8
+                  Text: ="CONNECTORS"
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =92
+                  Wrap: =true
+                  X: =148
+                  Y: =598
+            - hi2Li:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =52
+                  Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M14 24c8 0 8 8 16 8s8-8 16-8 M14 32c8 0 8 8 16 8s8-8 16-8 M14 40c8 0 8 8 16 8'/></g></svg>")
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =52
+                  X: =260
+                  Y: =540
+            - hl2Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =32
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =8
+                  Text: ="WIRES & CABLES"
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =92
+                  Wrap: =true
+                  X: =240
+                  Y: =598
+            - hi3Li:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =52
+                  Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M40 18a8 8 0 0 0-10 10L18 40l6 6 12-12a8 8 0 0 0 10-10l-5 5-5-1-1-5z'/></g></svg>")
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =52
+                  X: =352
+                  Y: =540
+            - hl3Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =32
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =8
+                  Text: ="TOOLS"
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =92
+                  Wrap: =true
+                  X: =332
+                  Y: =598
+            - hi4Li:
+                Control: Image
+                Properties:
+                  BorderColor: =RGBA(0,0,0,0)
+                  Height: =52
+                  Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M32 16l14 8v16l-14 8-14-8V24z M18 24l14 8 14-8 M32 32v16'/></g></svg>")
+                  ImagePosition: =ImagePosition.Fit
+                  Width: =52
+                  X: =444
+                  Y: =540
+            - hl4Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Center
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =32
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =8
+                  Text: ="ENGINEERING SAMPLES"
+                  VerticalAlign: =VerticalAlign.Top
+                  Width: =92
+                  Wrap: =true
+                  X: =424
+                  Y: =598
+            - hf0Li:
+                Control: Rectangle
+                Properties:
+                  BorderColor: =cJcb
+                  Fill: =cJcb
+                  Height: =2
+                  Width: =36
+                  X: =60
+                  Y: =726
+            - hf1Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Left
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =26
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: ="JCB INDIA   |   ELECTRICAL DEVELOPMENT LAB, PUNE"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =460
+                  X: =106
+                  Y: =714
+            - hf2Li:
+                Control: Label
+                Properties:
+                  Align: =Align.Right
+                  Color: =cInk2
+                  Font: =fUI
+                  FontWeight: =FontWeight.Bold
+                  Height: =26
+                  PaddingBottom: =0
+                  PaddingLeft: =0
+                  PaddingRight: =0
+                  PaddingTop: =0
+                  Size: =9
+                  Text: ="LIVE STOCK   |   BOM CHECK   |   APPROVALS"
+                  VerticalAlign: =VerticalAlign.Middle
+                  Width: =420
+                  X: =900
+                  Y: =714
             - tbLogoLi:
                 Control: Image
                 Properties:
@@ -183,33 +502,44 @@ Screens:
                   BorderThickness: =1
                   DropShadow: =DropShadow.None
                   Fill: =cGlass
-                  Height: =If(gLoginMode = "setpw", 400, 450)
-                  RadiusBottomLeft: =24
-                  RadiusBottomRight: =24
-                  RadiusTopLeft: =24
-                  RadiusTopRight: =24
-                  Width: =700
-                  X: =333
-                  Y: =140
+                  Height: =If(gLoginMode = "register", 450, 504)
+                  RadiusBottomLeft: =16
+                  RadiusBottomRight: =16
+                  RadiusTopLeft: =16
+                  RadiusTopRight: =16
+                  Width: =If(gLoginMode = "register", 700, 420)
+                  X: =600
+                  Y: =If(gLoginMode = "register", 150, 130)
                 Children:
+                  - icLi:
+                      Control: Image
+                      Properties:
+                        BorderColor: =RGBA(0,0,0,0)
+                        Height: =60
+                        Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M40 18a8 8 0 0 0-10 10L18 40l6 6 12-12a8 8 0 0 0 10-10l-5 5-5-1-1-5z'/></g></svg>")
+                        ImagePosition: =ImagePosition.Fit
+                        Visible: =!(gLoginMode = "register")
+                        Width: =60
+                        X: =180
+                        Y: =24
                   - tLi:
                       Control: Label
                       Properties:
                         Align: =Align.Center
-                        Color: =cOrange
+                        Color: =cInk
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =48
+                        Height: =40
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: =28
+                        Size: =22
                         Text: =Switch(gLoginMode, "setpw", "Set Your Password", "register", "Request Access", "User Login")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =700
+                        Width: =Parent.Width
                         X: =0
-                        Y: =26
+                        Y: =If(gLoginMode = "register", 26, 92)
                   - sLi:
                       Control: Label
                       Properties:
@@ -217,17 +547,17 @@ Screens:
                         Color: =cInk2
                         Font: =fUI
                         FontWeight: =FontWeight.Normal
-                        Height: =24
+                        Height: =22
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =11
-                        Text: =Switch(gLoginMode, "setpw", "Hi " & Coalesce(gPend.FullName, gPend.Username) & ", choose the password you will use every time.", "register", "Ask the Lab Lead for an account. You can log in as soon as it is approved.", "Sign in with your lab username and password.")
+                        Text: =Switch(gLoginMode, "setpw", "Hi " & Coalesce(gPend.FullName, gPend.Username) & ", choose your password.", "register", "Ask the Lab Lead for an account. You can log in as soon as it is approved.", "Sign in to EDS Lab Material Portal")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =620
-                        X: =40
-                        Y: =74
+                        Width: =Parent.Width - 40
+                        X: =20
+                        Y: =If(gLoginMode = "register", 70, 132)
                   - uLiPl:
                       Control: Classic/Button
                       Properties:
@@ -243,7 +573,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =52
+                        Height: =48
                         HoverBorderColor: =cOrange
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
@@ -253,17 +583,16 @@ Screens:
                         PressedBorderColor: =cOrange
                         PressedColor: =cOnJcb
                         PressedFill: =cOrange
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                         Size: =11
                         Text: =""
-                        Tooltip: ="Username"
                         Visible: =gLoginMode = "login"
-                        Width: =60
-                        X: =60
-                        Y: =124
+                        Width: =48
+                        X: =30
+                        Y: =176
                   - uLiIc:
                       Control: Classic/Icon
                       Properties:
@@ -277,8 +606,8 @@ Screens:
                         PaddingTop: =0
                         Visible: =gLoginMode = "login"
                         Width: =24
-                        X: =78
-                        Y: =138
+                        X: =42
+                        Y: =188
                   - usrLi:
                       Control: Classic/TextInput
                       Properties:
@@ -293,7 +622,7 @@ Screens:
                         FocusedBorderColor: =cOrange
                         FocusedBorderThickness: =2
                         Font: =fUI
-                        Height: =52
+                        Height: =48
                         HintText: ="Username"
                         HoverBorderColor: =cJcb
                         HoverColor: =cInputInk
@@ -309,9 +638,9 @@ Screens:
                         RadiusTopRight: =8
                         Size: =13
                         Visible: =gLoginMode = "login"
-                        Width: =524
-                        X: =116
-                        Y: =124
+                        Width: =312
+                        X: =78
+                        Y: =176
                   - pLiPl:
                       Control: Classic/Button
                       Properties:
@@ -327,7 +656,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =52
+                        Height: =48
                         HoverBorderColor: =cOrange
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
@@ -337,17 +666,16 @@ Screens:
                         PressedBorderColor: =cOrange
                         PressedColor: =cOnJcb
                         PressedFill: =cOrange
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                         Size: =11
                         Text: =""
-                        Tooltip: ="Password"
                         Visible: =gLoginMode = "login"
-                        Width: =60
-                        X: =60
-                        Y: =188
+                        Width: =48
+                        X: =30
+                        Y: =236
                   - pLiIc:
                       Control: Classic/Icon
                       Properties:
@@ -361,8 +689,8 @@ Screens:
                         PaddingTop: =0
                         Visible: =gLoginMode = "login"
                         Width: =24
-                        X: =78
-                        Y: =202
+                        X: =42
+                        Y: =248
                   - pwdLi:
                       Control: Classic/TextInput
                       Properties:
@@ -377,14 +705,14 @@ Screens:
                         FocusedBorderColor: =cOrange
                         FocusedBorderThickness: =2
                         Font: =fUI
-                        Height: =52
+                        Height: =48
                         HintText: ="Password"
                         HoverBorderColor: =cJcb
                         HoverColor: =cInputInk
                         HoverFill: =cInputHover
                         Mode: =If(gShowPw, TextMode.SingleLine, TextMode.Password)
                         PaddingLeft: =10
-                        PaddingRight: =48
+                        PaddingRight: =44
                         PressedBorderColor: =cJcb
                         PressedColor: =cInputInk
                         PressedFill: =cInput
@@ -394,9 +722,9 @@ Screens:
                         RadiusTopRight: =8
                         Size: =13
                         Visible: =gLoginMode = "login"
-                        Width: =524
-                        X: =116
-                        Y: =188
+                        Width: =312
+                        X: =78
+                        Y: =236
                   - eyPLi:
                       Control: Classic/Icon
                       Properties:
@@ -413,8 +741,8 @@ Screens:
                         Tooltip: =If(gShowPw, "Hide password", "Show password")
                         Visible: =gLoginMode = "login"
                         Width: =28
-                        X: =596
-                        Y: =202
+                        X: =352
+                        Y: =250
                   - n1LiPl:
                       Control: Classic/Button
                       Properties:
@@ -430,7 +758,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =52
+                        Height: =48
                         HoverBorderColor: =cOrange
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
@@ -440,17 +768,16 @@ Screens:
                         PressedBorderColor: =cOrange
                         PressedColor: =cOnJcb
                         PressedFill: =cOrange
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                         Size: =11
                         Text: =""
-                        Tooltip: ="New Password"
                         Visible: =gLoginMode = "setpw"
-                        Width: =60
-                        X: =60
-                        Y: =124
+                        Width: =48
+                        X: =30
+                        Y: =176
                   - n1LiIc:
                       Control: Classic/Icon
                       Properties:
@@ -464,8 +791,8 @@ Screens:
                         PaddingTop: =0
                         Visible: =gLoginMode = "setpw"
                         Width: =24
-                        X: =78
-                        Y: =138
+                        X: =42
+                        Y: =188
                   - np1Li:
                       Control: Classic/TextInput
                       Properties:
@@ -480,15 +807,14 @@ Screens:
                         FocusedBorderColor: =cOrange
                         FocusedBorderThickness: =2
                         Font: =fUI
-                        Height: =52
-                        HintText: |-
-                          ="New password: 6+ characters, a letter and a number"
+                        Height: =48
+                        HintText: ="New password"
                         HoverBorderColor: =cJcb
                         HoverColor: =cInputInk
                         HoverFill: =cInputHover
                         Mode: =If(gShowPw, TextMode.SingleLine, TextMode.Password)
                         PaddingLeft: =10
-                        PaddingRight: =48
+                        PaddingRight: =44
                         PressedBorderColor: =cJcb
                         PressedColor: =cInputInk
                         PressedFill: =cInput
@@ -498,9 +824,9 @@ Screens:
                         RadiusTopRight: =8
                         Size: =13
                         Visible: =gLoginMode = "setpw"
-                        Width: =524
-                        X: =116
-                        Y: =124
+                        Width: =312
+                        X: =78
+                        Y: =176
                   - eyNLi:
                       Control: Classic/Icon
                       Properties:
@@ -517,8 +843,8 @@ Screens:
                         Tooltip: =If(gShowPw, "Hide password", "Show password")
                         Visible: =gLoginMode = "setpw"
                         Width: =28
-                        X: =596
-                        Y: =138
+                        X: =352
+                        Y: =190
                   - n2LiPl:
                       Control: Classic/Button
                       Properties:
@@ -534,7 +860,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =52
+                        Height: =48
                         HoverBorderColor: =cOrange
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
@@ -544,17 +870,16 @@ Screens:
                         PressedBorderColor: =cOrange
                         PressedColor: =cOnJcb
                         PressedFill: =cOrange
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                         Size: =11
                         Text: =""
-                        Tooltip: ="Confirm"
                         Visible: =gLoginMode = "setpw"
-                        Width: =60
-                        X: =60
-                        Y: =188
+                        Width: =48
+                        X: =30
+                        Y: =236
                   - n2LiIc:
                       Control: Classic/Icon
                       Properties:
@@ -568,8 +893,8 @@ Screens:
                         PaddingTop: =0
                         Visible: =gLoginMode = "setpw"
                         Width: =24
-                        X: =78
-                        Y: =202
+                        X: =42
+                        Y: =248
                   - np2Li:
                       Control: Classic/TextInput
                       Properties:
@@ -584,14 +909,14 @@ Screens:
                         FocusedBorderColor: =cOrange
                         FocusedBorderThickness: =2
                         Font: =fUI
-                        Height: =52
+                        Height: =48
                         HintText: ="Confirm new password"
                         HoverBorderColor: =cJcb
                         HoverColor: =cInputInk
                         HoverFill: =cInputHover
                         Mode: =If(gShowPw, TextMode.SingleLine, TextMode.Password)
                         PaddingLeft: =10
-                        PaddingRight: =48
+                        PaddingRight: =44
                         PressedBorderColor: =cJcb
                         PressedColor: =cInputInk
                         PressedFill: =cInput
@@ -601,9 +926,9 @@ Screens:
                         RadiusTopRight: =8
                         Size: =13
                         Visible: =gLoginMode = "setpw"
-                        Width: =524
-                        X: =116
-                        Y: =188
+                        Width: =312
+                        X: =78
+                        Y: =236
                   - rgNLiLb:
                       Control: Label
                       Properties:
@@ -925,17 +1250,17 @@ Screens:
                         Color: =If(StartsWith(gLoginMsg, "✓"), cOk, cStop)
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =28
+                        Height: =26
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: =11
+                        Size: =10
                         Text: =gLoginMsg
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =620
-                        X: =40
-                        Y: =If(gLoginMode = "register", 304, 244)
+                        Width: =Parent.Width - 40
+                        X: =20
+                        Y: =If(gLoginMode = "register", 304, 288)
                   - goLi:
                       Control: Classic/Button
                       Properties:
@@ -951,7 +1276,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =52
+                        Height: =50
                         HoverBorderColor: =cOrange
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
@@ -962,23 +1287,62 @@ Screens:
                         PressedBorderColor: =cOrange
                         PressedColor: =cOnJcb
                         PressedFill: =cOrange
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
-                        Size: =15
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =14
                         Text: ="Login   →"
                         Visible: =gLoginMode = "login"
-                        Width: =580
-                        X: =60
-                        Y: =276
+                        Width: =360
+                        X: =30
+                        Y: =318
+                  - or1Li:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine2
+                        Fill: =cLine2
+                        Height: =1
+                        Visible: =gLoginMode = "login"
+                        Width: =150
+                        X: =30
+                        Y: =392
+                  - orLi:
+                      Control: Label
+                      Properties:
+                        Align: =Align.Center
+                        Color: =cInk3
+                        Font: =fUI
+                        FontWeight: =FontWeight.Normal
+                        Height: =24
+                        PaddingBottom: =0
+                        PaddingLeft: =0
+                        PaddingRight: =0
+                        PaddingTop: =0
+                        Size: =9
+                        Text: ="OR"
+                        VerticalAlign: =VerticalAlign.Middle
+                        Visible: =gLoginMode = "login"
+                        Width: =60
+                        X: =180
+                        Y: =380
+                  - or2Li:
+                      Control: Rectangle
+                      Properties:
+                        BorderColor: =cLine2
+                        Fill: =cLine2
+                        Height: =1
+                        Visible: =gLoginMode = "login"
+                        Width: =150
+                        X: =240
+                        Y: =392
                   - rgLi:
                       Control: Classic/Button
                       Properties:
                         Align: =Align.Center
-                        BorderColor: =cJcb
+                        BorderColor: =cInk2
                         BorderThickness: =1
-                        Color: =cJcb
+                        Color: =cInk
                         DisabledBorderColor: =cLine
                         DisabledColor: =cInk3
                         DisabledFill: =RGBA(255,255,255,0.05)
@@ -987,7 +1351,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =48
+                        Height: =46
                         HoverBorderColor: =cJcb
                         HoverColor: =cJcb
                         HoverFill: =cJcbWash
@@ -997,16 +1361,16 @@ Screens:
                         PressedBorderColor: =cJcb
                         PressedColor: =cJcb
                         PressedFill: =cJcbWash
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
-                        Size: =14
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =13
                         Text: ="Register"
                         Visible: =gLoginMode = "login"
-                        Width: =580
-                        X: =60
-                        Y: =340
+                        Width: =360
+                        X: =30
+                        Y: =414
                   - spLi:
                       Control: Classic/Button
                       Properties:
@@ -1033,16 +1397,16 @@ Screens:
                         PressedBorderColor: =cOrange
                         PressedColor: =cOnJcb
                         PressedFill: =cOrange
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
                         Size: =14
                         Text: ="Save and Log In"
                         Visible: =gLoginMode = "setpw"
-                        Width: =280
-                        X: =60
-                        Y: =284
+                        Width: =360
+                        X: =30
+                        Y: =318
                   - sxLi:
                       Control: Classic/Button
                       Properties:
@@ -1058,7 +1422,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         FontWeight: =FontWeight.Bold
-                        Height: =50
+                        Height: =46
                         HoverBorderColor: =cJcb
                         HoverColor: =cJcb
                         HoverFill: =cJcbWash
@@ -1068,16 +1432,16 @@ Screens:
                         PressedBorderColor: =cJcb
                         PressedColor: =cJcb
                         PressedFill: =cJcbWash
-                        RadiusBottomLeft: =12
-                        RadiusBottomRight: =12
-                        RadiusTopLeft: =12
-                        RadiusTopRight: =12
-                        Size: =14
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =13
                         Text: ="Cancel"
                         Visible: =gLoginMode = "setpw"
-                        Width: =280
-                        X: =360
-                        Y: =284
+                        Width: =360
+                        X: =30
+                        Y: =414
                   - rsLi:
                       Control: Classic/Button
                       Properties:
@@ -1156,14 +1520,14 @@ Screens:
                         Color: =cInk3
                         Font: =fUI
                         FontWeight: =FontWeight.Normal
-                        Height: =22
+                        Height: =20
                         PaddingBottom: =0
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Size: =10
-                        Text: =If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", "Your password is stored scrambled; nobody can read it, not even the Lab Lead.")
+                        Size: =9
+                        Text: =If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", "Your password is stored scrambled; nobody can read it.")
                         VerticalAlign: =VerticalAlign.Middle
-                        Width: =620
-                        X: =40
-                        Y: =If(gLoginMode = "setpw", 352, 404)
+                        Width: =Parent.Width - 40
+                        X: =20
+                        Y: =If(gLoginMode = "register", 404, 470)

@@ -43,7 +43,19 @@ public static class Render {
     foreach (var p in new[] { "Text", "HintText", "Default", "Size", "FontWeight", "Align", "VerticalAlign", "Font", "BorderThickness", "Icon", "Image", "HtmlText", "PaddingLeft", "Wrap", "DefaultDate", "Mode", "RadiusTopLeft", "ImagePosition" }) {
       var e = P(c, p); if (e != null) d[p] = Str(Ev(e, prm));
     }
+    if (kind == "input" && c.GetProperty("gallery").ValueKind != JsonValueKind.String && H.CtlTypes.ContainsKey(c.GetProperty("name").GetString())) {
+      try { if (H.Engine.GetValue(c.GetProperty("name").GetString()) is RecordValue rv && rv.GetField("Text") is StringValue tv && tv.Value != "") d["Typed"] = tv.Value; } catch { }
+      var pm = P(c, "Mode"); if (pm != null && pm.Contains("Password")) d["Pw"] = "1";
+    }
     if (kind == "dropdown") { var it = P(c, "Items"); var def = P(c, "Default"); d["Text"] = def != null ? Str(Ev(def, prm)) : Str(Ev("First(" + it + ").Value", prm)); }
+    var cn = c.GetProperty("name").GetString();
+    if ((kind == "dropdown" || kind == "date") && !cn.StartsWith("hdrAs") && c.GetProperty("gallery").ValueKind != JsonValueKind.String && H.CtlTypes.ContainsKey(cn)) {
+      try {
+        var rv = H.Engine.GetValue(cn) as RecordValue;
+        if (kind == "dropdown" && rv?.GetField("Selected") is RecordValue sel && sel.GetField("Value") is StringValue sv && sv.Value != "") d["Text"] = sv.Value;
+        if (kind == "date" && rv?.GetField("SelectedDate") is DateValue dv) d["DefaultDate"] = Str(dv);
+      } catch { }
+    }
     if (extra != null) foreach (var kv in extra) d[kv.Key] = kv.Value;
     Out.Add(d);
   }
@@ -98,16 +110,46 @@ public static class Render {
     Emit(kind, c, ax, ay, w, h, prm);
   }
 
-  public static int RunAfterSim(Host h, string outDir) {
-    H = h;
-    var roots = new Dictionary<string, JsonElement>();
+  static Dictionary<string, JsonElement> Roots;
+  public static void Init(Host h) {
+    H = h; if (Roots != null) return;
+    Roots = new();
     foreach (var c in h.App.GetProperty("controls").EnumerateArray()) {
       var n = c.GetProperty("name").GetString();
-      // parent link = previous controls listed; rebuild tree from 'parent' field
       var par = c.TryGetProperty("parent", out var pp) && pp.ValueKind == JsonValueKind.String ? pp.GetString() : null;
-      if (par == null) roots[c.GetProperty("screen").GetString()] = c; else { if (!Kids.ContainsKey(par)) Kids[par] = new(); Kids[par].Add(c); }
+      if (par == null) Roots[c.GetProperty("screen").GetString()] = c; else { if (!Kids.ContainsKey(par)) Kids[par] = new(); Kids[par].Add(c); }
     }
+  }
+  // one screen in the current app state, with an optional notification banner (as Power Apps shows Notify)
+  public static void Shot(Host h, string scr, string path, string toast = null) {
+    Init(h); Refresh(h);
+    Out = new(); Draw(Roots[scr], 0, 0, 1366, 768, null, 0, 0);
+    if (toast != null) Out.Add(new() { ["k"] = "toast", ["x"] = 0.0, ["y"] = 0.0, ["w"] = 1366.0, ["h"] = 44.0, ["Text"] = toast });
+    File.WriteAllText(path, JsonSerializer.Serialize(Out));
+  }
+
+  public static int RunAfterSim(Host h, string outDir) {
+    Init(h);
+    var roots = Roots;
     Directory.CreateDirectory(outDir);
+    Refresh(h);
+    foreach (var (scr, root) in roots) {
+      Out = new();
+      Draw(root, 0, 0, 1366, 768, null, 0, 0);
+      File.WriteAllText(Path.Combine(outDir, scr + ".json"), JsonSerializer.Serialize(Out));
+    }
+    // extra states of the login screen
+    foreach (var mode in new[] { "register", "setpw" }) {
+      h.Engine.Eval($"Set(gLoginMode, \"{mode}\"); Set(gPend, LookUp(tblUsers, Username = \"gaurav.shelke\"))", null, h.Opts);
+      Out = new(); Draw(roots["scrLogin"], 0, 0, 1366, 768, null, 0, 0);
+      File.WriteAllText(Path.Combine(outDir, "scrLogin-" + mode + ".json"), JsonSerializer.Serialize(Out));
+    }
+    h.Engine.Eval("Set(gLoginMode, \"login\")", null, h.Opts);
+    Console.WriteLine($"rendered {roots.Count} screens to {outDir}");
+    return 0;
+  }
+
+  static void Refresh(Host h) {
     foreach (var (name, c) in h.Ctl) if (c.GetProperty("type").GetString() == "Timer")   // previews show timers as finished
       h.SetCtl(name, "Value", FormulaValue.New(double.Parse(c.GetProperty("props").GetProperty("Duration").GetString())));
     // galleries: AllItems = their current Items, so "empty" labels behave like in Power Apps
@@ -132,19 +174,5 @@ public static class Render {
         var e = P(c, "Text"); if (e == null) continue;
         h.SetCtl(name, "Text", FormulaValue.New(Str(Ev(e, Param(1000, 500, null)))));
       }
-    foreach (var (scr, root) in roots) {
-      Out = new();
-      Draw(root, 0, 0, 1366, 768, null, 0, 0);
-      File.WriteAllText(Path.Combine(outDir, scr + ".json"), JsonSerializer.Serialize(Out));
-    }
-    // extra states of the login screen
-    foreach (var mode in new[] { "register", "setpw" }) {
-      h.Engine.Eval($"Set(gLoginMode, \"{mode}\"); Set(gPend, LookUp(tblUsers, Username = \"gaurav.shelke\"))", null, h.Opts);
-      Out = new(); Draw(roots["scrLogin"], 0, 0, 1366, 768, null, 0, 0);
-      File.WriteAllText(Path.Combine(outDir, "scrLogin-" + mode + ".json"), JsonSerializer.Serialize(Out));
-    }
-    h.Engine.Eval("Set(gLoginMode, \"login\")", null, h.Opts);
-    Console.WriteLine($"rendered {roots.Count} screens to {outDir}");
-    return 0;
   }
 }

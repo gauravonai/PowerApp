@@ -2135,7 +2135,8 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =12
-                              Text: ="When an engineer submits a BOM it lands here."
+                              Text: |-
+                                ="To raise one: BOM Compare, paste the BOM, then Raise Part Request."
                               VerticalAlign: =VerticalAlign.Middle
                               Visible: =CountRows(rqDshGal.AllItems) = 0
                               Width: =1090

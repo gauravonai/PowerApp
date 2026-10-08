@@ -34,6 +34,325 @@
             Width: =1366
             X: =0
             Y: =0
+      - hshWl:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =768
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='0'><stop offset='0' stop-color='#07050a' stop-opacity='0.92'/><stop offset='0.42' stop-color='#07050a' stop-opacity='0.55'/><stop offset='0.7' stop-color='#07050a' stop-opacity='0'/></linearGradient></defs><rect width='100' height='100' fill='url(#g)'/></svg>")
+            ImagePosition: =ImagePosition.Stretch
+            Width: =1366
+            X: =0
+            Y: =0
+      - heyWl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =22
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =10
+            Text: ="ENGINEERING   •   MATERIAL   •   CONTROL"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =460
+            X: =60
+            Y: =196
+      - hh1Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cJcb
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =62
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =44
+            Text: ="EDS LAB"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =480
+            X: =56
+            Y: =220
+      - hh2Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =56
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =36
+            Text: ="MATERIAL PORTAL"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =480
+            X: =56
+            Y: =276
+      - hlnWl:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cJcb
+            Fill: =cJcb
+            Height: =4
+            Width: =56
+            X: =60
+            Y: =344
+      - ht1Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =36
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =24
+            Text: ="Engineering materials."
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =470
+            X: =60
+            Y: =362
+      - ht2Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =36
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =24
+            Text: ="Controlled better."
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =470
+            X: =60
+            Y: =396
+      - hpWl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Normal
+            Height: =66
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =12
+            Text: |-
+              ="A centralised workspace for EDS lab materials, components and engineering samples: live stock, BOM checks and every request from submission to release."
+            VerticalAlign: =VerticalAlign.Top
+            Width: =440
+            Wrap: =true
+            X: =60
+            Y: =444
+      - hi0Wl:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =52
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='22' y='22' width='20' height='20' rx='2'/><path d='M26 22v-5M32 22v-5M38 22v-5M26 42v5M32 42v5M38 42v5M22 26h-5M22 32h-5M22 38h-5M42 26h5M42 32h5M42 38h5'/></g></svg>")
+            ImagePosition: =ImagePosition.Fit
+            Width: =52
+            X: =76
+            Y: =540
+      - hl0Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: ="COMPONENTS"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =92
+            Wrap: =true
+            X: =56
+            Y: =598
+      - hi1Wl:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =52
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='20' y='24' width='18' height='16' rx='3'/><path d='M38 28h8M38 36h8M20 32h-6'/></g></svg>")
+            ImagePosition: =ImagePosition.Fit
+            Width: =52
+            X: =168
+            Y: =540
+      - hl1Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: ="CONNECTORS"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =92
+            Wrap: =true
+            X: =148
+            Y: =598
+      - hi2Wl:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =52
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M14 24c8 0 8 8 16 8s8-8 16-8 M14 32c8 0 8 8 16 8s8-8 16-8 M14 40c8 0 8 8 16 8'/></g></svg>")
+            ImagePosition: =ImagePosition.Fit
+            Width: =52
+            X: =260
+            Y: =540
+      - hl2Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: ="WIRES & CABLES"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =92
+            Wrap: =true
+            X: =240
+            Y: =598
+      - hi3Wl:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =52
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M40 18a8 8 0 0 0-10 10L18 40l6 6 12-12a8 8 0 0 0 10-10l-5 5-5-1-1-5z'/></g></svg>")
+            ImagePosition: =ImagePosition.Fit
+            Width: =52
+            X: =352
+            Y: =540
+      - hl3Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: ="TOOLS"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =92
+            Wrap: =true
+            X: =332
+            Y: =598
+      - hi4Wl:
+          Control: Image
+          Properties:
+            BorderColor: =RGBA(0,0,0,0)
+            Height: =52
+            Image: ="data:image/svg+xml;utf8," & EncodeUrl("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><path d='M32 3 L57 17.5 L57 46.5 L32 61 L7 46.5 L7 17.5 Z' fill='none' stroke='#f5b820' stroke-width='2.2'/><g fill='none' stroke='#f3ece0' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M32 16l14 8v16l-14 8-14-8V24z M18 24l14 8 14-8 M32 32v16'/></g></svg>")
+            ImagePosition: =ImagePosition.Fit
+            Width: =52
+            X: =444
+            Y: =540
+      - hl4Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Center
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =32
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =8
+            Text: ="ENGINEERING SAMPLES"
+            VerticalAlign: =VerticalAlign.Top
+            Width: =92
+            Wrap: =true
+            X: =424
+            Y: =598
+      - hf0Wl:
+          Control: Rectangle
+          Properties:
+            BorderColor: =cJcb
+            Fill: =cJcb
+            Height: =2
+            Width: =36
+            X: =60
+            Y: =726
+      - hf1Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Left
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="JCB INDIA   |   ELECTRICAL DEVELOPMENT LAB, PUNE"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =460
+            X: =106
+            Y: =714
+      - hf2Wl:
+          Control: Label
+          Properties:
+            Align: =Align.Right
+            Color: =cInk2
+            Font: =fUI
+            FontWeight: =FontWeight.Bold
+            Height: =26
+            PaddingBottom: =0
+            PaddingLeft: =0
+            PaddingRight: =0
+            PaddingTop: =0
+            Size: =9
+            Text: ="LIVE STOCK   |   BOM CHECK   |   APPROVALS"
+            VerticalAlign: =VerticalAlign.Middle
+            Width: =420
+            X: =900
+            Y: =714
       - tbLogoWl:
           Control: Image
           Properties:
@@ -88,98 +407,52 @@
             BorderThickness: =1
             DropShadow: =DropShadow.None
             Fill: =cGlass
-            Height: =440
-            RadiusBottomLeft: =24
-            RadiusBottomRight: =24
-            RadiusTopLeft: =24
-            RadiusTopRight: =24
-            Width: =620
-            X: =60
-            Y: =160
+            Height: =380
+            RadiusBottomLeft: =16
+            RadiusBottomRight: =16
+            RadiusTopLeft: =16
+            RadiusTopRight: =16
+            Width: =420
+            X: =600
+            Y: =190
           Children:
-            - eybWl:
-                Control: Label
-                Properties:
-                  Align: =Align.Left
-                  Color: =cOrange
-                  Font: =fUI
-                  FontWeight: =FontWeight.Bold
-                  Height: =24
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =10
-                  Text: ="Electrical Development Lab  ·  Material Management"
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =540
-                  X: =40
-                  Y: =34
             - h1Wl:
                 Control: Label
                 Properties:
-                  Align: =Align.Left
-                  Color: =cInk2
-                  Font: =fUI
-                  FontWeight: =FontWeight.Normal
-                  Height: =34
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =20
-                  Text: ="Welcome to the"
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =540
-                  X: =40
-                  Y: =66
-            - h2Wl:
-                Control: Label
-                Properties:
-                  Align: =Align.Left
+                  Align: =Align.Center
                   Color: =cInk
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =52
+                  Height: =40
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
-                  Size: =30
-                  Text: ="EDS Lab Material Portal"
+                  Size: =24
+                  Text: ="Welcome"
                   VerticalAlign: =VerticalAlign.Middle
-                  Width: =560
-                  X: =40
-                  Y: =100
-            - hlWl:
-                Control: Image
-                Properties:
-                  BorderColor: =RGBA(0,0,0,0)
-                  Height: =4
-                  Image: =imgLine
-                  ImagePosition: =ImagePosition.Stretch
-                  Width: =300
-                  X: =40
-                  Y: =158
+                  Width: =420
+                  X: =0
+                  Y: =34
             - pWl:
                 Control: Label
                 Properties:
-                  Align: =Align.Left
+                  Align: =Align.Center
                   Color: =cInk2
                   Font: =fUI
                   FontWeight: =FontWeight.Normal
-                  Height: =64
+                  Height: =48
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
                   PaddingTop: =0
-                  Size: =13
-                  Text: ="Live stock, BOM checks in seconds, and every material request from submission to release, in one place."
+                  Size: =12
+                  Text: ="Live stock, BOM checks in seconds, and every material request in one place."
                   VerticalAlign: =VerticalAlign.Top
-                  Width: =540
+                  Width: =340
                   Wrap: =true
                   X: =40
-                  Y: =178
+                  Y: =80
             - ch1Wl:
                 Control: Label
                 Properties:
@@ -188,7 +461,7 @@
                   Fill: =cJcbWash
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =32
+                  Height: =30
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
@@ -196,9 +469,9 @@
                   Size: =10
                   Text: ="✓  Live Stock"
                   VerticalAlign: =VerticalAlign.Middle
-                  Width: =150
+                  Width: =160
                   X: =40
-                  Y: =256
+                  Y: =146
             - ch2Wl:
                 Control: Label
                 Properties:
@@ -207,7 +480,7 @@
                   Fill: =cJcbWash
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =32
+                  Height: =30
                   PaddingBottom: =0
                   PaddingLeft: =0
                   PaddingRight: =0
@@ -216,27 +489,8 @@
                   Text: ="✓  BOM Compare"
                   VerticalAlign: =VerticalAlign.Middle
                   Width: =160
-                  X: =200
-                  Y: =256
-            - ch3Wl:
-                Control: Label
-                Properties:
-                  Align: =Align.Center
-                  Color: =cJcb
-                  Fill: =cJcbWash
-                  Font: =fUI
-                  FontWeight: =FontWeight.Bold
-                  Height: =32
-                  PaddingBottom: =0
-                  PaddingLeft: =0
-                  PaddingRight: =0
-                  PaddingTop: =0
-                  Size: =10
-                  Text: ="✓  Approvals and Release"
-                  VerticalAlign: =VerticalAlign.Middle
-                  Width: =210
-                  X: =370
-                  Y: =256
+                  X: =220
+                  Y: =146
             - goWl:
                 Control: Classic/Button
                 Properties:
@@ -262,31 +516,31 @@
                   PressedBorderColor: =cOrange
                   PressedColor: =cOnJcb
                   PressedFill: =cOrange
-                  RadiusBottomLeft: =26
-                  RadiusBottomRight: =26
-                  RadiusTopLeft: =26
-                  RadiusTopRight: =26
+                  RadiusBottomLeft: =10
+                  RadiusBottomRight: =10
+                  RadiusTopLeft: =10
+                  RadiusTopRight: =10
                   Size: =14
-                  Text: ="Log In   ›"
-                  Width: =250
+                  Text: ="Log In   →"
+                  Width: =340
                   X: =40
-                  Y: =330
+                  Y: =206
             - rgWl:
                 Control: Classic/Button
                 Properties:
                   Align: =Align.Center
-                  BorderColor: =cLine2
+                  BorderColor: =cInk2
                   BorderThickness: =1
                   Color: =cInk
                   DisabledBorderColor: =cLine
                   DisabledColor: =cInk3
                   DisabledFill: =RGBA(255,255,255,0.05)
-                  Fill: =RGBA(255,255,255,0.08)
+                  Fill: =cClear
                   FocusedBorderColor: =cJcb
                   FocusedBorderThickness: =2
                   Font: =fUI
                   FontWeight: =FontWeight.Bold
-                  Height: =52
+                  Height: =48
                   HoverBorderColor: =cJcb
                   HoverColor: =cJcb
                   HoverFill: =cJcbWash
@@ -296,15 +550,15 @@
                   PressedBorderColor: =cJcb
                   PressedColor: =cJcb
                   PressedFill: =cJcbWash
-                  RadiusBottomLeft: =26
-                  RadiusBottomRight: =26
-                  RadiusTopLeft: =26
-                  RadiusTopRight: =26
+                  RadiusBottomLeft: =10
+                  RadiusBottomRight: =10
+                  RadiusTopLeft: =10
+                  RadiusTopRight: =10
                   Size: =13
                   Text: ="Request Access"
-                  Width: =250
-                  X: =306
-                  Y: =330
+                  Width: =340
+                  X: =40
+                  Y: =274
       - verWl:
           Control: Label
           Properties:
@@ -322,4 +576,4 @@
             VerticalAlign: =VerticalAlign.Middle
             Width: =240
             X: =1100
-            Y: =730
+            Y: =744

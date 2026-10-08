@@ -1808,7 +1808,7 @@ Screens:
                                   Control: Label
                                   Properties:
                                     Align: =Align.Right
-                                    Color: =If(Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased)) > 0, cStop, cInk3)
+                                    Color: =If(If(LookUp(nfReq, RequestNo = gReqNo).Status in ["SUBMITTED", "ADMIN REVIEW", "APPROVED"] && ThisItem.QtyReserved + ThisItem.QtyReleased = 0, Max(0, ThisItem.QtyRequested - Coalesce(LookUp(nfStock, PN = ThisItem.PN).Avail, 0)), Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased))) > 0, cStop, cInk3)
                                     Font: =fUI
                                     FontWeight: =FontWeight.Bold
                                     Height: =52
@@ -1817,7 +1817,7 @@ Screens:
                                     PaddingRight: =0
                                     PaddingTop: =0
                                     Size: =11
-                                    Text: =Text(Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased)), "#,##0")
+                                    Text: =Text(If(LookUp(nfReq, RequestNo = gReqNo).Status in ["SUBMITTED", "ADMIN REVIEW", "APPROVED"] && ThisItem.QtyReserved + ThisItem.QtyReleased = 0, Max(0, ThisItem.QtyRequested - Coalesce(LookUp(nfStock, PN = ThisItem.PN).Avail, 0)), Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased))), "#,##0")
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =52
                                     X: =584
@@ -1893,7 +1893,7 @@ Screens:
                                     RadiusTopRight: =9
                                     Size: =8
                                     Text: ="Request Separately"
-                                    Visible: =Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased)) > 0 && ((LookUp(nfReq, RequestNo = gReqNo).RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && LookUp(nfReq, RequestNo = gReqNo).RaisedByEmail = gMeMail)) || gRole in ["Lab Admin", "Lab Lead"]) && !(LookUp(nfReq, RequestNo = gReqNo).Status in nfDeadStatus)
+                                    Visible: =If(LookUp(nfReq, RequestNo = gReqNo).Status in ["SUBMITTED", "ADMIN REVIEW", "APPROVED"] && ThisItem.QtyReserved + ThisItem.QtyReleased = 0, Max(0, ThisItem.QtyRequested - Coalesce(LookUp(nfStock, PN = ThisItem.PN).Avail, 0)), Max(0, ThisItem.QtyRequested - Max(ThisItem.QtyReserved, ThisItem.QtyReleased))) > 0 && ((LookUp(nfReq, RequestNo = gReqNo).RaisedByEmail = gMeEmail || (!IsBlank(gMeMail) && LookUp(nfReq, RequestNo = gReqNo).RaisedByEmail = gMeMail)) || gRole in ["Lab Admin", "Lab Lead"]) && !(LookUp(nfReq, RequestNo = gReqNo).Status in nfDeadStatus)
                                     Width: =162
                                     X: =656
                                     Y: =30

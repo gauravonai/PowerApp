@@ -7,6 +7,7 @@ var host = new Host(args[1], args[2]);
 if (mode == "bind") return Bind.Run(host);
 if (mode == "sim") return Sim.Run(host);
 if (mode == "smoke") { Sim.Run(host); return Smoke.Run(host); }
+if (mode == "phase1") return Phase1.Run(host, args[3]);
 if (mode == "render") { var f = Sim.Run(host); return Render.RunAfterSim(host, args[3]); }
 return 2;
 
