@@ -6,7 +6,7 @@ Screens:
   scrTeam:
     Properties:
       Fill: =cBg
-      OnVisible: =If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); Navigate(scrLogin, ScreenTransition.None), !gIsLead, Notify("Team Access is for the Lab Lead only.", NotificationType.Warning); Navigate(scrDash, ScreenTransition.None))
+      OnVisible: =If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); Navigate(scrLogin, ScreenTransition.None))
     Children:
       - rootTm:
           Control: GroupContainer
@@ -338,7 +338,7 @@ Screens:
                   BorderThickness: =0
                   Fill: =RGBA(0,0,0,0)
                   Height: =696
-                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
+                  Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
                   OnSelect: |-
                     =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                       "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
@@ -546,7 +546,7 @@ Screens:
                               PaddingRight: =0
                               PaddingTop: =0
                               Size: =12
-                              Text: ="Approve access requests, set roles, and give a temporary password when someone forgets theirs."
+                              Text: ="Approve access requests, set roles, and reset a password when someone forgets theirs."
                               VerticalAlign: =VerticalAlign.Middle
                               Width: =1000
                               X: =0
@@ -887,7 +887,7 @@ Screens:
                               HoverBorderColor: =cJcb
                               HoverColor: =cInputInk
                               HoverFill: =cInputHover
-                              Items: =["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Pending", "Disabled"]
+                              Items: =["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Lab Admin, Manager", "Pending", "Disabled"]
                               PaddingLeft: =10
                               PressedBorderColor: =cJcb
                               PressedColor: =cInputInk
@@ -918,7 +918,7 @@ Screens:
                               HoverColor: =cOnJcb
                               HoverFill: =cOrange
                               OnSelect: |-
-                                =IfError(If(!gIsLead, Notify("Only the Lab Lead can add people.", NotificationType.Error), IsBlank(Trim(taUsernameTm.Text)) || IsBlank(Trim(taFullNameTm.Text)), Notify("Username and full name are required.", NotificationType.Error), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(taUsernameTm.Text)))), Notify("That username already exists.", NotificationType.Error), Collect(tblUsers, {Username: Lower(Trim(taUsernameTm.Text)), FullName: Trim(taFullNameTm.Text), Role: taRoleTm.Selected.Value, BusinessUnit: Trim(taBusinessUnitTm.Text), Email: Lower(Trim(taEmailTm.Text))}); Notify("Added. Now give them a temporary password (Temp Password on their row) so they can log in.", NotificationType.Success); Set(gPanel, "")), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                =IfError(If(IsBlank(Trim(taUsernameTm.Text)) || IsBlank(Trim(taFullNameTm.Text)), Notify("Username and full name are required.", NotificationType.Error), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(taUsernameTm.Text)))), Notify("That username already exists.", NotificationType.Error), Collect(tblUsers, {Username: Lower(Trim(taUsernameTm.Text)), FullName: Trim(taFullNameTm.Text), Role: taRoleTm.Selected.Value, BusinessUnit: Trim(taBusinessUnitTm.Text), Email: Lower(Trim(taEmailTm.Text))}); Notify("Added. At their first login they choose their own password.", NotificationType.Success); Set(gPanel, "")), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                               PaddingLeft: =8
                               PaddingRight: =8
                               PressedBorderColor: =cOrange
@@ -1227,12 +1227,17 @@ Screens:
                                     X: =166
                                     Y: =6
                               - tmC2:
-                                  Control: Classic/TextInput
+                                  Control: Classic/DropDown
                                   Properties:
                                     BorderColor: =cInputLine
                                     BorderThickness: =1
+                                    ChevronBackground: =cInput
+                                    ChevronFill: =cOrange
+                                    ChevronHoverBackground: =cJcb
+                                    ChevronHoverFill: =cOnJcb
                                     Color: =cInputInk
-                                    Default: =Text(ThisItem.Role)
+                                    Default: |-
+                                      =With({r: Trim(Text(ThisItem.Role))}, Coalesce(LookUp(["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Lab Admin, Manager", "Pending", "Disabled"] As RO, Lower(RO.Value) = Lower(r)).Value, With({k: Lower(Substitute(Substitute(Substitute(Substitute(r, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))))
                                     DisabledBorderColor: =cLine
                                     DisabledColor: =cInk2
                                     DisabledFill: =RGBA(255,255,255,0.10)
@@ -1241,22 +1246,17 @@ Screens:
                                     FocusedBorderThickness: =2
                                     Font: =fUI
                                     Height: =30
-                                    HintText: ="Engineer, Manager"
                                     HoverBorderColor: =cJcb
                                     HoverColor: =cInputInk
                                     HoverFill: =cInputHover
+                                    Items: =["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Lab Admin, Manager", "Pending", "Disabled"]
                                     PaddingLeft: =10
-                                    PaddingRight: =6
                                     PressedBorderColor: =cJcb
                                     PressedColor: =cInputInk
                                     PressedFill: =cInput
-                                    RadiusBottomLeft: =8
-                                    RadiusBottomRight: =8
-                                    RadiusTopLeft: =8
-                                    RadiusTopRight: =8
+                                    SelectionColor: =cOnJcb
+                                    SelectionFill: =cJcb
                                     Size: =11
-                                    Tooltip: |-
-                                      ="Several roles: separate with commas. Engineer, Lab Admin, Lab Lead, Manager, Pending, Disabled"
                                     Width: =142
                                     X: =336
                                     Y: =6
@@ -1329,10 +1329,10 @@ Screens:
                                   Properties:
                                     Align: =Align.Center
                                     BorderColor: |-
-                                      =Coalesce(LookUp(nfPill, K = Upper(With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", StartsWith(st, "p1$"), "SET", StartsWith(st, "t1$"), "TEMPORARY", "NOT SET")))).C, cInk3)
+                                      =Coalesce(LookUp(nfPill, K = Upper(With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", IsBlank(st), "NOT SET", StartsWith(st, "t1$"), "TEMPORARY", "SET")))).C, cInk3)
                                     BorderThickness: =1
                                     Color: |-
-                                      =Coalesce(LookUp(nfPill, K = Upper(With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", StartsWith(st, "p1$"), "SET", StartsWith(st, "t1$"), "TEMPORARY", "NOT SET")))).C, cInk3)
+                                      =Coalesce(LookUp(nfPill, K = Upper(With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", IsBlank(st), "NOT SET", StartsWith(st, "t1$"), "TEMPORARY", "SET")))).C, cInk3)
                                     Fill: =RGBA(0,0,0,0.25)
                                     Font: =fUI
                                     FontWeight: =FontWeight.Bold
@@ -1343,7 +1343,7 @@ Screens:
                                     PaddingTop: =0
                                     Size: =9
                                     Text: |-
-                                      =Coalesce(LookUp(nfPill, K = Upper(With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", StartsWith(st, "p1$"), "SET", StartsWith(st, "t1$"), "TEMPORARY", "NOT SET")))).D, With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", StartsWith(st, "p1$"), "SET", StartsWith(st, "t1$"), "TEMPORARY", "NOT SET")))
+                                      =Coalesce(LookUp(nfPill, K = Upper(With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", IsBlank(st), "NOT SET", StartsWith(st, "t1$"), "TEMPORARY", "SET")))).D, With({st: Trim(Text(ThisItem.Password)), rk: With({k: Lower(Substitute(Substitute(Substitute(Substitute(Trim(First(Split(Text(ThisItem.Role), ",")).Value), " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))}, If(rk = "Pending", "PENDING APPROVAL", IsBlank(st), "NOT SET", StartsWith(st, "t1$"), "TEMPORARY", "SET")))
                                     VerticalAlign: =VerticalAlign.Middle
                                     Width: =112
                                     Wrap: =false
@@ -1358,7 +1358,7 @@ Screens:
                                     HoverColor: =cJcb
                                     Icon: =Icon.Save
                                     OnSelect: |-
-                                      =IfError(If(!gIsLead, Notify("Only the Lab Lead can change team access.", NotificationType.Error), IsBlank(Trim(tmC2.Text)), Notify("Role cannot be empty. Use Pending or Disabled to block a login.", NotificationType.Error), Patch(tblUsers, ThisItem, {FullName: Trim(tmC1.Text), Role: Trim(tmC2.Text), BusinessUnit: Trim(tmC3.Text), Email: Lower(Trim(tmC4.Text))}); Notify(ThisItem.Username & " saved as " & Concat(ForAll(Split(Substitute(Substitute(Substitute(Trim(tmC2.Text), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer"))), Value, ", ") & ".", NotificationType.Success)), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                      =IfError(Patch(tblUsers, ThisItem, {FullName: Trim(tmC1.Text), Role: tmC2.Selected.Value, BusinessUnit: Trim(tmC3.Text), Email: Lower(Trim(tmC4.Text))}); Notify(ThisItem.Username & " saved as " & tmC2.Selected.Value & ".", NotificationType.Success), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                                     PaddingBottom: =8
                                     PaddingLeft: =8
                                     PaddingRight: =8
@@ -1388,7 +1388,7 @@ Screens:
                                     HoverColor: =cJcb
                                     HoverFill: =cJcbWash
                                     OnSelect: |-
-                                      =IfError(If(!gIsLead, Notify("Only the Lab Lead can give a temporary password.", NotificationType.Error), With({code: Text(RandBetween(100000, 999999)), u: ThisItem}, Patch(tblUsers, ThisItem, {Password: With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & code & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "t1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: ""}); Set(gTempCode, "Temporary password for " & ThisItem.Username & ": " & code); Notify(gTempCode & ". Tell them in person. It works once, then they choose their own.", NotificationType.Information))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                                      =IfError(Patch(tblUsers, ThisItem, {Password: "", PasswordSetOn: ""}); Notify(ThisItem.Username & ": password cleared. At the next login they choose a new one.", NotificationType.Success), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                                     PaddingLeft: =8
                                     PaddingRight: =8
                                     PressedBorderColor: =cJcb
@@ -1399,8 +1399,8 @@ Screens:
                                     RadiusTopLeft: =10
                                     RadiusTopRight: =10
                                     Size: =9
-                                    Text: ="Temp Password"
-                                    Width: =116
+                                    Text: ="Reset Password"
+                                    Width: =120
                                     X: =922
                                     Y: =7
                               - tmSep:

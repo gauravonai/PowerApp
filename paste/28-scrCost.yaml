@@ -328,7 +328,7 @@
             BorderThickness: =0
             Fill: =RGBA(0,0,0,0)
             Height: =696
-            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)
+            Items: =Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)
             OnSelect: |-
               =If(!ThisItem.Hdr, Switch(ThisItem.Key,
                 "dash", Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade),
