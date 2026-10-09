@@ -589,7 +589,7 @@ Screens:
                         RadiusTopRight: =10
                         Size: =11
                         Text: =""
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =48
                         X: =30
                         Y: =176
@@ -604,7 +604,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =24
                         X: =42
                         Y: =188
@@ -637,7 +637,7 @@ Screens:
                         RadiusTopLeft: =8
                         RadiusTopRight: =8
                         Size: =13
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =312
                         X: =78
                         Y: =176
@@ -672,7 +672,7 @@ Screens:
                         RadiusTopRight: =10
                         Size: =11
                         Text: =""
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =48
                         X: =30
                         Y: =236
@@ -687,7 +687,7 @@ Screens:
                         PaddingLeft: =0
                         PaddingRight: =0
                         PaddingTop: =0
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =24
                         X: =42
                         Y: =248
@@ -721,7 +721,7 @@ Screens:
                         RadiusTopLeft: =8
                         RadiusTopRight: =8
                         Size: =13
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =312
                         X: =78
                         Y: =236
@@ -739,7 +739,7 @@ Screens:
                         PaddingRight: =0
                         PaddingTop: =0
                         Tooltip: =If(gShowPw, "Hide password", "Show password")
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =28
                         X: =352
                         Y: =250
@@ -1171,7 +1171,7 @@ Screens:
                         FocusedBorderThickness: =2
                         Font: =fUI
                         Height: =40
-                        HintText: ="At least 6, a letter and a number"
+                        HintText: ="At least 4 characters"
                         HoverBorderColor: =cJcb
                         HoverColor: =cInputInk
                         HoverFill: =cInputHover
@@ -1281,7 +1281,7 @@ Screens:
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
                         OnSelect: |-
-                          =With({un: Lower(Trim(usrLi.Text)), pw: pwdLi.Text}, With({u: LookUp(tblUsers, Lower(Trim(Text(Username))) = un || (!IsBlank(Email) && Lower(Trim(Text(Email))) = un))}, With({st: Trim(Text(u.Password)), rk: ForAll(Split(Substitute(Substitute(Substitute(Text(u.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, If(IsBlank(un), Set(gLoginMsg, "Type your username."), IsBlank(pw) && StartsWith(st, "p1$"), Set(gLoginMsg, "Type your password."), IsBlank(u), Set(gLoginMsg, "No account with that username. Use Register to ask for access."), "Pending" in rk, Set(gLoginMsg, "Your access request is waiting for the Lab Lead's approval."), "Disabled" in rk, Set(gLoginMsg, "This account is switched off. Please ask the Lab Lead."), gLoginTries >= 5, Set(gLoginMsg, "Too many wrong attempts. Close the app and open it again, or ask the Lab Lead."), StartsWith(st, "p1$"), If(With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & pw & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "p1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))) = st, Set(gMe, u); Set(gMeName, Coalesce(Trim(Text(gMe.FullName)), Trim(Text(gMe.Username)))); Set(gMeEmail, Lower(Trim(Text(gMe.Username)))); Set(gMeMail, Lower(Trim(Text(gMe.Email)))); Set(gMeInitials, Upper(Concat(FirstN(Split(gMeName, " "), 2), Left(Value, 1)))); With({rl: ForAll(Split(Substitute(Substitute(Substitute(Text(gMe.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, Set(gIsLead, "Lab Lead" in rl); Set(gIsAdmin, gIsLead || "Lab Admin" in rl); Set(gIsMgr, "Manager" in rl); Set(gRoleHome, Coalesce(First(rl).Value, "Engineer"))); Set(gRoleOptions, ForAll(Filter(Table({V: "Engineer", Ok: true}, {V: "Lab Admin", Ok: gIsAdmin}, {V: "Manager", Ok: gIsAdmin || gIsMgr}), Ok) As RO, {Value: RO.V})); Set(gRole, gRoleHome); Set(gLoginTries, 0); Set(gLoginMode, "login"); Set(gLoginMsg, ""); Set(gNpForm, Patch(gNpForm, {RequesterName: gMeName})); Set(gLastSync, Now()); Notify("Welcome, " & gMeName & ".", NotificationType.Success); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade), Set(gLoginTries, gLoginTries + 1); Set(gLoginMsg, "That password is not right.")), StartsWith(st, "t1$"), If(With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & pw & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "t1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))) = st, Set(gPend, u); Set(gLoginMode, "setpw"); Set(gLoginMsg, "Temporary password accepted. Now choose your own password."), Set(gLoginTries, gLoginTries + 1); Set(gLoginMsg, "That password is not right.")), Lower(First(Split(User().Email, "@")).Value) = Lower(Trim(Text(u.Username))) || (!IsBlank(u.Email) && Lower(User().Email) = Lower(Trim(Text(u.Email)))), Set(gPend, u); Set(gLoginMode, "setpw"); Set(gLoginMsg, "First time here: choose your password."), Set(gLoginMsg, "This account has no password yet. Ask the Lab Lead for a temporary password.")))))
+                          =With({un: Lower(Trim(usrLi.Text)), pw: pwdLi.Text}, With({u: LookUp(tblUsers, Lower(Trim(Text(Username))) = un || (!IsBlank(Email) && Lower(Trim(Text(Email))) = un))}, With({st: Trim(Text(u.Password)), rk: ForAll(Split(Substitute(Substitute(Substitute(Text(u.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, If(IsBlank(un), Set(gLoginMsg, "Type your username."), IsBlank(u), Set(gLoginMsg, "No account with that username. Press Register to ask for access."), "Disabled" in rk, Set(gLoginMsg, "This account is switched off. Please ask the Lab Lead."), "Pending" in rk, Set(gLoginMsg, "Your access request is waiting for the Lab Lead's approval."), IsBlank(st), Set(gPend, u); Set(gLoginMode, "setpw"); Set(gLoginMsg, "First time here: choose your password."), IsBlank(pw), Set(gLoginMsg, "Type your password. Forgot it? Press Forgot Password."), pw = st || (StartsWith(st, "p1$") && IfError(With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & pw & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "p1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), "") = st), Set(gMe, u); Set(gMeName, Coalesce(Trim(Text(gMe.FullName)), Trim(Text(gMe.Username)))); Set(gMeEmail, Lower(Trim(Text(gMe.Username)))); Set(gMeMail, Lower(Trim(Text(gMe.Email)))); Set(gMeInitials, Upper(Concat(FirstN(Split(gMeName, " "), 2), Left(Value, 1)))); With({rl: ForAll(Split(Substitute(Substitute(Substitute(Text(gMe.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, Set(gIsLead, "Lab Lead" in rl); Set(gIsAdmin, gIsLead || "Lab Admin" in rl); Set(gIsMgr, "Manager" in rl); Set(gRoleHome, Coalesce(First(rl).Value, "Engineer"))); Set(gRoleOptions, ForAll(Filter(Table({V: "Engineer", Ok: true}, {V: "Lab Admin", Ok: gIsAdmin}, {V: "Manager", Ok: gIsAdmin || gIsMgr}), Ok) As RO, {Value: RO.V})); Set(gRole, gRoleHome); Set(gLoginTries, 0); Set(gLoginMode, "login"); Set(gLoginMsg, ""); Set(gNpForm, Patch(gNpForm, {RequesterName: gMeName})); Set(gLastSync, Now()); Notify("Welcome, " & gMeName & ".", NotificationType.Success); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade), StartsWith(st, "t1$") && IfError(With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & pw & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "t1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), "") = st, Set(gPend, u); Set(gLoginMode, "setpw"); Set(gLoginMsg, "Accepted. Now choose your own password."), Set(gLoginTries, gLoginTries + 1); Set(gLoginMsg, "That password is not right. Forgot it? Press Forgot Password.")))))
                         PaddingLeft: =8
                         PaddingRight: =8
                         PressedBorderColor: =cOrange
@@ -1293,7 +1293,7 @@ Screens:
                         RadiusTopRight: =10
                         Size: =14
                         Text: ="Login   →"
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =360
                         X: =30
                         Y: =318
@@ -1303,7 +1303,7 @@ Screens:
                         BorderColor: =cLine2
                         Fill: =cLine2
                         Height: =1
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =150
                         X: =30
                         Y: =392
@@ -1322,7 +1322,7 @@ Screens:
                         Size: =9
                         Text: ="OR"
                         VerticalAlign: =VerticalAlign.Middle
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =60
                         X: =180
                         Y: =380
@@ -1332,7 +1332,7 @@ Screens:
                         BorderColor: =cLine2
                         Fill: =cLine2
                         Height: =1
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =150
                         X: =240
                         Y: =392
@@ -1367,7 +1367,7 @@ Screens:
                         RadiusTopRight: =10
                         Size: =13
                         Text: ="Register"
-                        Visible: =gLoginMode = "login"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =360
                         X: =30
                         Y: =414
@@ -1391,7 +1391,7 @@ Screens:
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
                         OnSelect: |-
-                          =IfError(With({p: np1Li.Text, u: LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(Text(gPend.Username))))}, If(Len(p) < 6 || CountRows(Filter(Split(p, ""), Value in "0123456789")) = 0 || Lower(p) = Upper(p), Set(gLoginMsg, "At least 6 characters, with a letter and a number."), p <> np2Li.Text, Set(gLoginMsg, "The two passwords do not match."), Patch(tblUsers, u, {Password: With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & p & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "p1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: Text(Today(), "yyyy-mm-dd")}); Reset(np1Li); Reset(np2Li); Set(gMe, LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(Text(gPend.Username))))); Set(gMeName, Coalesce(Trim(Text(gMe.FullName)), Trim(Text(gMe.Username)))); Set(gMeEmail, Lower(Trim(Text(gMe.Username)))); Set(gMeMail, Lower(Trim(Text(gMe.Email)))); Set(gMeInitials, Upper(Concat(FirstN(Split(gMeName, " "), 2), Left(Value, 1)))); With({rl: ForAll(Split(Substitute(Substitute(Substitute(Text(gMe.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, Set(gIsLead, "Lab Lead" in rl); Set(gIsAdmin, gIsLead || "Lab Admin" in rl); Set(gIsMgr, "Manager" in rl); Set(gRoleHome, Coalesce(First(rl).Value, "Engineer"))); Set(gRoleOptions, ForAll(Filter(Table({V: "Engineer", Ok: true}, {V: "Lab Admin", Ok: gIsAdmin}, {V: "Manager", Ok: gIsAdmin || gIsMgr}), Ok) As RO, {Value: RO.V})); Set(gRole, gRoleHome); Set(gLoginTries, 0); Set(gLoginMode, "login"); Set(gLoginMsg, ""); Set(gNpForm, Patch(gNpForm, {RequesterName: gMeName})); Set(gLastSync, Now()); Notify("Welcome, " & gMeName & ".", NotificationType.Success); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                          =IfError(With({p: np1Li.Text, u: LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(Text(gPend.Username))))}, If(Len(p) < 4, Set(gLoginMsg, "The password needs at least 4 characters."), p <> np2Li.Text, Set(gLoginMsg, "The two passwords do not match."), Patch(tblUsers, u, {Password: With({s: Lower(Lower(Trim(Text(u.Username)))) & "|" & p & "|" & Lower(Lower(Trim(Text(u.Username)))) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "p1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: Text(Today(), "yyyy-mm-dd")}); Reset(np1Li); Reset(np2Li); Set(gMe, LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(Text(gPend.Username))))); Set(gMeName, Coalesce(Trim(Text(gMe.FullName)), Trim(Text(gMe.Username)))); Set(gMeEmail, Lower(Trim(Text(gMe.Username)))); Set(gMeMail, Lower(Trim(Text(gMe.Email)))); Set(gMeInitials, Upper(Concat(FirstN(Split(gMeName, " "), 2), Left(Value, 1)))); With({rl: ForAll(Split(Substitute(Substitute(Substitute(Text(gMe.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, Set(gIsLead, "Lab Lead" in rl); Set(gIsAdmin, gIsLead || "Lab Admin" in rl); Set(gIsMgr, "Manager" in rl); Set(gRoleHome, Coalesce(First(rl).Value, "Engineer"))); Set(gRoleOptions, ForAll(Filter(Table({V: "Engineer", Ok: true}, {V: "Lab Admin", Ok: gIsAdmin}, {V: "Manager", Ok: gIsAdmin || gIsMgr}), Ok) As RO, {Value: RO.V})); Set(gRole, gRoleHome); Set(gLoginTries, 0); Set(gLoginMode, "login"); Set(gLoginMsg, ""); Set(gNpForm, Patch(gNpForm, {RequesterName: gMeName})); Set(gLastSync, Now()); Notify("Welcome, " & gMeName & ".", NotificationType.Success); Navigate(If(gRole = "Manager", scrMgrDash, scrDash), ScreenTransition.Fade))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                         PaddingLeft: =8
                         PaddingRight: =8
                         PressedBorderColor: =cOrange
@@ -1462,7 +1462,7 @@ Screens:
                         HoverColor: =cOnJcb
                         HoverFill: =cOrange
                         OnSelect: |-
-                          =IfError(With({un: Lower(Trim(rgULi.Text)), nm: Trim(rgNLi.Text), p: rgP1Li.Text}, If(IsBlank(nm) || IsBlank(un), Set(gLoginMsg, "Full name and username are required."), " " in un, Set(gLoginMsg, "A username cannot contain spaces (for example gaurav.shelke)."), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = un)), Set(gLoginMsg, "That username already exists. Log in, or pick another one."), Len(p) < 6 || CountRows(Filter(Split(p, ""), Value in "0123456789")) = 0 || Lower(p) = Upper(p), Set(gLoginMsg, "Password: at least 6 characters, with a letter and a number."), p <> rgP2Li.Text, Set(gLoginMsg, "The two passwords do not match."), Collect(tblUsers, {Username: un, FullName: nm, Role: "Pending", BusinessUnit: Trim(rgBLi.Text), Password: With({s: Lower(un) & "|" & p & "|" & Lower(un) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "p1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: Text(Today(), "yyyy-mm-dd"), Email: Lower(Trim(rgMLi.Text))}); Reset(rgULi); Reset(rgNLi); Reset(rgBLi); Reset(rgMLi); Reset(rgP1Li); Reset(rgP2Li); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  Request sent. You can log in as soon as the Lab Lead approves it."))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
+                          =IfError(With({un: Lower(Trim(rgULi.Text)), nm: Trim(rgNLi.Text), p: rgP1Li.Text}, If(IsBlank(nm) || IsBlank(un), Set(gLoginMsg, "Full name and username are required."), " " in un, Set(gLoginMsg, "A username cannot contain spaces (for example gaurav.shelke)."), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = un)), Set(gLoginMsg, "That username already exists. Log in, or pick another one."), Len(p) < 4, Set(gLoginMsg, "The password needs at least 4 characters."), p <> rgP2Li.Text, Set(gLoginMsg, "The two passwords do not match."), Collect(tblUsers, {Username: un, FullName: nm, Role: "Pending", BusinessUnit: Trim(rgBLi.Text), Password: With({s: Lower(un) & "|" & p & "|" & Lower(un) & "|EDSLAB-PA1"}, With({c: ForAll(Sequence(Len(s)) As I, Coalesce(Find(Mid(s, I.Value, 1), " !""#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~"), 97))}, With({n: CountRows(c)}, "p1$" & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7919 + 104723) + x * y * (J.Value * 15485863 + 2750159) + y * z * 999983 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 6007 + 130363) + x * y * (J.Value * 32452843 + 1299709) + y * z * 1000003 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 4513 + 611953) + x * y * (J.Value * 49979687 + 3571) + y * z * 7368787 + x, 2147483647))), Value), 2147483647), "0000000000") & Text(Mod(Sum(ForAll(Sequence(n) As J, With({x: Index(c, J.Value).Value, y: Index(c, Mod(J.Value, n) + 1).Value, z: Index(c, Mod(J.Value + 1, n) + 1).Value}, Mod(x * x * x * (J.Value * 7727 + 86028121) + x * y * (J.Value * 67867967 + 104395301) + y * z * 68629 + x, 2147483647))), Value), 2147483647), "0000000000")))), PasswordSetOn: Text(Today(), "yyyy-mm-dd"), Email: Lower(Trim(rgMLi.Text))}); Reset(rgULi); Reset(rgNLi); Reset(rgBLi); Reset(rgMLi); Reset(rgP1Li); Reset(rgP2Li); Set(gLoginMode, "login"); Set(gLoginMsg, "✓  Request sent. You can log in as soon as the Lab Lead approves it."))), Set(gBusy, false); Notify("Saving failed: " & FirstError.Message & " Nothing was changed. If someone has the lab data file open on their PC, ask them to close it, then try again.", NotificationType.Error))
                         PaddingLeft: =8
                         PaddingRight: =8
                         PressedBorderColor: =cOrange
@@ -1513,6 +1513,42 @@ Screens:
                         Width: =280
                         X: =360
                         Y: =340
+                  - fgLi:
+                      Control: Classic/Button
+                      Properties:
+                        Align: =Align.Center
+                        BorderColor: =cClear
+                        BorderThickness: =0
+                        Color: =cJcb
+                        DisabledBorderColor: =cLine
+                        DisabledColor: =cInk3
+                        DisabledFill: =RGBA(255,255,255,0.05)
+                        Fill: =cClear
+                        FocusedBorderColor: =cJcb
+                        FocusedBorderThickness: =2
+                        Font: =fUI
+                        FontWeight: =FontWeight.Bold
+                        Height: =28
+                        HoverBorderColor: =cClear
+                        HoverColor: =cOrange
+                        HoverFill: =cJcbWash
+                        OnSelect: |-
+                          =With({un: Lower(Trim(usrLi.Text))}, With({u: LookUp(tblUsers, Lower(Trim(Text(Username))) = un || (!IsBlank(Email) && Lower(Trim(Text(Email))) = un))}, With({rk: ForAll(Split(Substitute(Substitute(Substitute(Text(u.Role), ";", ","), "/", ","), "+", ","), ",") As RR, With({k: Lower(Substitute(Substitute(Substitute(Substitute(RR.Value, " ", ""), "-", ""), "_", ""), ".", ""))}, If(IsBlank(k), "Engineer", k in ["pending", "requested"], "Pending", k in ["disabled", "rejected", "left", "inactive"], "Disabled", k in ["lablead", "lead", "labhead", "teamlead"], "Lab Lead", "admin" in k || k in ["store", "storekeeper", "stores"] || "incharge" in k, "Lab Admin", "manager" in k || k in ["mgr", "hod", "head"], "Manager", "Engineer")))}, If(IsBlank(un), Set(gLoginMsg, "Type your username first, then press Forgot Password."), IsBlank(u), Set(gLoginMsg, "No account with that username. Press Register to ask for access."), "Disabled" in rk, Set(gLoginMsg, "This account is switched off. Please ask the Lab Lead."), "Pending" in rk, Set(gLoginMsg, "Your access request is waiting for the Lab Lead's approval."), Set(gPend, u); Reset(pwdLi); Set(gLoginMode, "setpw"); Set(gLoginMsg, "Choose a new password for " & u.Username & ".")))))
+                        PaddingLeft: =8
+                        PaddingRight: =8
+                        PressedBorderColor: =cClear
+                        PressedColor: =cJcb
+                        PressedFill: =cJcbWash
+                        RadiusBottomLeft: =10
+                        RadiusBottomRight: =10
+                        RadiusTopLeft: =10
+                        RadiusTopRight: =10
+                        Size: =10
+                        Text: ="Forgot Password?"
+                        Visible: =(IsBlank(gLoginMode) || gLoginMode = "login")
+                        Width: =200
+                        X: =110
+                        Y: =464
                   - fLi:
                       Control: Label
                       Properties:
@@ -1526,8 +1562,9 @@ Screens:
                         PaddingRight: =0
                         PaddingTop: =0
                         Size: =9
-                        Text: =If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", "Your password is stored scrambled; nobody can read it.")
+                        Text: ="Your password is stored scrambled."
                         VerticalAlign: =VerticalAlign.Middle
+                        Visible: =!(IsBlank(gLoginMode) || gLoginMode = "login")
                         Width: =Parent.Width - 40
                         X: =20
                         Y: =If(gLoginMode = "register", 404, 470)
