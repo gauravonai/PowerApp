@@ -69,16 +69,17 @@ public static class Sim {
     var engRow = (RecordValue)E($"LookUp(tblUsers, Username = \"{eng}\")");
     Logout(); Login(eng, "whatever");
     Ok(S("gRole") == "" && S("gLoginMode") == "setpw" && S("gPend.Username") == eng, "a person whose password cell is empty is asked to choose one (no Lab Lead needed)");
-    E("Set(gLoginMode, \"login\")");
-    Login("gaurav.shelke", "abc123");
+    Txt("np1Li", "first1"); Txt("np2Li", "first1"); Do("spLi");
+    Ok(S("gRole") == "Engineer", "engineer chose a first password and is logged in");
+    Logout(); Login("gaurav.shelke", "abc123");
+    engRow = (RecordValue)E($"LookUp(tblUsers, Username = \"{eng}\")");
     Do("tmC6t", "OnSelect", FormulaValue.NewRecordFromFields(new NamedValue("ThisItem", engRow)));
-    var code = S("gTempCode"); code = code.Substring(code.Length - 6);
-    Ok(S($"LookUp(tblUsers, Username = \"{eng}\").Password").StartsWith("t1$") && code.All(char.IsDigit), $"Lab Lead gives {eng} a temporary password ({code}), stored scrambled");
-    Logout(); Login(eng, code);
-    Ok(S("gLoginMode") == "setpw", "temporary password accepted -> must choose own password");
+    Ok(S($"LookUp(tblUsers, Username = \"{eng}\").Password") == "", $"Team Access > Reset Password clears {eng}'s password");
+    Logout(); Login(eng, "first1");
+    Ok(S("gLoginMode") == "setpw", "after a reset the person is asked to choose a new password");
     Txt("np1Li", "Pune2026x"); Txt("np2Li", "Pune2026x"); Do("spLi");
     Ok(S("gRole") == "Engineer" && N("CountRows(gRoleOptions)") == 1, "engineer logged in, Engineer only");
-    Logout(); Login(eng, code); Ok(S("gRole") == "", "the temporary password no longer works once used");
+    Logout(); Login(eng, "first1"); Ok(S("gRole") == "", "the old password no longer works");
     E($"Patch(tblUsers, LookUp(tblUsers, Username = \"{eng}\"), {{Role: \"Engineer, Manager\"}})"); Touch();
     Login(eng, "Pune2026x");
     Ok(S("gRole") == "Engineer" && N("CountRows(gRoleOptions)") == 2 && S("Last(gRoleOptions).Value") == "Manager", "Role 'Engineer, Manager' -> opens as Engineer, can switch to Manager");
@@ -349,15 +350,22 @@ public static class Sim {
     var npr = S("First(Sort(nfNewPart, RequestNo, SortOrder.Descending)).RequestNo");
     Ok(npr == "NPR-" + DateTime.Today.Year + "-00002" && ((TableValue)E(P("nmNpGal", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("RequestNo")).Value == npr), npr + " submitted and shown under Your New Part Requests (typed requester name differs)");
 
-    Console.WriteLine("== 22. Team Access is the Lab Lead's");
-    Ok(((TableValue)E(P("navGalDsh", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("Key")).Value == "team"), "Lab Lead sees Team Access");
-    E("Set(gIsLead, false); Set(gRole, \"Lab Admin\")");
-    Ok(!((TableValue)E(P("navGalDsh", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("Key")).Value == "team"), "Lab Admin (not Lead) does not");
-    E("Set(gIsLead, true); Set(gRole, \"Lab Lead\")");
+    Console.WriteLine("== 22. Team Access (Lab Admin and Lab Lead, role dropdown, reset password)");
+    bool SeesTeam() => ((TableValue)E(P("navGalDsh", "Items"))).Rows.Any(r => ((StringValue)r.Value.GetField("Key")).Value == "team");
+    Ok(SeesTeam(), "Lab Lead sees Team Access");
+    E("Set(gIsLead, false); Set(gRole, \"Lab Admin\")"); Ok(SeesTeam(), "Lab Admin sees Team Access");
+    E("Set(gRole, \"Engineer\")"); Ok(!SeesTeam(), "Engineer does not");
+    E("Set(gIsLead, false); Set(gRole, \"\")");     // as in Studio without logging in: buttons still work
     var engRow2 = $"LookUp(tblUsers, Username = \"{eng}\")";
-    Txt("tmC1", "Akshay Aadarsh"); Txt("tmC2", "Engineer, Manager"); Txt("tmC3", "EDS"); Txt("tmC4", "akshay@jcb.com");
+    var roles = ((TableValue)E(P("tmC2", "Items"))).Rows.Select(r => ((StringValue)r.Value.GetField("Value")).Value).ToList();
+    Ok(roles.Contains("Lab Lead") && roles.Contains("Engineer, Manager") && roles.Contains("Pending"), "role dropdown: " + string.Join(" / ", roles));
+    Ok(S("With({ThisItem: " + engRow2 + "}, " + P("tmC2", "Default") + ")") == "Engineer, Manager", "dropdown opens on the person's current role");
+    Txt("tmC1", "Akshay Aadarsh"); Sel("tmC2", "Lab Admin, Manager"); Txt("tmC3", "EDS"); Txt("tmC4", "akshay@jcb.com");
     Do("tmC6", "OnSelect", It(engRow2));
-    Ok(S(engRow2 + ".Role") == "Engineer, Manager", "Role edited as text keeps both roles ('Engineer, Manager')");
+    Ok(S(engRow2 + ".Role") == "Lab Admin, Manager" && MockNotify.Log.Any(l => l.Contains("saved")), "Save writes the role picked in the dropdown");
+    Do("tmC6t", "OnSelect", It(engRow2));
+    Ok(S(engRow2 + ".Password") == "", "Reset Password works without any role check");
+    E("Set(gIsLead, true); Set(gRole, \"Lab Lead\")");
 
     Console.WriteLine("== 23. System Check page");
     foreach (var (k, c) in h.Ctl.Where(kv => System.Text.RegularExpressions.Regex.IsMatch(kv.Key, "^v[0-9]+Ck$"))) {

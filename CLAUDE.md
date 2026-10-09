@@ -26,6 +26,7 @@ Generator: `tools/*.py` → `app/Src/*.pa.yaml`, `paste/*`, `app/EDS-Lab-Portal.
   smoke test 0 runtime errors; pack prints the import guards line.
 - v2.0.5 = plain names again (v2.0.4 `_1` build was wrong for a fresh import). v2.0.2 imports in the user's Studio but showed no data (Power Fx 1.0 off). v2.0.3 = fix + System Check screen
   (Login → System Check) + docs/10 hand-built live test. Ask for the System Check screenshot first when data looks wrong.
+- v2.0.8 = Team Access fixed (dropdown back, Reset Password, no Lab-Lead-only blocks). Sim 168.
 - v2.0.7 = simple login (see Product decisions) + login box shows even without OnStart. Sim 163 checks + Phase 1 (15).
 - v2.0.6 = audit fixes (docs/11): BOM reader (Sr/desc/units), username identity + login guard on every screen,
   per-request purchase rows, invoice/new-part/team fixes, System Check 18 rows incl. BOM reader test. Sim 156 checks.
@@ -36,6 +37,8 @@ Generator: `tools/*.py` → `app/Src/*.pa.yaml`, `paste/*`, `app/EDS-Lab-Portal.
   A plain password typed in the Users sheet also works (admin rescue). Saved passwords scrambled `p1$`; Lab Lead temp
   codes `t1$` still work. Register → Role "Pending"; multi-role via comma list; View as; Log Out.
   Never add login hurdles again without asking.
+- Team Access (v2.0.8): Lab Admin + Lab Lead see it; NO role checks on its buttons (Studio testing without login must
+  work). Role = dropdown (incl. "Engineer, Manager", "Lab Admin, Manager"). Reset Password = clear the cell.
 - No backend words (Excel/OneDrive/Microsoft) on screens ordinary users see; Data Health + Photo check are admin-only.
 - Title Case for titles/buttons/headers/labels/pills (`pa.tc`); statuses stay UPPERCASE in Excel, display via `nfPill.D`.
 - Clickable things are buttons/icons (hand cursor), never labels (`lbl(onselect=)` raises).

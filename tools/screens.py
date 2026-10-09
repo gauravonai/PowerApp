@@ -18,7 +18,7 @@ SCREENS = []          # (screen name, nav key, root container)
 import os as _os
 import art as _art
 STYLE = _os.environ.get("UI_STYLE", "A")   # A = brand hero left + login card (user chose, default); B = centred card
-APP_VERSION = "2.0.7 · 09-Oct-2026"
+APP_VERSION = "2.0.8 · 09-Oct-2026"
 
 
 def DISP(x):
@@ -113,7 +113,7 @@ def shell(key, scr, nav_key, content, extra_root=None):
         rect("navBg" + K, 0, 57, 224, 711, "cGlass"),
         rect("navLn" + K, 223, 57, 1, 711, "cLine"),
         gallery("navGal" + K, 0, 64, 224, 696,
-                'Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole) && (Key <> "team" || gIsLead)), Seq)', 40, navrow,
+                'Sort(Filter(nfNav, Role = If(gRole = "Lab Lead", "Lab Admin", gRole)), Seq)', 40, navrow,
                 onselect="If(!ThisItem.Hdr, %s)" % nav_switch(), extra={"ShowScrollbar": "false"}),
     ]
     body = box("body" + K, 224, 57, 1142, 711, content, fill="cClear", border="cClear", thick=0, auto=True,
@@ -1951,33 +1951,30 @@ def scr_team():
             return [inp(n, x, 6, w - 8, 30, default="Text(ThisItem.%s)" % fld_, size=11, font=font)]
         return mk
 
-    ROLES = '["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Pending", "Disabled"]'
+    ROLES = ('["Engineer", "Lab Admin", "Lab Lead", "Manager", "Engineer, Manager", "Lab Admin, Manager", '
+             '"Pending", "Disabled"]')
 
     def role(n, x, w, rh):
-        # free text: one person can hold several roles ("Engineer, Manager"); a dropdown would drop all but one
-        return [inp(n, x, 6, w - 8, 30, default="Text(ThisItem.Role)", size=11,
-                    hint="Engineer, Manager", extra={"Tooltip": q("Several roles: separate with commas. "
-                                                                  "Engineer, Lab Admin, Lab Lead, Manager, Pending, Disabled")})]
+        # dropdown (user wants it); combined roles are in the list. A role typed in Excel that is not in the list
+        # shows as its nearest single role.
+        return [dd(n, x, 6, w - 8, 30, ROLES,
+                   default='With({r: Trim(Text(ThisItem.Role))}, Coalesce(LookUp(%s As RO, Lower(RO.Value) = Lower(r)).Value, %s))'
+                           % (ROLES, role_canon("r")), extra={"Size": 11})]
 
     def save(n, x, w, rh):
-        temp = ('If(!gIsLead, Notify("Only the Lab Lead can give a temporary password.", NotificationType.Error), '
-                'With({code: Text(RandBetween(100000, 999999)), u: ThisItem}, Patch(tblUsers, ThisItem, {Password: %s, '
-                'PasswordSetOn: ""}); Set(gTempCode, "Temporary password for " & ThisItem.Username & ": " & code); '
-                'Notify(gTempCode & ". Tell them in person. It works once, then they choose their own.", '
-                'NotificationType.Information)))' % hash_fx("code", "Lower(Trim(Text(u.Username)))", "t1$"))
+        # simple on purpose (user decision v2.0.7): whoever can open Team Access can use it
+        reset = ('Patch(tblUsers, ThisItem, {Password: "", PasswordSetOn: ""}); '
+                 'Notify(ThisItem.Username & ": password cleared. At the next login they choose a new one.", '
+                 'NotificationType.Success)')
         return [icon(n, x, 6, 30, 30, "Save", color="cJcb", tooltip="Save this person",
-                     onselect='If(!gIsLead, Notify("Only the Lab Lead can change team access.", NotificationType.Error), '
-                              'IsBlank(Trim(tmC2.Text)), Notify("Role cannot be empty. Use Pending or Disabled to block a '
-                              'login.", NotificationType.Error), '
-                              'Patch(tblUsers, ThisItem, {FullName: Trim(tmC1.Text), Role: Trim(tmC2.Text), '
+                     onselect='Patch(tblUsers, ThisItem, {FullName: Trim(tmC1.Text), Role: tmC2.Selected.Value, '
                               'BusinessUnit: Trim(tmC3.Text), Email: Lower(Trim(tmC4.Text))}); '
-                              'Notify(ThisItem.Username & " saved as " & Concat(%s, Value, ", ") & ".", '
-                              'NotificationType.Success))' % role_list("Trim(tmC2.Text)")),
-                btn(n + "t", '"Temp Password"', x + 36, 7, 116, 28, temp, kind="secondary", size=9)]
+                              'Notify(ThisItem.Username & " saved as " & tmC2.Selected.Value & ".", NotificationType.Success)'),
+                btn(n + "t", '"Reset Password"', x + 36, 7, 120, 28, reset, kind="secondary", size=9)]
     items = ('With({s: Lower(Trim(q%s.Text))}, Sort(Filter(tblUsers, !IsBlank(Username) && (IsBlank(s) || s in Lower(Text(Username) & " " & '
              'Text(FullName) & " " & Text(Role) & " " & Text(BusinessUnit) & " " & Text(Email)))), Text(Username)))' % K)
     pw = ('With({st: Trim(Text(ThisItem.Password)), rk: %s}, If(rk = "Pending", "PENDING APPROVAL", '
-          'StartsWith(st, "p1$"), "SET", StartsWith(st, "t1$"), "TEMPORARY", "NOT SET"))'
+          'IsBlank(st), "NOT SET", StartsWith(st, "t1$"), "TEMPORARY", "SET"))'
           % role_canon('Trim(First(Split(Text(ThisItem.Role), ",")).Value)'))
     cols = [Col("Username", 150, "Text(ThisItem.Username)", "mono"),
             Col("Full name", 170, None, "custom", make=ed("FullName")),
@@ -1993,17 +1990,16 @@ def scr_team():
                      req=f_ in ("Username", "FullName"))
     add += field("taRole" + K, "Role", 16, 120, 256, lambda n, x, y, w, h: dd(n, x, y, w, h, ROLES), req=True)
     add += [btn("taGo" + K, '"Add person"', "Parent.Width - 170", 138, 154, 36,
-                'If(!gIsLead, Notify("Only the Lab Lead can add people.", NotificationType.Error), '
-                'IsBlank(Trim(taUsername%(K)s.Text)) || IsBlank(Trim(taFullName%(K)s.Text)), Notify("Username and full name '
+                'If(IsBlank(Trim(taUsername%(K)s.Text)) || IsBlank(Trim(taFullName%(K)s.Text)), Notify("Username and full name '
                 'are required.", NotificationType.Error), !IsBlank(LookUp(tblUsers, Lower(Trim(Text(Username))) = '
                 'Lower(Trim(taUsername%(K)s.Text)))), Notify("That username already exists.", NotificationType.Error), '
                 'Collect(tblUsers, {Username: Lower(Trim(taUsername%(K)s.Text)), FullName: Trim(taFullName%(K)s.Text), '
                 'Role: taRole%(K)s.Selected.Value, BusinessUnit: Trim(taBusinessUnit%(K)s.Text), Email: Lower(Trim(taEmail%(K)s.Text))}); '
-                'Notify("Added. Now give them a temporary password (Temp Password on their row) so they can log in.", '
+                'Notify("Added. At their first login they choose their own password.", '
                 'NotificationType.Success); '
                 'Set(gPanel, ""))' % {"K": K})]
     addc = card("cdA" + K, "Add a person", 200, add, visible='gPanel = "team"')
-    content = [head(K, '"Team Access"', '"Approve access requests, set roles, and give a temporary password when someone '
+    content = [head(K, '"Team Access"', '"Approve access requests, set roles, and reset a password when someone '
                                         'forgets theirs."',
                     right=[btn("new" + K, '"+ Add person"', "Parent.Width - 150", 8, 140, 30, 'Set(gPanel, "team")', size=10)]),
                addc,

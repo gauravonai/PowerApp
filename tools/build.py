@@ -77,9 +77,6 @@ def screen_props(sname):
     if sname not in PUBLIC:
         p["OnVisible"] = ('If(IsBlank(gMeName), Set(gLoginMode, "login"); Set(gLoginMsg, "Please log in first."); '
                           'Navigate(scrLogin, ScreenTransition.None))')
-    if sname == "scrTeam":   # Team Access is the Lab Lead's page only (passwords, roles)
-        p["OnVisible"] = p["OnVisible"][:-1] + (', !gIsLead, Notify("Team Access is for the Lab Lead only.", '
-                                                'NotificationType.Warning); Navigate(scrDash, ScreenTransition.None))')
     return p
 
 
