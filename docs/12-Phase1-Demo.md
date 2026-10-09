@@ -6,10 +6,11 @@ minutes, and the Lab Admin has it immediately. Screenshots of every step: [`prev
 This exact flow is run automatically on the real workbook before every release (`fxsim phase1`, 15 checks).
 
 ## Before the meeting (10 minutes, once)
-1. Import `EDS-Lab-Portal-v2.0.6.msapp` into a **new** app, connect the 12 tables (plain names), Data row limit 2000.
+1. Import `EDS-Lab-Portal-v2.0.7.msapp` into a **new** app, connect the 12 tables (plain names), Data row limit 2000.
 2. Play → Login → **System Check**: all 18 rows OK.
-3. Pick a demo engineer (any Users row with Role = Engineer) and a Lab Admin. Give each a password:
-   log in as Lab Lead → **Team Access** → **Temp Password** on their row → log in as them once → set password.
+3. Pick a demo engineer (any Users row with Role = Engineer) and a Lab Admin. Give each a password: on the Login
+   page type the username and press **Forgot Password?** (or Login, if their Password cell is empty) and choose one.
+   Quickest: type a password straight into their Password cell in the Users sheet.
 4. In Excel, copy a real harness BOM (rows with Sr, part number, description, qty; units like `NOS` are fine).
 
 ## The demo (2 minutes)

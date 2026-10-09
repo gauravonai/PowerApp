@@ -18,7 +18,7 @@ SCREENS = []          # (screen name, nav key, root container)
 import os as _os
 import art as _art
 STYLE = _os.environ.get("UI_STYLE", "A")   # A = brand hero left + login card (user chose, default); B = centred card
-APP_VERSION = "2.0.6 · 08-Oct-2026"
+APP_VERSION = "2.0.7 · 09-Oct-2026"
 
 
 def DISP(x):
@@ -2114,47 +2114,56 @@ def hero_a(K):
 
 
 def pw_rules(p):
-    return ('Len(%s) < 6 || CountRows(Filter(Split(%s, ""), Value in "0123456789")) = 0 || Lower(%s) = Upper(%s)'
-            % (p, p, p, p))
+    return 'Len(%s) < 4' % p          # kept simple on purpose (user decision v2.0.7)
 
 
 def scr_login():
     K = "Li"
     from appfx import hash_fx, login_ok, role_canon, role_list
     msg = lambda m: 'Set(gLoginMsg, %s)' % m
-    LOG, SET, REG = 'gLoginMode = "login"', 'gLoginMode = "setpw"', 'gLoginMode = "register"'
+    # blank mode = login, so the login box shows even if the app was started without OnStart (Studio play)
+    LOG, SET, REG = '(IsBlank(gLoginMode) || gLoginMode = "login")', 'gLoginMode = "setpw"', 'gLoginMode = "register"'
     key = 'Lower(Trim(Text(u.Username)))'
     me_u = 'LookUp(tblUsers, Lower(Trim(Text(Username))) = Lower(Trim(Text(gPend.Username))))'
     login = (
         'With({un: Lower(Trim(usr%(K)s.Text)), pw: pwd%(K)s.Text}, '
         'With({u: LookUp(tblUsers, Lower(Trim(Text(Username))) = un || (!IsBlank(Email) && Lower(Trim(Text(Email))) = un))}, '
         'With({st: Trim(Text(u.Password)), rk: %(RK)s}, '
-        'If(IsBlank(un), %(M1)s, IsBlank(pw) && StartsWith(st, "p1$"), %(M2)s, '
-        'IsBlank(u), %(M3)s, "Pending" in rk, %(M4)s, "Disabled" in rk, %(M5)s, '
-        'gLoginTries >= 5, %(M6)s, '
-        'StartsWith(st, "p1$"), If(%(HP)s = st, %(OK)s, Set(gLoginTries, gLoginTries + 1); %(M7)s), '
-        'StartsWith(st, "t1$"), If(%(HT)s = st, Set(gPend, u); Set(gLoginMode, "setpw"); %(M8)s, '
-        'Set(gLoginTries, gLoginTries + 1); %(M7)s), '
-        'Lower(First(Split(User().Email, "@")).Value) = %(KEY)s || (!IsBlank(u.Email) && Lower(User().Email) = '
-        'Lower(Trim(Text(u.Email)))), Set(gPend, u); Set(gLoginMode, "setpw"); %(M9)s, '
-        '%(M10)s))))'
+        'If(IsBlank(un), %(M1)s, IsBlank(u), %(M3)s, "Disabled" in rk, %(M5)s, "Pending" in rk, %(M4)s, '
+        'IsBlank(st), Set(gPend, u); Set(gLoginMode, "setpw"); %(M9)s, '
+        'IsBlank(pw), %(M2)s, '
+        'pw = st || (StartsWith(st, "p1$") && IfError(%(HP)s, "") = st), %(OK)s, '
+        'StartsWith(st, "t1$") && IfError(%(HT)s, "") = st, Set(gPend, u); Set(gLoginMode, "setpw"); %(M8)s, '
+        'Set(gLoginTries, gLoginTries + 1); %(M7)s))))'
         % {"K": K, "RK": role_list("Text(u.Role)"), "KEY": key,
            "HP": hash_fx("pw", key, "p1$"), "HT": hash_fx("pw", key, "t1$"), "OK": login_ok("u"),
-           "M1": msg('"Type your username."'), "M2": msg('"Type your password."'),
-           "M3": msg('"No account with that username. Use Register to ask for access."'),
+           "M1": msg('"Type your username."'), "M2": msg('"Type your password. Forgot it? Press Forgot Password."'),
+           "M3": msg('"No account with that username. Press Register to ask for access."'),
            "M4": msg('"Your access request is waiting for the Lab Lead\'s approval."'),
            "M5": msg('"This account is switched off. Please ask the Lab Lead."'),
            "M6": msg('"Too many wrong attempts. Close the app and open it again, or ask the Lab Lead."'),
-           "M7": msg('"That password is not right."'),
-           "M8": msg('"Temporary password accepted. Now choose your own password."'),
+           "M7": msg('"That password is not right. Forgot it? Press Forgot Password."'),
+           "M8": msg('"Accepted. Now choose your own password."'),
            "M9": msg('"First time here: choose your password."'),
            "M10": msg('"This account has no password yet. Ask the Lab Lead for a temporary password."')})
+    forgot = (
+        'With({un: Lower(Trim(usr%(K)s.Text))}, '
+        'With({u: LookUp(tblUsers, Lower(Trim(Text(Username))) = un || (!IsBlank(Email) && Lower(Trim(Text(Email))) = un))}, '
+        'With({rk: %(RK)s}, '
+        'If(IsBlank(un), %(F1)s, IsBlank(u), %(M3)s, "Disabled" in rk, %(M5)s, "Pending" in rk, %(M4)s, '
+        'Set(gPend, u); Reset(pwd%(K)s); Set(gLoginMode, "setpw"); '
+        'Set(gLoginMsg, "Choose a new password for " & u.Username & ".")))))'
+        % {"K": K, "RK": role_list("Text(u.Role)"),
+           "F1": msg('"Type your username first, then press Forgot Password."'),
+           "M3": msg('"No account with that username. Press Register to ask for access."'),
+           "M4": msg('"Your access request is waiting for the Lab Lead\'s approval."'),
+           "M5": msg('"This account is switched off. Please ask the Lab Lead."')})
     setpw = (
         'With({p: np1%(K)s.Text, u: %(U)s}, If(%(RULES)s, %(R1)s, p <> np2%(K)s.Text, %(R2)s, '
         'Patch(tblUsers, u, {Password: %(H)s, PasswordSetOn: Text(Today(), "yyyy-mm-dd")}); '
         'Reset(np1%(K)s); Reset(np2%(K)s); %(OK)s))'
         % {"K": K, "U": me_u, "RULES": pw_rules("p"), "H": hash_fx("p", key, "p1$"), "OK": login_ok(me_u),
-           "R1": msg('"At least 6 characters, with a letter and a number."'),
+           "R1": msg('"The password needs at least 4 characters."'),
            "R2": msg('"The two passwords do not match."')})
     reg = (
         'With({un: Lower(Trim(rgU%(K)s.Text)), nm: Trim(rgN%(K)s.Text), p: rgP1%(K)s.Text}, '
@@ -2170,7 +2179,7 @@ def scr_login():
            "E1": msg('"Full name and username are required."'),
            "E2": msg('"A username cannot contain spaces (for example gaurav.shelke)."'),
            "E3": msg('"That username already exists. Log in, or pick another one."'),
-           "E4": msg('"Password: at least 6 characters, with a letter and a number."'),
+           "E4": msg('"The password needs at least 4 characters."'),
            "E5": msg('"The two passwords do not match."'),
            "OK": msg('"✓  Request sent. You can log in as soon as the Lab Lead approves it."')})
 
@@ -2192,7 +2201,7 @@ def scr_login():
                                        "AccessibleLabel": 'If(gShowPw, "Hide password", "Show password")',
                                        "PaddingTop": 0, "PaddingBottom": 0, "PaddingLeft": 0, "PaddingRight": 0})
     if STYLE == "A":
-        return _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye)
+        return _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye, forgot)
     kids = [
         lbl("t" + K, 'Switch(gLoginMode, "setpw", "Set Your Password", "register", "Request Access", "User Login")',
             0, 26, 700, 48, size=28, bold=True, color="cOrange", align="Center"),
@@ -2206,14 +2215,14 @@ def scr_login():
                     inp("pwd" + K, 116, 188, 524, 52, hint="Password", size=13, visible=LOG, extra=dict(pwmode, PaddingRight=48)), LOG)
     kids += [eye("eyP" + K, 188, LOG)]
     kids += pillrow("n1" + K, 124, "New Password", "Lock",
-                    inp("np1" + K, 116, 124, 524, 52, hint="New password: 6+ characters, a letter and a number", size=13,
+                    inp("np1" + K, 116, 124, 524, 52, hint="New password (at least 4 characters)", size=13,
                         visible=SET, extra=dict(pwmode, PaddingRight=48)), SET)
     kids += [eye("eyN" + K, 124, SET)]
     kids += pillrow("n2" + K, 188, "Confirm", "Lock",
                     inp("np2" + K, 116, 188, 524, 52, hint="Confirm new password", size=13, visible=SET, extra=dict(pwmode, PaddingRight=48)), SET)
     reg_f = [("rgN", "Full Name", True, 0, 0, "Gaurav Shelke", None), ("rgU", "Username", True, 1, 0, "gaurav.shelke", None),
              ("rgB", "Business Unit", False, 0, 1, "EDS", None), ("rgM", "Email (Optional)", False, 1, 1, "name@jcb.com", None),
-             ("rgP1", "Password", True, 0, 2, "At least 6, a letter and a number", pwmode),
+             ("rgP1", "Password", True, 0, 2, "At least 4 characters", pwmode),
              ("rgP2", "Confirm Password", True, 1, 2, "Type it again", pwmode)]
     for nm, label, req, col, row, hint, ex in reg_f:
         x, y = 60 + col * 300, 110 + row * 64
@@ -2232,9 +2241,10 @@ def scr_login():
         btn("rs" + K, '"Send Request"', 60, 340, 280, 50, reg, size=14, radius=12, visible=REG),
         btn("rb" + K, '"Back to Login"', 360, 340, 280, 50, 'Set(gLoginMode, "login"); Set(gLoginMsg, "")',
             kind="secondary", size=14, radius=12, visible=REG),
-        lbl("f" + K, 'If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", '
-                     '"Your password is stored scrambled; nobody can read it, not even the Lab Lead.")',
-            40, 'If(gLoginMode = "setpw", 352, 404)', 620, 22, size=10, color="cInk3", align="Center")]
+        btn("fg" + K, '"Forgot Password?"', 250, 398, 200, 30, forgot, kind="ghost", size=10, visible=LOG,
+            extra={"Color": "cJcb", "HoverColor": "cOrange"}),
+        lbl("f" + K, '"Your password is stored scrambled."', 40, 'If(gLoginMode = "setpw", 352, 404)', 620, 22, size=10,
+            color="cInk3", align="Center", visible="!" + LOG)]
     panel = box("pn" + K, 333, 140, 700, 'If(gLoginMode = "setpw", 400, 450)', kids, fill="cGlass", border="cLine2",
                 radius=24)
     kids = backdrop(K, "RGBA(8, 6, 10, 0.25)") + topbar(K, [
@@ -2251,11 +2261,11 @@ def scr_login():
 REG_FIELDS = lambda pwmode: [
     ("rgN", "Full Name", True, 0, 0, "Gaurav Shelke", None), ("rgU", "Username", True, 1, 0, "gaurav.shelke", None),
     ("rgB", "Business Unit", False, 0, 1, "EDS", None), ("rgM", "Email (Optional)", False, 1, 1, "name@jcb.com", None),
-    ("rgP1", "Password", True, 0, 2, "At least 6, a letter and a number", pwmode),
+    ("rgP1", "Password", True, 0, 2, "At least 4 characters", pwmode),
     ("rgP2", "Confirm Password", True, 1, 2, "Type it again", pwmode)]
 
 
-def _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye):
+def _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye, forgot):
     """Style A login (user's JCB-style mockup): brand hero on the left, compact login card beside it."""
     NREG = "!(%s)" % REG
     pwx = dict(pwmode, PaddingRight=44)
@@ -2308,9 +2318,10 @@ def _login_a(K, login, setpw, reg, LOG, SET, REG, pwmode, eye):
         btn("rs" + K, '"Send Request"', 60, 340, 280, 50, reg, size=14, radius=12, visible=REG),
         btn("rb" + K, '"Back to Login"', 360, 340, 280, 50, 'Set(gLoginMode, "login"); Set(gLoginMsg, "")',
             kind="secondary", size=14, radius=12, visible=REG),
-        lbl("f" + K, 'If(gLoginMode = "login", "Forgot your password? The Lab Lead can give you a temporary one.", '
-                     '"Your password is stored scrambled; nobody can read it.")',
-            20, 'If(%s, 404, 470)' % REG, "Parent.Width - 40", 20, size=9, color="cInk3", align="Center")]
+        btn("fg" + K, '"Forgot Password?"', 110, 464, 200, 28, forgot, kind="ghost", size=10, visible=LOG,
+            extra={"Color": "cJcb", "HoverColor": "cOrange"}),
+        lbl("f" + K, '"Your password is stored scrambled."', 20, 'If(%s, 404, 470)' % REG, "Parent.Width - 40", 20,
+            size=9, color="cInk3", align="Center", visible="!" + LOG)]
     panel = box("pn" + K, 600, 'If(%s, 150, 130)' % REG, 'If(%s, 700, 420)' % REG, 'If(%s, 450, 504)' % REG, kids,
                 fill="cGlass", border="cLine2", radius=16)
     kids = backdrop(K, "RGBA(8, 6, 10, 0.05)") + hero_a(K) + topbar(K, [

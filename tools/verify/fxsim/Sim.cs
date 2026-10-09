@@ -55,8 +55,7 @@ public static class Sim {
     Login("nobody.here", "x"); Ok(S("gLoginMsg").StartsWith("No account"), "unknown username refused");
     Login("Gaurav.Shelke", "");
     Ok(S("gLoginMode") == "setpw" && S("gRole") == "", "first login of gaurav.shelke (no password yet, same person as this PC's account) -> choose a password");
-    Txt("np1Li", "abc"); Txt("np2Li", "abc"); Do("spLi"); Ok(S("gLoginMsg").StartsWith("At least 6"), "password 'abc' refused (too short)");
-    Txt("np1Li", "abcdefg"); Txt("np2Li", "abcdefg"); Do("spLi"); Ok(S("gLoginMsg").StartsWith("At least 6"), "password without a number refused");
+    Txt("np1Li", "abc"); Txt("np2Li", "abc"); Do("spLi"); Ok(S("gLoginMsg").Contains("at least 4"), "password 'abc' refused (under 4 characters)");
     Txt("np1Li", "abc123"); Txt("np2Li", "abc124"); Do("spLi"); Ok(S("gLoginMsg").Contains("do not match"), "mismatched confirmation refused");
     Txt("np2Li", "abc123"); Do("spLi");
     var hv = tests.GetProperty("hash_vectors")[0][2].GetString();
@@ -64,12 +63,13 @@ public static class Sim {
     Ok(S("LookUp(tblUsers, Username = \"gaurav.shelke\").Password") == hv && !S("LookUp(tblUsers, Username = \"gaurav.shelke\").Password").Contains("abc123"), "Users.Password holds the scrambled value, never 'abc123'");
     Ok(N("CountRows(gRoleOptions)") == 3, "Lab Lead can view as Engineer / Lab Admin / Manager");
     Logout(); Ok(S("gRole") == "" && MockNav.Log.LastOrDefault() == "scrLogin", "Log Out clears the session and returns to the login page");
-    Login("gaurav.shelke", "abc999"); Ok(S("gRole") == "" && S("gLoginMsg") == "That password is not right." && N("gLoginTries") == 1, "wrong password refused, attempt counted");
+    Login("gaurav.shelke", "abc999"); Ok(S("gRole") == "" && S("gLoginMsg").StartsWith("That password is not right") && S("gLoginMsg").Contains("Forgot Password"), "wrong password refused, points to Forgot Password");
     Login("gaurav.shelke", "abc123"); Ok(S("gRole") == "Lab Lead" && N("gLoginTries") == 0, "right password logs in");
     var eng = "akshay.aadarsh";
     var engRow = (RecordValue)E($"LookUp(tblUsers, Username = \"{eng}\")");
     Logout(); Login(eng, "whatever");
-    Ok(S("gRole") == "" && S("gLoginMsg").Contains("no password yet"), "another person with no password cannot claim the account from this PC");
+    Ok(S("gRole") == "" && S("gLoginMode") == "setpw" && S("gPend.Username") == eng, "a person whose password cell is empty is asked to choose one (no Lab Lead needed)");
+    E("Set(gLoginMode, \"login\")");
     Login("gaurav.shelke", "abc123");
     Do("tmC6t", "OnSelect", FormulaValue.NewRecordFromFields(new NamedValue("ThisItem", engRow)));
     var code = S("gTempCode"); code = code.Substring(code.Length - 6);
@@ -91,7 +91,24 @@ public static class Sim {
     Login("test.person", "abc12345"); Ok(S("gRole") == "" && S("gLoginMsg").Contains("waiting"), "a pending person cannot log in until approved");
     E("Patch(tblUsers, LookUp(tblUsers, Username = \"test.person\"), {Role: \"Engineer\"})"); Touch();
     Login("test.person", "abc12345"); Ok(S("gRole") == "Engineer", "after approval (Role = Engineer) the person logs in");
-    Logout(); Login("gaurav.shelke", "abc123");
+    Logout();
+    Console.WriteLine("== 1a. Forgot Password (simple, no Lab Lead needed) and a plain password typed in the Users sheet");
+    E("Set(gLoginMode, Blank())");
+    Ok(S(P("goLi", "Visible")) == "true" || N("If(" + P("goLi", "Visible") + ", 1, 0)") == 1, "login box shows even if the app started without OnStart");
+    Txt("usrLi", ""); Do("fgLi"); Ok(S("gLoginMsg").StartsWith("Type your username first"), "Forgot Password without a username asks for it");
+    Txt("usrLi", "gaurav.shelke"); Do("fgLi");
+    Ok(S("gLoginMode") == "setpw" && S("gPend.Username") == "gaurav.shelke", "Forgot Password -> choose a new password");
+    Txt("np1Li", "lab1"); Txt("np2Li", "lab1"); Do("spLi");
+    Ok(S("gRole") == "Lab Lead", "new password saved and logged in");
+    Logout(); Login("gaurav.shelke", "abc123"); Ok(S("gRole") == "", "the old password no longer works");
+    Login("gaurav.shelke", "lab1"); Ok(S("gRole") == "Lab Lead", "the new password works");
+    Logout();
+    E("Patch(tblUsers, LookUp(tblUsers, Username = \"akshay.kakde\"), {Password: \"pune123\"})"); Touch();
+    Login("akshay.kakde", "pune123"); Ok(S("gRole") == "Engineer", "a plain password typed in the Users sheet by the admin works");
+    Logout(); Login("gaurav.shelke", "lab1"); E("Set(gLoginMode, \"login\")");
+    Txt("np1Li", "abc123"); Txt("np2Li", "abc123");
+    E("Set(gPend, LookUp(tblUsers, Username = \"gaurav.shelke\"))"); Do("spLi");   // back to the password later tests use
+    Ok(S("gRole") == "Lab Lead", "password changed back for the remaining tests");
 
     Console.WriteLine("== 0. hand-built Live Data Test formulas (docs/10), straight from the tables");
     var hand = tests.GetProperty("hand");

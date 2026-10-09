@@ -12,13 +12,12 @@ as yourselves on the same PC.
 | Situation | What happens |
 |---|---|
 | **Welcome** screen | **Log In** or **Request Access**. Nothing about the data or its storage is shown before login. |
-| **User Login** | Username + Password (as in your InnoSphere screenshot), **Login** and **Register**. |
-| First time, own PC | If the account has no password yet **and** the PC is signed in as that same person (M365 email = username), the app asks them to **choose a password**. Nobody can claim someone else's account this way. |
-| First time, shared PC or forgotten password | Lab Lead → **Team Access** → **Temp Password** on that person's row. The app shows a 6-digit code; the person logs in with it once, then must choose their own password. |
-| **Register** | Full name, username, business unit, email (optional), password. Creates a Users row with **Role = Pending**. The person can't log in until the Lab Lead sets a real role in Team Access. |
-| Password rule | At least 6 characters, with a letter and a number (same rule as the HTA). 5 wrong attempts lock the login until the app is reopened. |
-| How passwords are stored | Scrambled with the username as salt (`p1$…`, temporary codes `t1$…`), never in plain text. Power Apps has no cryptographic hash function, so this is a strong scramble, not bank-grade. As with the HTA, **the real protection is the permission on the workbook's folder**. |
-| Old HTA passwords | Power Apps can't check the HTA's SHA-256 hashes, so everyone sets a new password once (own PC: by themselves; shared PC: temporary code from the Lab Lead). |
+| **User Login** | Username + Password, **Login**, **Register** and **Forgot Password?** |
+| First time | If the person's Password cell is empty, the app asks them to choose a password. |
+| Forgot password | Type your username, press **Forgot Password?**, choose a new password (at least 4 characters). Done. |
+| Admin rescue | Type a password straight into the person's Password cell in the Users sheet: it works as typed. |
+| **Register** | Full name, username, business unit, email (optional), password. Creates a Users row with **Role = Pending**; the Lab Lead sets a real role in Team Access. |
+| How passwords are stored | Passwords chosen in the app are scrambled (`p1$…`). Kept deliberately simple: the real protection is the permission on the workbook's folder. |
 | Several roles, one person | Put them in the **Role** cell separated by commas, e.g. `Engineer, Manager`. The first one is where the app opens. |
 | Switching role | Header **View as**: only the roles you hold. Lab Lead / Lab Admin can view all three; a Manager can also work as Engineer. |
 | **Log Out** | Header, top right. Clears the session and returns to the login page, ready for the next person. |
