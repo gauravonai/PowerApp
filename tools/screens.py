@@ -324,7 +324,7 @@ def stock_table(K, items, admin_edit=False, h=520):
                         visible=ADMIN),
                     icon(n + "Sv", x + w - 38, 6, 30, rh - 12, "Save", color="cJcb", visible=ADMIN,
                          tooltip="Save location to the parts catalogue",
-                         onselect='Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = ThisItem.PN), '
+                         onselect='Patch(tblParts, LookUp(tblParts, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = ThisItem.PN), '
                                   '{Location: Trim(%s.Text)}); Notify(ThisItem.PartNo & " is now at " & '
                                   'Coalesce(Trim(%s.Text), "—") & ".", NotificationType.Success)' % (n, n)),
                     lbl(n + "Ro", 'Coalesce(ThisItem.Location, "—")', x, 0, w - 8, rh, size=11, font=MONO,
@@ -387,7 +387,7 @@ def scr_inventory():
                           req=req)
     save_add = ('With({pn: Trim(apPn%(K)s.Text)}, If(IsBlank(pn) || IsBlank(Trim(apDs%(K)s.Text)) || IsBlank(Trim(apCt%(K)s.Text)), '
                 'Notify("Part number, description and category are required.", NotificationType.Error), '
-                '!IsBlank(LookUp(tblParts, Upper(Trim(Text(PartNo))) = Upper(pn))), '
+                '!IsBlank(LookUp(tblParts, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = Upper(pn))), '
                 'Notify(pn & " is already in the catalogue.", NotificationType.Error), '
                 'Collect(tblParts, {PartNo: pn, Description: Trim(apDs%(K)s.Text), Category: Trim(apCt%(K)s.Text), '
                 'SubCategory: Trim(apSc%(K)s.Text), UOM: Coalesce(Trim(apUm%(K)s.Text), "NO"), Location: Trim(apLc%(K)s.Text), '
@@ -405,7 +405,7 @@ def scr_inventory():
             color="cInk3", wrap=True, valign="Top"),
         inp("rtPn" + K, 740, 60, 200, 34, hint="Part number", font=MONO),
         btn("rtGo" + K, '"Retire"', "Parent.Width - 112", 60, 96, 34,
-            'With({r: LookUp(tblParts, Upper(Trim(Text(PartNo))) = Upper(Trim(rtPn%s.Text)))}, If(IsBlank(r), '
+            'With({r: LookUp(tblParts, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = Upper(Trim(rtPn%s.Text)))}, If(IsBlank(r), '
             'Notify("No such part.", NotificationType.Error), Patch(tblParts, r, {Active: "No"}); '
             'Notify(Trim(rtPn%s.Text) & " retired.", NotificationType.Success); Set(gPanel, "")))' % (K, K),
             kind="danger")], visible='gPanel = "retire" && %s' % ADMIN)
@@ -428,7 +428,8 @@ def bom_lines(src):
     """Non-empty lines of a pasted BOM, each split into tokens. Separators: tab, comma, semicolon, normal and
     non-breaking spaces; Windows (CR LF) and Unix line breaks."""
     return ('Filter(ForAll(Split(Substitute(%s, Char(13), ""), Char(10)) As L, '
-            '{Tok: Filter(Split(TrimEnds(Substitute(Substitute(Substitute(Substitute(L.Value, Char(9), " "), Char(160), " "), '
+            '{Tok: Filter(Split(TrimEnds(Substitute(Substitute(Substitute(Substitute(Substitute(Substitute(L.Value, UniChar(8203), ""), '
+            'UniChar(65279), ""), Char(9), " "), Char(160), " "), '
             '",", " "), ";", " ")), " "), !IsBlank(Value))}), CountRows(Tok) > 0)' % src)
 
 
@@ -714,8 +715,8 @@ def scr_reqdetail():
                 icon(n + "Sv", x + w - 38, 9, 30, 30, "Save", color="cJcb", visible=canact,
                      tooltip="Save store location (this line and the parts catalogue)",
                      onselect='Patch(tblReqLines, LookUp(tblReqLines, Text(RequestNo) = gReqNo && Value(Text(Sr)) = ThisItem.Sr), '
-                              '{StoreLocation: Trim(%s.Text)}); If(!IsBlank(LookUp(tblParts, Upper(Trim(Text(PartNo))) = ThisItem.PN)), '
-                              'Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = ThisItem.PN), {Location: Trim(%s.Text)})); '
+                              '{StoreLocation: Trim(%s.Text)}); If(!IsBlank(LookUp(tblParts, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = ThisItem.PN)), '
+                              'Patch(tblParts, LookUp(tblParts, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = ThisItem.PN), {Location: Trim(%s.Text)})); '
                               'Notify(ThisItem.PartNo & " is now at " & Coalesce(Trim(%s.Text), "—") & ".", NotificationType.Success)'
                               % (n, n, n)),
                 lbl(n + "r", cur, x, 0, w - 8, rh, size=11, font=MONO, visible="!(%s)" % canact)]
@@ -896,7 +897,7 @@ def scr_reqdetail():
 
 def purch_add(rows):
     """Every line still short after a reserve/release lands on Ongoing Purchase (once per part + request)."""
-    return ('ForAll(%s As G, With({ex: LookUp(tblPurch, Upper(Trim(Text(PartNo))) = G.PN && Text(RequestNo) = gReqNo)}, '
+    return ('ForAll(%s As G, With({ex: LookUp(tblPurch, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = G.PN && Text(RequestNo) = gReqNo)}, '
             'If(IsBlank(ex), Collect(tblPurch, {PartNo: G.PartNo, Description: G.Desc, QtyRequired: G.Gap, QtyConfirmed: 0, '
             'RequestNo: gReqNo, RaisedBy: gMeName, PRNumber: "", SupplierNo: "", SupplierName: "", Stage: "REQUIRED", '
             'DateRaised: %s, Notes: LookUp(nfReq, RequestNo = gReqNo).RaisedByName & " waiting"}), '
@@ -1087,7 +1088,7 @@ def scr_inward():
         'Reason: Trim(rsn%(K)s.Text) & If(t = "FOC", If(IsBlank(Trim(rsn%(K)s.Text)), "FOC", " (FOC)"), ""), '
         'EntryId: "TXN-" & Text(GUID())}); '
         'If(!IsBlank(Trim(loc%(K)s.Text)) && Trim(loc%(K)s.Text) <> Coalesce(p.Location, ""), '
-        'Patch(tblParts, LookUp(tblParts, Upper(Trim(Text(PartNo))) = p.PN), {Location: Trim(loc%(K)s.Text)})); '
+        'Patch(tblParts, LookUp(tblParts, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = p.PN), {Location: Trim(loc%(K)s.Text)})); '
         'Notify("Recorded " & qn & " " & p.UOM & " of " & p.PartNo & ". Stock is now " & '
         '(p.OnHand + If(t in ["ADJUST-", "SCRAP"], -qn, qn)) & ".", NotificationType.Success); '
         'Reset(qty%(K)s); Reset(pn%(K)s); Reset(ref%(K)s); Reset(rsn%(K)s); Reset(cost%(K)s); Reset(loc%(K)s); '
@@ -1788,7 +1789,7 @@ def scr_purch():
     addrow = ('CountRows(Filter(ForAll(Distinct(Filter(nfGapLines, PN = %(S)s.PN), RequestNo) As RQ, '
               'With({g: Sum(Filter(nfGapLines, PN = %(S)s.PN && RequestNo = RQ.Value), QtyRequested - Max(QtyReserved, QtyReleased)), '
               'who: LookUp(nfReq, RequestNo = RQ.Value).RaisedByName}, '
-              'If(IsBlank(LookUp(tblPurch, Upper(Trim(Text(PartNo))) = %(S)s.PN && Text(RequestNo) = RQ.Value)), '
+              'If(IsBlank(LookUp(tblPurch, Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))) = %(S)s.PN && Text(RequestNo) = RQ.Value)), '
               'Collect(tblPurch, {PartNo: %(S)s.PartNo, Description: %(S)s.Description, QtyRequired: g, QtyConfirmed: 0, '
               'RequestNo: RQ.Value, RaisedBy: gMeName, PRNumber: "", SupplierNo: "", SupplierName: "", Stage: "REQUIRED", '
               'DateRaised: %(N)s, Notes: who & " waiting"}); true, false))), Value))')

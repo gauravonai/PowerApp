@@ -71,6 +71,18 @@ public static class Phase1 {
     Txt("qStk", "");
 
     Console.WriteLine("== Step 3. Engineer pastes the harness BOM (copied from Excel: Sr, part, description, qty)");
+    var onBefore = N($"LookUp(nfStock, PartNo = \"{pn}\").OnHand");
+    // real workbooks often carry invisible characters in part-number cells (copied from SAP/web): a trailing
+    // non-breaking space, a tab, a zero-width space. Put them into the Parts sheet and expect the BOM to still match.
+    E($"Patch(tblParts, LookUp(tblParts, Text(PartNo) = \"{pn}\"), {{PartNo: \"{pn}\" & Char(160) & Char(9)}})");
+    E($"Patch(tblParts, LookUp(tblParts, Text(PartNo) = \"{pnLow}\"), {{PartNo: UniChar(8203) & \"{pnLow}\" & Char(160)}})");
+    Touch();
+    Txt("qStk", pn);
+    var diag = S("With({k: Upper(Trim(qStk.Text))}, \"Typed: [\" & k & \"] \" & Len(k) & \" chars  |  exact match: \" & CountRows(Filter(tblParts, Upper(Text(PartNo)) = k)) & \"  |  contains: \" & CountRows(Filter(tblParts, k in Upper(Text(PartNo)))) & \"  |  Excel cell: [\" & LookUp(tblParts, k in Upper(Text(PartNo))).PartNo & \"] \" & Len(LookUp(tblParts, k in Upper(Text(PartNo))).PartNo) & \" chars\")");
+    Console.WriteLine("        diagnostic label: " + diag);
+    Ok(diag.Contains("exact match: 0") && diag.Contains("contains: 1"), "docs/14 diagnostic label spots the invisible character (exact 0, contains 1)");
+    Txt("qStk", "");
+    Ok(S($"LookUp(nfStock, PN = \"{pn}\").PN") == pn && N($"LookUp(nfStock, PN = \"{pn}\").OnHand") == onBefore, "hidden characters in the Parts sheet (non-breaking space, tab, zero-width space) are ignored: same part, same on hand");
     var desc = S($"LookUp(nfStock, PartNo = \"{pn}\").Description");
     var bom = $"Sr\tPart Number\tDescription\tQty\n1\t{pn}\t{desc}\t10\n2\t{pnLow}\t{S($"LookUp(nfStock, PartNo = \"{pnLow}\").Description")}\t{N($"LookUp(nfStock, PartNo = \"{pnLow}\").Avail") + 5} NOS\n3\t{pnOut}\tOut of stock part\t4\n4\tNEW/PART-0099\tNot in catalogue\t2\n5\tMC000AAOAVO2IH 4001 8\tPart number with spaces\t3";
     E($"Set(gBomText, \"{bom.Replace("\"", "\"\"").Replace("\n", "\" & Char(10) & \"").Replace("\t", "\" & Char(9) & \"")}\")");

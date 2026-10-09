@@ -202,7 +202,7 @@ kCktPerHr = 7.5;
 // ---------- Parts (retired parts, Active = No, are hidden like the HTA) ----------
 nfParts = ForAll(
     Filter(tblParts, !IsBlank(PartNo) && Lower(Trim(Text(Active))) <> "no") As P,
-    {PartNo: Trim(Text(P.PartNo)), PN: Upper(Trim(Text(P.PartNo))), Description: Text(P.Description),
+    {PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(P.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(P.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))), Description: Text(P.Description),
      Category: Text(P.Category), SubCategory: Text(P.SubCategory), UOM: Coalesce(Text(P.UOM), "NO"),
      Location: Text(P.Location), Supplier: Text(P.Supplier), UnitCost: %(N_P_UnitCost)s,
      RefQty: %(N_P_Ref)s});
@@ -211,7 +211,7 @@ nfParts = ForAll(
 nfMoves = ForAll(
     Filter(tblMoves, !IsBlank(PartNo)) As M,
     With({t: Upper(Trim(Text(M.Type))), q: Abs(%(N_M_Qty)s)},
-        {Date: %(D_M_Date)s, PartNo: Trim(Text(M.PartNo)), PN: Upper(Trim(Text(M.PartNo))),
+        {Date: %(D_M_Date)s, PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(M.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(M.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))),
          Type: If(t = "ISSUE", "RELEASE", t), RawType: t, Qty: q,
          SQty: Switch(t, "RECEIPT", q, "RETURN", q, "ADJUST+", q, "ISSUE", -q, "SCRAP", -q, "ADJUST-", -q, 0),
          Reference: Text(M.Reference), UnitCost: %(N_M_Cost)s, By: Text(M.By), Reason: Text(M.Reason),
@@ -231,7 +231,7 @@ nfReq = ForAll(
      LastUpdated: Text(R.LastUpdated), LastUpdatedBy: Text(R.LastUpdatedBy), History: Text(R.History)});
 nfLines = ForAll(
     Filter(tblReqLines, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As L,
-    {RequestNo: Text(L.RequestNo), Sr: %(N_L_Sr)s, PartNo: Trim(Text(L.PartNo)), PN: Upper(Trim(Text(L.PartNo))),
+    {RequestNo: Text(L.RequestNo), Sr: %(N_L_Sr)s, PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(L.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(L.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))),
      Description: Text(L.Description), QtyRequested: %(N_L_Q)s, QtyReserved: %(N_L_Res)s,
      QtyReleased: %(N_L_Rel)s, UOM: Text(L.UOM), LineStatus: Upper(Text(L.LineStatus)),
      UnitCost: %(N_L_Cost)s, StoreLocation: Text(L.StoreLocation), Remarks: Text(L.Remarks)});
@@ -284,7 +284,7 @@ nfShortBook = Sort(ForAll(Distinct(nfGapLines, PN) As G,
 
 // ---------- other tabs ----------
 nfPurch = ForAll(Filter(tblPurch, !IsBlank(PartNo) && !StartsWith(Text(PartNo), "SAMPLE")) As U,
-    {PartNo: Trim(Text(U.PartNo)), PN: Upper(Trim(Text(U.PartNo))), Description: Text(U.Description),
+    {PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(U.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(U.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))), Description: Text(U.Description),
      QtyRequired: %(N_U_Need)s, QtyConfirmed: %(N_U_Conf)s, RequestNo: Text(U.RequestNo),
      RaisedBy: Text(U.RaisedBy), PRNumber: Text(U.PRNumber), SupplierNo: Text(U.SupplierNo),
      SupplierName: Text(U.SupplierName), Stage: Upper(Coalesce(Text(U.Stage), "REQUIRED")),

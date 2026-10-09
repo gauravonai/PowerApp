@@ -212,7 +212,7 @@ App:
       // ---------- Parts (retired parts, Active = No, are hidden like the HTA) ----------
       nfParts = ForAll(
           Filter(tblParts, !IsBlank(PartNo) && Lower(Trim(Text(Active))) <> "no") As P,
-          {PartNo: Trim(Text(P.PartNo)), PN: Upper(Trim(Text(P.PartNo))), Description: Text(P.Description),
+          {PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(P.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(P.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))), Description: Text(P.Description),
            Category: Text(P.Category), SubCategory: Text(P.SubCategory), UOM: Coalesce(Text(P.UOM), "NO"),
            Location: Text(P.Location), Supplier: Text(P.Supplier), UnitCost: Coalesce(IfError(Value(Text(P.UnitCost)), IfError(Value(First(Split(Trim(Text(P.UnitCost)), " ")).Value), 0)), 0),
            RefQty: Coalesce(IfError(Value(Text(P.ReorderRefQty)), IfError(Value(First(Split(Trim(Text(P.ReorderRefQty)), " ")).Value), 0)), 0)});
@@ -221,7 +221,7 @@ App:
       nfMoves = ForAll(
           Filter(tblMoves, !IsBlank(PartNo)) As M,
           With({t: Upper(Trim(Text(M.Type))), q: Abs(Coalesce(IfError(Value(Text(M.Qty)), IfError(Value(First(Split(Trim(Text(M.Qty)), " ")).Value), 0)), 0))},
-              {Date: If(IsBlank(M.Date), Blank(), IfError(With({t: Trim(Text(M.Date))}, If(!("-" in t) && !("/" in t) && !(":" in t) && !IsBlank(IfError(Value(t), Blank())) && Value(t) > 1000, DateAdd(Date(1899, 12, 30), RoundDown(Value(t), 0), TimeUnit.Days), DateValue(t))), Blank())), PartNo: Trim(Text(M.PartNo)), PN: Upper(Trim(Text(M.PartNo))),
+              {Date: If(IsBlank(M.Date), Blank(), IfError(With({t: Trim(Text(M.Date))}, If(!("-" in t) && !("/" in t) && !(":" in t) && !IsBlank(IfError(Value(t), Blank())) && Value(t) > 1000, DateAdd(Date(1899, 12, 30), RoundDown(Value(t), 0), TimeUnit.Days), DateValue(t))), Blank())), PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(M.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(M.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))),
                Type: If(t = "ISSUE", "RELEASE", t), RawType: t, Qty: q,
                SQty: Switch(t, "RECEIPT", q, "RETURN", q, "ADJUST+", q, "ISSUE", -q, "SCRAP", -q, "ADJUST-", -q, 0),
                Reference: Text(M.Reference), UnitCost: Coalesce(IfError(Value(Text(M.UnitCost)), IfError(Value(First(Split(Trim(Text(M.UnitCost)), " ")).Value), 0)), 0), By: Text(M.By), Reason: Text(M.Reason),
@@ -241,7 +241,7 @@ App:
            LastUpdated: Text(R.LastUpdated), LastUpdatedBy: Text(R.LastUpdatedBy), History: Text(R.History)});
       nfLines = ForAll(
           Filter(tblReqLines, !IsBlank(RequestNo) && !StartsWith(Text(RequestNo), "SAMPLE")) As L,
-          {RequestNo: Text(L.RequestNo), Sr: Coalesce(IfError(Value(Text(L.Sr)), IfError(Value(First(Split(Trim(Text(L.Sr)), " ")).Value), 0)), 0), PartNo: Trim(Text(L.PartNo)), PN: Upper(Trim(Text(L.PartNo))),
+          {RequestNo: Text(L.RequestNo), Sr: Coalesce(IfError(Value(Text(L.Sr)), IfError(Value(First(Split(Trim(Text(L.Sr)), " ")).Value), 0)), 0), PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(L.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(L.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))),
            Description: Text(L.Description), QtyRequested: Coalesce(IfError(Value(Text(L.QtyRequested)), IfError(Value(First(Split(Trim(Text(L.QtyRequested)), " ")).Value), 0)), 0), QtyReserved: Coalesce(IfError(Value(Text(L.QtyReserved)), IfError(Value(First(Split(Trim(Text(L.QtyReserved)), " ")).Value), 0)), 0),
            QtyReleased: Coalesce(IfError(Value(Text(L.QtyReleased)), IfError(Value(First(Split(Trim(Text(L.QtyReleased)), " ")).Value), 0)), 0), UOM: Text(L.UOM), LineStatus: Upper(Text(L.LineStatus)),
            UnitCost: Coalesce(IfError(Value(Text(L.UnitCost)), IfError(Value(First(Split(Trim(Text(L.UnitCost)), " ")).Value), 0)), 0), StoreLocation: Text(L.StoreLocation), Remarks: Text(L.Remarks)});
@@ -294,7 +294,7 @@ App:
 
       // ---------- other tabs ----------
       nfPurch = ForAll(Filter(tblPurch, !IsBlank(PartNo) && !StartsWith(Text(PartNo), "SAMPLE")) As U,
-          {PartNo: Trim(Text(U.PartNo)), PN: Upper(Trim(Text(U.PartNo))), Description: Text(U.Description),
+          {PartNo: Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(U.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), "")), PN: Upper(Trim(Substitute(Substitute(Substitute(Substitute(Substitute(Text(U.PartNo), Char(160), " "), Char(9), " "), Char(10), " "), Char(13), " "), UniChar(8203), ""))), Description: Text(U.Description),
            QtyRequired: Coalesce(IfError(Value(Text(U.QtyRequired)), IfError(Value(First(Split(Trim(Text(U.QtyRequired)), " ")).Value), 0)), 0), QtyConfirmed: Coalesce(IfError(Value(Text(U.QtyConfirmed)), IfError(Value(First(Split(Trim(Text(U.QtyConfirmed)), " ")).Value), 0)), 0), RequestNo: Text(U.RequestNo),
            RaisedBy: Text(U.RaisedBy), PRNumber: Text(U.PRNumber), SupplierNo: Text(U.SupplierNo),
            SupplierName: Text(U.SupplierName), Stage: Upper(Coalesce(Text(U.Stage), "REQUIRED")),
