@@ -96,6 +96,18 @@ public static class Phase1 {
     Ok(N($"LookUp(colBom, PartNo = \"{pn}\").OnHand") == N($"LookUp(nfStock, PartNo = \"{pn}\").OnHand"), "on hand shown = live stock from the Movements sheet");
     Shot("scrBom", "bom-compare", t);
 
+    // fallback: a part the calculated stock list does not return is still read straight from the Parts/Movements sheets
+    var pnF = S("Index(Filter(nfStock, OnHand > 3 && Reserved = 0 && Status = \"IN STOCK\"), 7).PartNo");
+    var onF = N($"LookUp(nfStock, PartNo = \"{pnF}\").OnHand");
+    E($"Patch(tblParts, LookUp(tblParts, Text(PartNo) = \"{pnF}\"), {{Active: \"No\"}})"); Touch();
+    Ok(N($"CountRows(Filter(nfStock, PartNo = \"{pnF}\"))") == 0, $"{pnF} hidden from the calculated stock list for this test");
+    var keep = S("gBomText");
+    Txt("txtBom", pnF + "\t2"); Do("goBom");
+    Ok(S($"LookUp(colBom, PN = \"{pnF.ToUpper()}\").Status") == "AVAILABLE" && N($"LookUp(colBom, PN = \"{pnF.ToUpper()}\").OnHand") == onF,
+       $"Compare still finds {pnF} by reading the sheets directly: on hand {onF}, Available (never a false New Part)");
+    E($"Patch(tblParts, LookUp(tblParts, Text(PartNo) = \"{pnF}\"), {{Active: \"Yes\"}})"); Touch();
+    Txt("txtBom", keep); Do("goBom");
+
     Console.WriteLine("== Step 4. Engineer raises the request");
     Do("reqBom");
     Ok(Screen() == "scrNewReq", "Raise Part Request opens New Request with the 5 BOM lines carried over");
