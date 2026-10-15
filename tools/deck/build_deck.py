@@ -139,6 +139,9 @@ html,body{height:100%;background:#2a2a2a;font-family:var(--ui);color:var(--ink)}
 @media print{.nav,.notes,.progress{display:none}html,body{background:#fff}.stage{position:static;display:block}
  .deck{transform:none!important;box-shadow:none;page-break-after:always;height:auto}.slide{position:relative;display:block;height:720px;page-break-after:always}}
 .nav.show{opacity:1}
+.scr.wide{grid-template-columns:900px 1fr;gap:22px} .wide .shot,.wide .shot img{width:900px}
+.wide .side h4{font-size:18px;margin-bottom:8px} .wide .it{padding:5px 6px;gap:9px} .wide .it .t{font-size:13px}
+.wide .res{font-size:14px}
 .gc{display:block;color:inherit;text-decoration:none;cursor:pointer} .gc:hover img{outline:3px solid var(--y)}
 .grid.g9{gap:12px 26px;margin-top:16px} .g9 img{height:104px} .g9 h3{font-size:18px;margin-top:4px} .g9 p{font-size:12.5px}
 .bcols{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:34px}
@@ -229,10 +232,11 @@ def render(slides):
         else:
             path, ctls = controls(s["img"])
             x0, x1, y0 = s["x0"], s["x1"], s["y0"]
-            y1 = y0 + (x1 - x0) * 520 / 690
+            W, H = (900, 506) if s.get("wide") else (690, 520)
+            y1 = y0 + (x1 - x0) * H / W
             y1 = min(y1, Image.open(path).height)
-            uri, (_, ih) = png_uri(path, (x0, y0, x1, round(y1)), 1380)
-            k = 690 / (x1 - x0)
+            uri, (_, ih) = png_uri(path, (x0, y0, x1, round(y1)), 2 * W)
+            k = W / (x1 - x0)
             dots, items = [], []
             for i, (ref, head, text) in enumerate(s["spots"]):
                 box = where(ctls, ref)
@@ -250,9 +254,9 @@ def render(slides):
                 items.append("<div class='it%s' data-i='%d'><b>%d</b><div class='t'><i>%s</i>%s</div></div>"
                              % ("" if box else " nd", i, i + 1, esc(head), esc(text)))
             out.append("<section class='slide' data-notes=\"%s\"><div class='kick'>%s</div><div class='hd'>%s</div><div class='rule'></div>"
-                       "<div class='scr'><div class='shot' style='height:%dpx'><img src='%s'><div class='ring'></div>%s</div>"
+                       "<div class='scr%s'><div class='shot' style='height:%dpx'><img src='%s'><div class='ring'></div>%s</div>"
                        "<div class='side'><h4>Click → What happens</h4>%s<div class='res'><b>Result</b>%s</div></div></div>%s</section>"
-                       % (notes, esc(s["kicker"]), esc(s["title"]), ih // 2, uri, "".join(dots), "".join(items), esc(s["result"]),
+                       % (notes, esc(s["kicker"]), esc(s["title"]), " wide" if s.get("wide") else "", ih // 2, uri, "".join(dots), "".join(items), esc(s["result"]),
                           foot(n, total, s["kicker"])))
     appx = next((k for k, x in enumerate(slides) if x["kind"] == "divider"), 0)
     return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"

@@ -9,8 +9,8 @@ Spot = (where, heading, text). where = control name, (name, n-th match), (x, y, 
 MAIN = "EDS Lab Material Portal · Phase 1"
 
 
-def screen(title, kicker, img, spots, result, notes, y0=60, x0=224, x1=1366, step=None):
-    return {"kind": "screen", "title": title, "kicker": kicker, "img": img, "spots": spots, "result": result,
+def screen(title, kicker, img, spots, result, notes, y0=60, x0=224, x1=1366, step=None, wide=False):
+    return {"wide": wide, "kind": "screen", "title": title, "kicker": kicker, "img": img, "spots": spots, "result": result,
             "notes": notes, "y0": y0, "x0": x0, "x1": x1, "step": step}
 
 
@@ -43,24 +43,24 @@ SLIDES = [
                "request saved, Lab Admin sees it.",
      "notes": "This is the flow management asked for. The next slides walk through each step."},
     # ------------------------------------------------------------------ 4
-    screen("Welcome", "Start · everyone", "p1:01-welcome.png", [
+    screen("Welcome page", "Start · everyone", "p1:01-welcome.png", [
         ("goWl", "Log In", "Opens the login page."),
         ("rgWl", "Request Access", "A new person asks for an account; the Lab Admin gives the role."),
         ("ch1Wl", "What the portal does", "Live stock, BOM compare and request tracking, in one line.")],
         "Nobody sees lab data before logging in.",
         "First screen for everyone. The version number bottom right tells us which build is installed.",
-        y0=0, x0=0, x1=1366),
+        y0=0, x0=0, x1=1366, wide=True),
     # ------------------------------------------------------------------ 5
-    screen("Log In", "Step 1 of 6 · Engineer", "p1:02-login-engineer.png", [
-        ("usrLi", "Username", "The name the Lab Admin set up, e.g. akshay.kakde."),
-        ("pwdLi", "Password", "Eye icon shows or hides it. Empty password? You choose one on first login."),
+    screen("Login page", "Step 1 of 6 · Engineer", "p1:02-login-engineer.png", [
+        ((630, 306, 360, 48), "Username", "The name the Lab Admin set up, e.g. akshay.kakde."),
+        ((630, 366, 360, 48), "Password", "Eye icon shows or hides it. Empty password? You choose one on first login."),
         ("goLi", "Login", "Opens the dashboard for your role."),
         ("fgLi", "Forgot Password?", "Type your username and set a new password. No waiting for anyone."),
         ("rgLi", "Register", "New user fills name, username and password; role starts as Pending."),
         ("ckLi", "System Check", "18 health checks of the data links, for support.")],
         "The engineer lands on the Engineer dashboard.",
         "Kept simple on purpose: username and password, self-service password reset.",
-        y0=20, x0=560, x1=1366, step=1),
+        y0=0, x0=0, x1=1366, step=1, wide=True),
     # ------------------------------------------------------------------ 6
     screen("Engineer dashboard", "Step 1 of 6 · Engineer", "p1:03-engineer-dashboard.png", [
         ("hdTDsh", "Greeting", "Good morning plus the person's name and role."),
