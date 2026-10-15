@@ -13,12 +13,16 @@ import sys
 
 from PIL import Image
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from slides import APPENDIX, MAIN, SLIDES  # noqa: E402
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(os.path.dirname(HERE))
 P1 = os.path.join(ROOT, "tools", "out", "p1png")
 ALL = os.path.join(ROOT, "tools", "out", "png")
 OUT = os.path.join(ROOT, "docs", "deck", "EDS-Portal-Walkthrough.html")
-FONT = os.environ.get("DECK_FONT_DIR", "")
+FONT = os.environ.get("DECK_FONT_DIR", os.path.join(HERE, "fonts"))
+CTL = {"p1": (P1, os.path.join(ROOT, "tools", "out", "phase1")), "all": (ALL, os.path.join(ROOT, "tools", "out", "render"))}
 
 
 def png_uri(path, box, width):
@@ -44,51 +48,22 @@ def font_css():
     return "".join(out)
 
 
-def screen(title, kicker, img, box, spots, result, notes, step=None):
-    """spots: list of (x, y, (bx, by, bw, bh), heading, text) in screenshot pixels."""
-    return {"kind": "screen", "title": title, "kicker": kicker, "img": img, "box": box, "spots": spots,
-            "result": result, "notes": notes, "step": step}
+def controls(img):
+    src, js = img.split(":", 1)
+    base = os.path.join(CTL[src][1], os.path.splitext(js)[0] + ".json")
+    return os.path.join(CTL[src][0], js), [c for c in json.load(open(base)) if "w" in c]
 
 
-SLIDES_PROTO = [
-    {"kind": "title", "title": "EDS Lab Material Portal", "sub": "Phase 1 walkthrough · Engineer to Lab Admin",
-     "who": "Gaurav Shelke · EDS Lab, Pune", "when": "October 2026",
-     "notes": "Today I will show every page of the new portal and exactly what happens on each click, using real lab data."},
-    {"kind": "flow", "title": "Phase 1 at a glance", "lead": "Engineer to Lab Admin in about 2 minutes, on live lab stock.",
-     "steps": [("Log In", "02-login-engineer.png", "Username and password"),
-               ("Check Stock", "04-check-stock.png", "Live on hand for every part"),
-               ("BOM Compare", "05-bom-compare.png", "Paste the Excel BOM, see the gaps"),
-               ("Raise Request", "06-new-request-filled.png", "Project details and BOM lines"),
-               ("My Requests", "07-my-requests.png", "Track status any time"),
-               ("Lab Admin", "10-lab-admin-queue.png", "Store sees it instantly")],
-     "banner": "Tested end to end on the lab's real data before every release: login, stock search, BOM paste, "
-               "request saved, Lab Admin sees it.",
-     "notes": "This is the flow management asked for. The next slides walk through each step."},
-    screen("BOM Compare", "Step 3 of 6 · Engineer", "05-bom-compare.png", (224, 80, 1366, 1100), [
-        (286, 250, (266, 237, 1058, 120), "Paste the BOM",
-         "Copy the rows straight from the Excel BOM: Sr, part number, description, qty. Units like NOS are fine."),
-        (280, 389, (266, 371, 220, 36), "Compare Against Stock",
-         "The app re-reads the latest stock and checks every line of the BOM."),
-        (1312, 382, (826, 365, 500, 48), "Summary line",
-         "How many lines were read, parts compared, found in stock and new parts."),
-        (445, 452, (250, 441, 1090, 100), "Result tiles",
-         "Available today, short, new parts and the estimated material value."),
-        (1318, 652, (1150, 606, 170, 160), "Status per line",
-         "Available · Shortage · Out of Stock · New Part, with on hand, reserved and short."),
-        (1150, 580, (1144, 566, 180, 28), "Raise Part Request ›",
-         "Opens New Request with these lines already filled in.")],
-        "In seconds the engineer knows what the store can supply and what must be bought.",
-        "Copy straight from the harness BOM in Excel. New Part means the lab has never stocked it; "
-        "that is different from out of stock.", step=3),
-    {"kind": "grid", "title": "Other pages (1 of 2)", "foot": "Lab Admin pages · already built",
-     "items": [("Component Inventory", "scrInventory.png", "Full catalogue with store locations; Lab Admin edits locations."),
-               ("Material Inward", "scrInward.png", "Book goods received (PO, FOC, return, scrap); stock updates at once."),
-               ("Stock Transactions", "scrLedger.png", "Every movement with date, reference and who issued it."),
-               ("High Demand Parts", "scrDemand.png", "Most-issued parts for the chosen period, to plan buying."),
-               ("Brand New Purchase Part", "scrNewPart.png", "Engineer asks the lab to buy a part it has never stocked."),
-               ("New Purchase Parts", "scrNewPartQ.png", "Lab Admin and Manager approve or reject those requests.")],
-     "notes": "These pages are built and tested; they roll out after Phase 1."},
-]
+def where(ctls, ref):
+    """Spot reference -> (x, y, w, h) in app pixels, or None."""
+    if ref is None or (isinstance(ref, tuple) and len(ref) == 4):
+        return ref
+    name, nth = ref if isinstance(ref, tuple) else (ref, 0)
+    hits = [c for c in ctls if c.get("n") == name]
+    if len(hits) <= nth:
+        raise SystemExit("deck: control %s not found" % name)
+    c = hits[nth]
+    return (c["x"], c["y"], c["w"], c["h"])
 
 
 CSS = r"""
@@ -163,7 +138,21 @@ html,body{height:100%;background:#2a2a2a;font-family:var(--ui);color:var(--ink)}
 .notes b{display:block;font:800 13px var(--ui);margin-bottom:4px;letter-spacing:.5px}
 @media print{.nav,.notes,.progress{display:none}html,body{background:#fff}.stage{position:static;display:block}
  .deck{transform:none!important;box-shadow:none;page-break-after:always;height:auto}.slide{position:relative;display:block;height:720px;page-break-after:always}}
-.nav.show{opacity:1}"""
+.nav.show{opacity:1}
+.gc{display:block;color:inherit;text-decoration:none;cursor:pointer} .gc:hover img{outline:3px solid var(--y)}
+.grid.g9{gap:12px 26px;margin-top:16px} .g9 img{height:104px} .g9 h3{font-size:18px;margin-top:4px} .g9 p{font-size:12.5px}
+.bcols{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:34px}
+.bc h3{font:800 26px 'Deck Head','Arial Narrow';text-transform:uppercase;padding-bottom:8px;border-bottom:2px solid var(--ink);margin-bottom:14px}
+.bc ul{list-style:none} .bc li{position:relative;padding:0 0 14px 26px;font:18px/1.4 var(--ui);color:var(--ink)}
+.bc li:before{content:'';position:absolute;left:0;top:8px;width:11px;height:11px;background:var(--y)}
+.bcols+.banner{margin-top:30px}
+.div-s .band{position:absolute;left:0;top:0;bottom:0;width:18px;background:var(--y)}
+.ixg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px 22px;margin-top:22px}
+.ix{display:flex;align-items:baseline;gap:10px;padding:7px 10px;border-radius:6px;cursor:pointer;font:600 15px var(--ui);color:var(--ink);border:1px solid var(--line)}
+.ix b{font:800 15px 'Deck Head','Arial Narrow';min-width:24px} .ix i{margin-left:auto;font:12px var(--ui);color:var(--mute);font-style:normal}
+.ix:hover{background:#fff6e0;border-color:var(--y)}
+.dot.off{display:none} .it.nd b{background:#fff;border-style:dashed}
+@media print{.slide.on{animation:none}}"""
 
 JS = r"""
 const slides=[...document.querySelectorAll('.slide')];let cur=0,spot=-1;
@@ -176,16 +165,17 @@ function setSpot(n){const s=slides[cur];spot=n;
  s.querySelectorAll('.dot').forEach((d,k)=>d.classList.toggle('on',k===n));
  s.querySelectorAll('.it').forEach((d,k)=>d.classList.toggle('on',k===n));
  const r=s.querySelector('.ring');if(!r)return;
- if(n<0){r.classList.remove('on');return}
+ if(n<0||!s.querySelectorAll('.dot')[n].dataset.bx){r.classList.remove('on');return}
  const d=s.querySelectorAll('.dot')[n];r.style.left=d.dataset.bx+'px';r.style.top=d.dataset.by+'px';
  r.style.width=d.dataset.bw+'px';r.style.height=d.dataset.bh+'px';r.classList.add('on')}
 function next(){const n=slides[cur].querySelectorAll('.dot').length;if(spot<n-1&&n){setSpot(spot+1)}else show(cur+1)}
 function prev(){if(spot>0)setSpot(spot-1);else if(spot===0)setSpot(-1);else show(cur-1)}
 document.addEventListener('keydown',e=>{if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}
  if(['ArrowLeft','PageUp'].includes(e.key))prev();if(e.key==='n')document.getElementById('nt').classList.toggle('on');
- if(e.key==='Escape')setSpot(-1)});
+ if(e.key==='Escape')setSpot(-1);if(e.key==='h')show(0)});
 document.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',e=>{e.stopPropagation();setSpot(+d.dataset.i)}));
 document.querySelectorAll('.it').forEach(d=>d.addEventListener('click',()=>setSpot(+d.dataset.i)));
+document.querySelectorAll('[data-go]').forEach(a=>a.addEventListener('click',()=>{if(+a.dataset.go)show(+a.dataset.go-1)}));
 let ht;addEventListener('mousemove',()=>{const n=document.querySelector('.nav');n.classList.add('show');clearTimeout(ht);ht=setTimeout(()=>n.classList.remove('show'),2200)});addEventListener('resize',fit);fit();show((+location.hash.slice(1)||1)-1);
 """
 
@@ -202,6 +192,8 @@ def foot(n, total, left):
 def render(slides):
     out = []
     total = len(slides)
+    goto = {x["title"].split(" (")[0]: k for k, x in enumerate(slides, 1) if x["kind"] == "screen"}
+    goto.update({"Procurement (PR/PO)": goto.get("Procurement"), "Manager Dashboard": goto.get("Manager Dashboard")})
     for n, s in enumerate(slides, 1):
         notes = esc(s.get("notes", ""))
         if s["kind"] == "title":
@@ -216,36 +208,72 @@ def render(slides):
                        "<p class='lead'>%s</p><div class='flow'>%s</div><div class='banner'>%s</div>%s</section>"
                        % (notes, esc(s["title"]), esc(s["lead"]), cells, esc(s["banner"]), foot(n, total, "EDS Lab Material Portal · Phase 1")))
         elif s["kind"] == "grid":
-            cells = "".join("<div class='gc'><img src='%s'><h3>%s</h3><p>%s</p></div>"
-                            % (png_uri(os.path.join(ALL, f), (224, 56, 1366, 640), 740)[0], esc(t), esc(d))
+            big = len(s["items"]) > 6
+            cells = "".join("<a class='gc' data-go='%d'><img src='%s'><h3>%s</h3><p>%s</p></a>"
+                            % (goto.get(t, 0), png_uri(os.path.join(ALL, f), (224, 56, 1366, 640), 740)[0], esc(t), esc(d))
                             for t, f, d in s["items"])
             out.append("<section class='slide' data-notes=\"%s\"><div class='hd'>%s</div><div class='rule'></div>"
-                       "<div class='grid'>%s</div>%s</section>" % (notes, esc(s["title"]), cells, foot(n, total, s["foot"])))
+                       "<div class='grid%s'>%s</div>%s</section>" % (notes, esc(s["title"]), " g9" if big else "", cells,
+                                                                    foot(n, total, s["foot"])))
+        elif s["kind"] == "bullets":
+            cols = "".join("<div class='bc'><h3>%s</h3><ul>%s</ul></div>" % (esc(h), "".join("<li>%s</li>" % esc(x) for x in li))
+                           for h, li in s["cols"])
+            out.append("<section class='slide' data-notes=\"%s\"><div class='kick'>%s</div><div class='hd'>%s</div><div class='rule'></div>"
+                       "<div class='bcols'>%s</div><div class='banner'>%s</div>%s</section>"
+                       % (notes, esc(s["kicker"]), esc(s["title"]), cols, esc(s["banner"]), foot(n, total, MAIN)))
+        elif s["kind"] == "divider":
+            links = "".join("<a class='ix' data-go='%d'><b>%d</b>%s<i>%s</i></a>" % (k, k, esc(t), esc(w)) for k, t, w in s["index"])
+            out.append("<section class='slide div-s' data-notes=\"%s\"><div class='band'></div><div class='kick'>Appendix</div>"
+                       "<div class='hd'>%s</div><div class='rule'></div><p class='lead'>%s</p><div class='ixg'>%s</div>%s</section>"
+                       % (notes, esc(s["title"]), esc(s["lead"]), links, foot(n, total, "Appendix")))
         else:
-            x0, y0, x1, y1 = s["box"]
-            uri, (w, h) = png_uri(os.path.join(P1, s["img"]), s["box"], 1380)
+            path, ctls = controls(s["img"])
+            x0, x1, y0 = s["x0"], s["x1"], s["y0"]
+            y1 = y0 + (x1 - x0) * 520 / 690
+            y1 = min(y1, Image.open(path).height)
+            uri, (_, ih) = png_uri(path, (x0, y0, x1, round(y1)), 1380)
             k = 690 / (x1 - x0)
             dots, items = [], []
-            for i, (x, y, (bx, by, bw, bh), head, text) in enumerate(s["spots"]):
-                dots.append("<div class='dot' data-i='%d' style='left:%.0fpx;top:%.0fpx' data-bx='%.0f' data-by='%.0f' "
-                            "data-bw='%.0f' data-bh='%.0f'>%d</div>"
-                            % (i, (x - x0) * k, (y - y0) * k, (bx - x0) * k - 4, (by - y0) * k - 4, bw * k + 8, bh * k + 8, i + 1))
-                items.append("<div class='it' data-i='%d'><b>%d</b><div class='t'><i>%s</i>%s</div></div>"
-                             % (i, i + 1, esc(head), esc(text)))
+            for i, (ref, head, text) in enumerate(s["spots"]):
+                box = where(ctls, ref)
+                if box:
+                    bx, by, bw, bh = box
+                    if by < y0 - 4 or by + min(bh, 40) > y1 + 4:
+                        raise SystemExit("deck: %s spot %s outside the crop" % (s["title"], head))
+                    dx, dy = (bx, by + bh / 2) if bh <= 60 else (bx + 4, by + 4)
+                    dots.append("<div class='dot' data-i='%d' style='left:%.0fpx;top:%.0fpx' data-bx='%.0f' data-by='%.0f' "
+                                "data-bw='%.0f' data-bh='%.0f'>%d</div>"
+                                % (i, (dx - x0) * k, (dy - y0) * k, (bx - x0) * k - 4, (by - y0) * k - 4, bw * k + 8,
+                                   min(bh, y1 - by) * k + 8, i + 1))
+                else:
+                    dots.append("<div class='dot off' data-i='%d'>%d</div>" % (i, i + 1))
+                items.append("<div class='it%s' data-i='%d'><b>%d</b><div class='t'><i>%s</i>%s</div></div>"
+                             % ("" if box else " nd", i, i + 1, esc(head), esc(text)))
             out.append("<section class='slide' data-notes=\"%s\"><div class='kick'>%s</div><div class='hd'>%s</div><div class='rule'></div>"
-                       "<div class='scr'><div class='shot'><img src='%s'><div class='ring'></div>%s</div>"
+                       "<div class='scr'><div class='shot' style='height:%dpx'><img src='%s'><div class='ring'></div>%s</div>"
                        "<div class='side'><h4>Click → What happens</h4>%s<div class='res'><b>Result</b>%s</div></div></div>%s</section>"
-                       % (notes, esc(s["kicker"]), esc(s["title"]), uri, "".join(dots), "".join(items), esc(s["result"]),
+                       % (notes, esc(s["kicker"]), esc(s["title"]), ih // 2, uri, "".join(dots), "".join(items), esc(s["result"]),
                           foot(n, total, s["kicker"])))
+    appx = next((k for k, x in enumerate(slides) if x["kind"] == "divider"), 0)
     return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>"
             "<title>EDS Lab Material Portal · Walkthrough</title><style>%s%s</style></head><body><div class='stage'><div class='deck'>"
             "<div class='progress'></div>%s</div></div><div class='nav'><button onclick='prev()'>‹ Back</button><span id='pg'></span>"
-            "<button onclick='next()'>Next ›</button><button onclick=\"document.getElementById('nt').classList.toggle('on')\">Notes (N)</button></div>"
-            "<div class='notes' id='nt'></div><script>%s</script></body></html>" % (font_css(), CSS, "".join(out), JS))
+            "<button onclick='next()'>Next ›</button><button onclick=\"document.getElementById('nt').classList.toggle('on')\">Notes (N)</button>"
+            "<button onclick='show(0)'>Home</button><button onclick='show(%d)'>Appendix</button></div>"
+            "<div class='notes' id='nt'></div><script>%s</script></body></html>" % (font_css(), CSS, "".join(out), appx, JS))
+
+
+def deck():
+    first = len(SLIDES) + 2
+    index = [(first + i, a["title"], a["kicker"].split(" · ", 1)[-1]) for i, a in enumerate(APPENDIX)]
+    div = {"kind": "divider", "title": "Every page in detail", "index": index,
+           "lead": "One slide per page, for questions. Click a page to jump; Home returns to the start.",
+           "notes": "Backup only. Jump to the page someone asks about."}
+    return SLIDES + [div] + APPENDIX
 
 
 if __name__ == "__main__":
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    html = render(SLIDES_PROTO)
+    html = render(deck())
     open(OUT, "w").write(html)
-    print("wrote", OUT, len(html) // 1024, "KB")
+    print("wrote", OUT, len(deck()), "slides", len(html) // 1024, "KB")

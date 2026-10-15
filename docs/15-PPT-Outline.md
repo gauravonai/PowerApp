@@ -1,6 +1,9 @@
 # Management deck: EDS Lab Material Portal, Phase 1 walkthrough (draft wording)
 
-16:9, JCB template. 16 slides. Every screen slide = app screenshot with numbered yellow callouts on the
+16:9, JCB template. 16 main slides + appendix (index slide + one slide per page, 37 in all).
+Built as one offline HTML deck: `python3 tools/deck/build_deck.py` → `docs/deck/EDS-Portal-Walkthrough.html`;
+wording in `tools/deck/slides.py`; screenshots + PDF: `node tools/deck/shoot_deck.js <html> <pngDir> [pdf]`.
+Keys: → / Space next hotspot or slide, ← back, N notes, H home; Appendix button jumps to the index. Every screen slide = app screenshot with numbered yellow callouts on the
 buttons + a "Click → What happens → Result" panel. Speaker notes under each slide.
 
 ---
@@ -89,3 +92,10 @@ Create Invoice · Invoices · Cost Sheet · Procurement (PR/PO) · Ongoing Purch
 - Phase 2: reserve → release → invoice live; manager dashboards.
 - Later: move data from Excel to a SharePoint list for more users and rows.
 - Ask: approval to pilot.
+
+## 17 · Appendix index (click a page to jump)
+## 18–37 · One slide per page
+Register · Set or reset password · System Check · Request Queue · Component Inventory · Material Inward ·
+Stock Transactions · High Demand Parts · Brand New Purchase Part · New Purchase Parts · Create Invoice · Invoices ·
+Cost Sheet · Procurement · Ongoing Purchase · Software Licenses · Team Access · Manager Dashboard ·
+About / Data Health · Print / PDF. Same layout: screenshot, numbered hotspots, Click → What happens, Result.
