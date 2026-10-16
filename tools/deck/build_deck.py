@@ -207,16 +207,16 @@ def render(slides):
             cells = "".join("<div class='fs'><span class='no'>STEP %d</span><h3>%s</h3><img src='%s'><p>%s</p></div>"
                             % (i + 1, esc(t), png_uri(os.path.join(P1, f), (224, 56, 1366, 900), 380)[0], esc(d))
                             for i, (t, f, d) in enumerate(s["steps"]))
-            out.append("<section class='slide' data-notes=\"%s\"><div class='hd'>%s</div><div class='rule'></div>"
+            out.append("<section class='slide' data-notes=\"%s\"><div class='kick'>%s</div><div class='hd'>%s</div><div class='rule'></div>"
                        "<p class='lead'>%s</p><div class='flow'>%s</div><div class='banner'>%s</div>%s</section>"
-                       % (notes, esc(s["title"]), esc(s["lead"]), cells, esc(s["banner"]), foot(n, total, "EDS Lab Material Portal · Phase 1")))
+                       % (notes, esc(s["kicker"]), esc(s["title"]), esc(s["lead"]), cells, esc(s["banner"]), foot(n, total, "EDS Lab Material Portal · Phase 1")))
         elif s["kind"] == "grid":
             big = len(s["items"]) > 6
             cells = "".join("<a class='gc' data-go='%d'><img src='%s'><h3>%s</h3><p>%s</p></a>"
                             % (goto.get(t, 0), png_uri(os.path.join(ALL, f), (224, 56, 1366, 640), 740)[0], esc(t), esc(d))
                             for t, f, d in s["items"])
-            out.append("<section class='slide' data-notes=\"%s\"><div class='hd'>%s</div><div class='rule'></div>"
-                       "<div class='grid%s'>%s</div>%s</section>" % (notes, esc(s["title"]), " g9" if big else "", cells,
+            out.append("<section class='slide' data-notes=\"%s\"><div class='kick'>%s</div><div class='hd'>%s</div><div class='rule'></div>"
+                       "<div class='grid%s'>%s</div>%s</section>" % (notes, esc(s["kicker"]), esc(s["title"]), " g9" if big else "", cells,
                                                                     foot(n, total, s["foot"])))
         elif s["kind"] == "bullets":
             cols = "".join("<div class='bc'><h3>%s</h3><ul>%s</ul></div>" % (esc(h), "".join("<li>%s</li>" % esc(x) for x in li))

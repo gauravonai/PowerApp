@@ -1,0 +1,19 @@
+{
+ "name": "EDS Lab Portal",
+ "headFontFace": "Arial Narrow",
+ "bodyFontFace": "Arial",
+ "colors": {
+  "dk1": "111111",
+  "lt1": "FFFFFF",
+  "dk2": "333333",
+  "lt2": "F6F5F2",
+  "accent1": "FCB026",
+  "accent2": "F39C12",
+  "accent3": "6B6B6B",
+  "accent4": "2E7D32",
+  "accent5": "C62828",
+  "accent6": "1565C0",
+  "hlink": "111111",
+  "folHlink": "333333"
+ }
+}

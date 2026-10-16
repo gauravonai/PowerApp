@@ -32,7 +32,7 @@ SLIDES = [
      "banner": "Runs in Power Apps on the lab's existing workbook. No new licence, no server; opens in the browser or Teams.",
      "notes": "Nothing new to install; it opens in the browser or Teams with the company login."},
     # ------------------------------------------------------------------ 3
-    {"kind": "flow", "title": "Phase 1 at a glance", "lead": "Engineer to Lab Admin in about 2 minutes, on live lab stock.",
+    {"kind": "flow", "kicker": "Phase 1 · the flow", "title": "Phase 1 at a glance", "lead": "Engineer to Lab Admin in about 2 minutes, on live lab stock.",
      "steps": [("Log In", "02-login-engineer.png", "Username and password"),
                ("Check Stock", "04-check-stock.png", "Live on hand for every part"),
                ("BOM Compare", "05-bom-compare.png", "Paste the Excel BOM, see the gaps"),
@@ -141,7 +141,7 @@ SLIDES = [
         "Phase 1 ends here. Release, invoice and procurement are already built: see the next slides and the appendix.",
         y0=200, step=6),
     # ------------------------------------------------------------------ 14
-    {"kind": "grid", "title": "Other pages (1 of 2)", "foot": "Store pages · already built",
+    {"kind": "grid", "kicker": "Already built · store", "title": "Other pages (1 of 2)", "foot": "Store pages · already built",
      "items": [("Component Inventory", "scrInventory.png", "Full catalogue with store locations; Lab Admin edits locations."),
                ("Material Inward", "scrInward.png", "Book goods received (PO, FOC, return, scrap); stock updates at once."),
                ("Stock Transactions", "scrLedger.png", "Every movement with date, reference and who issued it."),
@@ -150,7 +150,7 @@ SLIDES = [
                ("New Purchase Parts", "scrNewPartQ.png", "Lab Admin and Manager approve or reject those requests.")],
      "notes": "These pages are built and tested; they roll out after Phase 1. Each one is in the appendix in detail."},
     # ------------------------------------------------------------------ 15
-    {"kind": "grid", "title": "Other pages (2 of 2)", "foot": "Money, purchasing and admin · already built",
+    {"kind": "grid", "kicker": "Already built · money and admin", "title": "Other pages (2 of 2)", "foot": "Money, purchasing and admin · already built",
      "items": [("Create Invoice", "scrInvoice.png", "Job card for a released request; finance-locked cost formula."),
                ("Invoices", "scrInvList.png", "Every invoice raised; open, edit or issue."),
                ("Cost Sheet", "scrCost.png", "Quote a harness job: paste part, qty, cost."),

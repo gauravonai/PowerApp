@@ -3,7 +3,10 @@
 16:9, JCB template. 16 main slides + appendix (index slide + one slide per page, 37 in all).
 Built as one offline HTML deck: `python3 tools/deck/build_deck.py` → `docs/deck/EDS-Portal-Walkthrough.html`;
 wording in `tools/deck/slides.py`; screenshots + PDF: `node tools/deck/shoot_deck.js <html> <pngDir> [pdf]`.
-Keys: → / Space next hotspot or slide, ← back, N notes, H home; Appendix button jumps to the index. Every screen slide = app screenshot with numbered yellow callouts on the
+Keys: → / Space next hotspot or slide, ← back, N notes, H home; Appendix button jumps to the index.
+PowerPoint (editable, same layout, speaker notes, index + grid thumbnails link to the appendix slides):
+`node tools/deck/extract_layout.js <html> layout.json` → `node tools/deck/build_pptx.js layout.json docs/deck/EDS-Portal-Walkthrough.pptx`
+(needs pptxgenjs + sharp on NODE_PATH) → apply `tools/deck/theme.json` with the pptx skill's `apply_theme.js`. Every screen slide = app screenshot with numbered yellow callouts on the
 buttons + a "Click → What happens → Result" panel. Speaker notes under each slide.
 
 ---
